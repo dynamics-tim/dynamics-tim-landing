@@ -207,7 +207,7 @@ const certs = (await getCollection('certs')).sort((a, b) => b.data.issued.locale
               ))}
             </div>
             {cert.data.credentialUrl && (
-              <a href={cert.data.credentialUrl} class="mt-4 inline-flex text-xs font-semibold text-accent-200 hover:text-white">
+              <a href={cert.data.credentialUrl} target="_blank" rel="noopener noreferrer" class="mt-4 inline-flex text-xs font-semibold text-accent-200 hover:text-white">
                 Zertifikat ansehen ->
               </a>
             )}
