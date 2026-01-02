@@ -6,7 +6,13 @@ import ProjectCards from '../components/ProjectCards.astro';
 import { getCollection } from 'astro:content';
 
 const base = import.meta.env.BASE_URL ?? '/';
-const to = (path: string) => `${base}${path.replace(/^\//, '')}`;
+const to = (path: string) => {
+  const trimmed = path.replace(/^\//, '');
+  const [pathname, hash] = trimmed.split('#');
+  const normalized = pathname ? `${pathname.replace(/\/$/, '')}/` : '';
+  const suffix = hash ? `#${hash}` : '';
+  return `${base}${normalized}${suffix}`;
+};
 
 const projects = (await getCollection('projects')).sort((a, b) => (a.data.featured === b.data.featured ? 0 : a.data.featured ? -1 : 1));
 const heroServices = [

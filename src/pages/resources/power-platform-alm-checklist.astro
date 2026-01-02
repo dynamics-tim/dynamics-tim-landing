@@ -2,7 +2,13 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const base = import.meta.env.BASE_URL ?? '/';
-const to = (path: string) => `${base}${path.replace(/^\//, '')}`;
+const to = (path: string) => {
+  const trimmed = path.replace(/^\//, '');
+  const [pathname, hash] = trimmed.split('#');
+  const normalized = pathname ? `${pathname.replace(/\/$/, '')}/` : '';
+  const suffix = hash ? `#${hash}` : '';
+  return `${base}${normalized}${suffix}`;
+};
 
 const checklistBlocks = [
   {
@@ -61,7 +67,7 @@ const checklistBlocks = [
   description="ALM Checklist für Power Platform: Governance, CI/CD, Dataverse, Releases und Betrieb in Dynamics 365 Projekten."
   breadcrumbs={[
     { name: 'Startseite', url: '/' },
-    { name: 'Power Platform ALM Checklist', url: '/resources/power-platform-alm-checklist' }
+    { name: 'Power Platform ALM Checklist', url: '/resources/power-platform-alm-checklist/' }
   ]}
 >
   <section class="bg-surface-100 py-20">
