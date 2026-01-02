@@ -23,8 +23,9 @@ const {
   breadcrumbs = []
 } = Astro.props as Props;
 
-const baseTitle = 'Dynamics 365 Freelance · Tim Friedrich';
-const pageTitle = title ? `${title} · ${baseTitle}` : baseTitle;
+const baseTitle = 'Tim Friedrich';
+const siteName = 'Dynamics 365 Freelancer - Tim Friedrich';
+const pageTitle = title ? `${title} - ${baseTitle}` : siteName;
 const normalizeUrl = (value: string) => {
   const normalized = new URL(value);
   normalized.protocol = 'https:';
@@ -75,7 +76,7 @@ const jsonLd = {
       '@type': 'WebSite',
       '@id': webSiteId,
       url: siteUrl,
-      name: baseTitle,
+      name: siteName,
       inLanguage: 'de-DE',
       publisher: {
         '@id': personId
@@ -147,7 +148,7 @@ if (breadcrumbs.length > 0) {
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:image" content={imageUrl} />
 <meta property="og:locale" content="de_DE" />
-<meta property="og:site_name" content={baseTitle} />
+<meta property="og:site_name" content={siteName} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={description} />
