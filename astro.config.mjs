@@ -9,14 +9,21 @@ const defaultSite = 'https://dynamics-tim.dev';
 const defaultBase = '/';
 const publicBaseUrl = process.env.PUBLIC_BASE_URL;
 const ensureSlash = (value) => (value.endsWith('/') ? value : `${value}/`);
+const normalizeSiteUrl = (value) => {
+  const url = new URL(value);
+  url.protocol = 'https:';
+  url.hostname = url.hostname.replace(/^www\./, '');
+  return url.toString();
+};
 
-const siteUrl = ensureSlash(publicBaseUrl ?? defaultSite);
-const baseUrl = ensureSlash(publicBaseUrl ? new URL(publicBaseUrl).pathname : defaultBase);
+const siteUrl = ensureSlash(normalizeSiteUrl(publicBaseUrl ?? defaultSite));
+const baseUrl = ensureSlash(publicBaseUrl ? new URL(siteUrl).pathname : defaultBase);
 
 export default defineConfig({
   site: siteUrl,
   base: baseUrl,
   output: 'static',
+  trailingSlash: 'always',
   prefetch: true,
   integrations: [
     tailwind({

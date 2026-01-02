@@ -132,7 +132,7 @@ const serviceListSchema = {
       </a>
     </div>
   </section>
-  <script type="application/ld+json" is:inline>{JSON.stringify(serviceListSchema)}</script>
+  <script type="application/ld+json" set:html={JSON.stringify(serviceListSchema)} />
 </BaseLayout>
 
 

@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const base = import.meta.env.BASE_URL ?? '/';
+const to = (path: string) => `${base}${path.replace(/^\//, '')}`;
+
+const checklistBlocks = [
+  {
+    title: 'Governance & Umgebungen',
+    items: [
+      'Klare Environment-Strategie (Dev/Test/Prod) inklusive Namenskonventionen',
+      'DLP-Policies und Rollenmodell für Dataverse und Power Platform',
+      'Zugriffsregeln für Maker, Admins und Fachbereiche'
+    ]
+  },
+  {
+    title: 'Solution Management',
+    items: [
+      'Trennung von Managed und Unmanaged Solutions',
+      'Versionsschema und klare Release-Historie',
+      'Dependency-Checks vor jedem Deployment'
+    ]
+  },
+  {
+    title: 'CI/CD & Automatisierung',
+    items: [
+      'Build- und Release-Pipelines für Solutions und Custom Code',
+      'Konfiguration von Environment Variables und Connection References',
+      'Automatisierte Tests für kritische Prozesse'
+    ]
+  },
+  {
+    title: 'Security & Compliance',
+    items: [
+      'Least-Privilege Zugriff über Service Principals',
+      'Audit-Logs und Monitoring für sensitive Daten',
+      'Überprüfung von Connectoren und Datenflüssen'
+    ]
+  },
+  {
+    title: 'Monitoring & Betrieb',
+    items: [
+      'Application Insights und Log Analytics für Telemetrie',
+      'Fehlerhandling in Flows, Plugins und Azure Integrationen',
+      'Runbooks für Incident-Management und Rollback'
+    ]
+  },
+  {
+    title: 'Enablement & Dokumentation',
+    items: [
+      'Release Notes und Betriebsdokumentation',
+      'Admin- und Entwicklerhandbuch für das Team',
+      'Onboarding-Checkliste für neue Maker und Entwickler'
+    ]
+  }
+];
+---
+
+<BaseLayout
+  title="Power Platform ALM Checklist"
+  description="ALM Checklist für Power Platform: Governance, CI/CD, Dataverse, Releases und Betrieb in Dynamics 365 Projekten."
+  breadcrumbs={[
+    { name: 'Startseite', url: '/' },
+    { name: 'Power Platform ALM Checklist', url: '/resources/power-platform-alm-checklist' }
+  ]}
+>
+  <section class="bg-surface-100 py-20">
+    <div class="mx-auto max-w-4xl px-6">
+      <h1 class="section-title">Power Platform ALM Checklist</h1>
+      <p class="mt-6 text-lg text-slate-600">
+        Diese Checklist fasst die wichtigsten ALM-Bausteine für Dynamics 365 und Power Platform zusammen. Sie hilft Teams, Governance,
+        Releases und Betrieb strukturiert aufzusetzen, ohne dass die Umsetzung im Tagesgeschäft stecken bleibt.
+      </p>
+      <p class="mt-4 text-lg text-slate-600">
+        Nutze die Punkte als Quick Check vor einem Go-Live oder um bestehende Umgebungen zu stabilisieren. Falls du eine detaillierte
+        Bewertung brauchst, unterstütze ich dich gern mit einem Audit und einer konkreten Roadmap.
+      </p>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-2">
+        {checklistBlocks.map((block) => (
+          <article class="card flex flex-col gap-4 border-surface-200 bg-white/90 transition" key={block.title}>
+            <h2 class="text-xl font-semibold text-slate-900">{block.title}</h2>
+            <ul class="space-y-2 text-base text-slate-600 list-disc pl-5">
+              {block.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+
+      <div class="mt-12 rounded-2xl border border-surface-200 bg-white/90 p-6 shadow-soft">
+        <h2 class="text-2xl font-semibold text-slate-900">Nächster Schritt</h2>
+        <p class="mt-4 text-base text-slate-600">
+          Wenn du die Checklist einmal gemeinsam durchgehen möchtest, vereinbaren wir ein kurzes Strategiegespräch und priorisieren die
+          nächsten Schritte für dein Dynamics 365 Projekt.
+        </p>
+        <a
+          href={to('contact')}
+          class="mt-6 inline-flex items-center gap-2 rounded-2xl bg-brand-500 px-5 py-2 text-sm font-semibold text-white shadow-soft transition hover:bg-brand-400"
+        >
+          Strategiegespräch anfragen
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

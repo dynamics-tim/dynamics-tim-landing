@@ -57,6 +57,55 @@ const valueBullets = [
   }
 ];
 
+const approachSteps = [
+  {
+    title: 'Audit',
+    description:
+      'Ist-Analyse von Architektur, Security Model, Datenflüssen und ALM. Quick Wins, Risiken und Prioritäten klar sichtbar.'
+  },
+  {
+    title: 'Konzeption',
+    description:
+      'Zielbild für Prozesse, Rollenmodell und Integrationen. Backlog, technische Leitplanken und messbare Erfolgskennzahlen.'
+  },
+  {
+    title: 'Umsetzung',
+    description:
+      'Iterative Implementierung von Dynamics 365, Power Platform und Azure Integrationen inklusive Tests, Plugins und Automationen.'
+  },
+  {
+    title: 'Enablement',
+    description:
+      'Dokumentation, Training und Übergabe. Dein Team kann stabil releasen und die Lösung eigenständig weiterentwickeln.'
+  }
+];
+
+const useCases = [
+  'Dynamics 365 Sales/Service Integrationen mit ERP, BI und Microsoft 365',
+  'Security Model Audits: Business Units, Rollen, Field Security und DLP',
+  'Performance Tuning für Model-driven Apps, Plugins und Datenabfragen',
+  'Power Automate Orchestrierung mit sauberem Fehlerhandling und Monitoring',
+  'Azure Functions, Service Bus und Event Grid für event-driven Workflows',
+  'ALM-Standards für mehrere Umgebungen und release-sichere Deployments'
+];
+
+const techStack = [
+  'Dataverse, Model-driven Apps, Custom Pages und Canvas Apps',
+  'Power Automate, Power FX, PCF Controls und Custom Connectors',
+  'Azure Functions, Logic Apps, Service Bus und API Management',
+  'CI/CD mit Azure DevOps oder GitHub Actions inklusive Quality Gates',
+  'Monitoring über Application Insights, Log Analytics und Alerts',
+  'Security & Governance mit Azure AD, DLP und Rollenmodell'
+];
+
+const resourceGuide = {
+  title: 'Power Platform ALM Checklist',
+  description:
+    'Kurzer Leitfaden für Governance, CI/CD und Release-Standards in der Power Platform. Ideal als Einstieg für Teams und Entscheider.',
+  href: to('resources/power-platform-alm-checklist'),
+  cta: 'Power Platform ALM Checklist ansehen'
+};
+
 const faqs = [
   {
     question: 'Wie starte ich ein Dynamics 365 Projekt mit dir als Freelancer?',
@@ -76,6 +125,20 @@ const faqs = [
     answerHtml: `Ich arbeite mit C# Plugins, Power Automate, PCF Controls, Azure Functions, Service Bus, Event Grid und Playwright für UI Test Automation. Diese Technologien ermöglichen es mir, skalierbare und effiziente Lösungen zu entwickeln, die den spezifischen Anforderungen von Dynamics 365 gerecht werden.`,
     plainAnswer:
       'Ich arbeite mit C# Plugins, Power Automate, PCF Controls, Azure Functions, Service Bus, Event Grid und Playwright für UI Test Automation. Diese Technologien ermöglichen es mir, skalierbare und effiziente Lösungen zu entwickeln, die den spezifischen Anforderungen von Dynamics 365 gerecht werden.'
+  },
+  {
+    question: 'Wie stellst du Security und Performance in Dynamics 365 sicher?',
+    answerHtml:
+      'Ich prüfe Security Model, Rollen, Field Security und DLP-Regeln und optimiere Plugins, Abfragen und Client-Skripte. Dazu kommen Monitoring, Audit-Logs und klare Performance-Guidelines.',
+    plainAnswer:
+      'Ich prüfe Security Model, Rollen, Field Security und DLP-Regeln und optimiere Plugins, Abfragen und Client-Skripte. Dazu kommen Monitoring, Audit-Logs und klare Performance-Guidelines.'
+  },
+  {
+    question: 'Welche Deliverables bekomme ich nach dem Projektstart?',
+    answerHtml:
+      'Du erhältst ein priorisiertes Backlog, ein technisches Zielbild, Empfehlungen für ALM/CI-CD sowie eine Roadmap für die nächsten Sprints. Bei Bedarf ergänze ich eine Referenzarchitektur und ein Enablement-Konzept.',
+    plainAnswer:
+      'Du erhältst ein priorisiertes Backlog, ein technisches Zielbild, Empfehlungen für ALM/CI-CD sowie eine Roadmap für die nächsten Sprints. Bei Bedarf ergänze ich eine Referenzarchitektur und ein Enablement-Konzept.'
   }
 ];
 
@@ -129,7 +192,7 @@ const structuredData = [faqSchema, serviceItemList];
 ---
 
 <BaseLayout
-  title="Startseite"
+  title="Dynamics 365 Developer & Technical Consultant"
   description="Dynamics 365 Freelancer für Service- & Sales-Prozesse: Power Platform Engineering, Azure Integrationen, DevOps & Enablement."
   breadcrumbs={[{ name: 'Startseite', url: '/' }]}
 >
@@ -154,6 +217,121 @@ const structuredData = [faqSchema, serviceItemList];
     subheading="Ich verbinde Prozess-Know-how mit Dynamics 365 Engineering – vom ersten Workshop bis zur produktiven Übergabe."
     items={heroServices}
   />
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="section-title" data-reveal data-reveal-delay="0">Dynamics 365 Beratung &amp; Engineering</h2>
+      <div class="mt-6 max-w-4xl space-y-4 text-lg text-slate-600" data-reveal data-reveal-delay="80">
+        <p>
+          Ich bin Tim Friedrich und arbeite als Dynamics 365 Developer und Technical Consultant. Mein Fokus liegt auf skalierbaren
+          Plattformen. Ich baue skalierbare Plattformen, die echten Business-Value in Vertrieb und Service liefern – von der ersten
+          Prozessanalyse bis zum stabilen Betrieb.
+        </p>
+        <p>
+          Als Dynamics 365 Freelance Spezialist verbinde ich Power Platform Engineering, Azure Integrationen und DevOps/ALM mit
+          pragmatischer Umsetzung. Das Ergebnis sind klare Datenflüsse, sichere Governance und Lösungen, die langfristig wartbar bleiben.
+        </p>
+        <p>
+          Wenn du bereits ein CRM betreibst, starte ich mit einem Audit und entwickle daraus ein umsetzbares Zielbild.
+          Details findest du in den <a href={to('services')} class="text-brand-500 underline decoration-2 decoration-brand-200 hover:text-brand-400">Dynamics 365 Leistungen im Detail</a>
+          sowie im <a href={to('profile')} class="text-brand-500 underline decoration-2 decoration-brand-200 hover:text-brand-400">Profil und Zertifizierungen</a>.
+        </p>
+      </div>
+      <div class="mt-10 grid gap-6 md:grid-cols-2" data-reveal data-reveal-delay="160">
+        <div class="card">
+          <h3 class="text-xl font-semibold text-slate-900">Leistungsschwerpunkte</h3>
+          <ul class="mt-4 space-y-2 text-base text-slate-600 list-disc pl-5">
+            <li>Dynamics 365 Sales &amp; Customer Service: Prozesse, UX und Automatisierung</li>
+            <li>Power Platform Engineering: Power Automate, PCF Controls, Custom Pages</li>
+            <li>Azure Integrationen: Functions, Service Bus, API Management</li>
+            <li>DevOps/ALM: CI/CD, Quality Gates, sichere Releases</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="text-xl font-semibold text-slate-900">Wirkung im Business</h3>
+          <ul class="mt-4 space-y-2 text-base text-slate-600 list-disc pl-5">
+            <li>Schnellere Angebots- und Servicezyklen durch klare Automatisierung</li>
+            <li>Stabile Schnittstellen und nachvollziehbare Datenflüsse</li>
+            <li>Reduzierte technische Schulden durch saubere Architektur</li>
+            <li>Mehr Autonomie im Team dank strukturiertem Enablement</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface-50 py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="section-title" data-reveal data-reveal-delay="0">Vorgehensmodell</h2>
+      <p class="mt-4 max-w-3xl text-lg text-slate-600" data-reveal data-reveal-delay="80">
+        Audit → Konzeption → Umsetzung → Enablement: Ein klarer Ablauf, der Stakeholder früh abholt und die Umsetzung planbar macht.
+      </p>
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-reveal data-reveal-delay="160">
+        {approachSteps.map((step, index) => (
+          <div class="card" data-reveal data-reveal-delay={`${index * 80 + 200}`}>
+            <h3 class="text-xl font-semibold text-slate-900">{step.title}</h3>
+            <p class="mt-3 text-sm text-slate-600">{step.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="grid gap-10 lg:grid-cols-2">
+        <div data-reveal data-reveal-delay="0">
+          <h2 class="section-title">Typische Use Cases</h2>
+          <p class="mt-4 text-lg text-slate-600">
+            Von Integrationen bis Performance-Optimierung: Hier sind die Szenarien, in denen Kunden besonders schnell Ergebnisse sehen.
+          </p>
+          <ul class="mt-6 space-y-2 text-base text-slate-600 list-disc pl-5">
+            {useCases.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+        <div data-reveal data-reveal-delay="80">
+          <h2 class="section-title">Tech Stack</h2>
+          <p class="mt-4 text-lg text-slate-600">
+            Der Fokus liegt auf bewährten Microsoft-Technologien, die skalierbar und auditierbar bleiben.
+          </p>
+          <ul class="mt-6 space-y-2 text-base text-slate-600 list-disc pl-5">
+            {techStack.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface-100 py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <div class="grid gap-8 lg:grid-cols-2 lg:items-center">
+        <div data-reveal data-reveal-delay="0">
+          <h2 class="section-title">Ressourcen &amp; Linkable Assets</h2>
+          <p class="mt-4 text-lg text-slate-600">
+            Neben der Projektarbeit stelle ich kompakte Leitfäden bereit, die Teams bei Governance und ALM unterstützen.
+          </p>
+          <p class="mt-4 text-lg text-slate-600">
+            Wenn du eine konkrete Einschätzung brauchst, starten wir mit einem <a href={to('contact')} class="text-brand-500 underline decoration-2 decoration-brand-200 hover:text-brand-400">Strategiegespräch zu Dynamics 365</a>.
+          </p>
+        </div>
+        <article class="card flex flex-col gap-4 border-surface-200 bg-white/90 transition" data-reveal data-reveal-delay="120">
+          <h3 class="text-2xl font-semibold text-slate-900">{resourceGuide.title}</h3>
+          <p class="text-base text-slate-600">{resourceGuide.description}</p>
+          <a
+            href={resourceGuide.href}
+            class="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-brand-500 transition hover:text-brand-400"
+          >
+            <span>{resourceGuide.cta}</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+        </article>
+      </div>
+    </div>
+  </section>
 
   <section class="bg-surface-100 py-20" id="faq">
     <div class="mx-auto max-w-6xl px-6">
@@ -188,11 +366,11 @@ const structuredData = [faqSchema, serviceItemList];
           Kostenloses Erstgespräch
         </a>
         <a href={to('services')} class="cta-outline rounded-2xl border border-white/60 px-6 py-3 text-base font-semibold text-white transition hover:bg-white/15">
-          Leistungen ansehen
+          Dynamics 365 Leistungen ansehen
         </a>
       </div>
     </div>
   </section>
-  <script type="application/ld+json" is:inline>{JSON.stringify(structuredData)}</script>
+  <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 </BaseLayout>
 
