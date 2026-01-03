@@ -386,6 +386,9 @@
     if (source.dataset.attrIntegrity) {
       script.setAttribute('integrity', source.dataset.attrIntegrity);
     }
+    if (source.dataset.goatcounter) {
+      script.setAttribute('data-goatcounter', source.dataset.goatcounter);
+    }
 
     appendTarget.appendChild(script);
     return script;

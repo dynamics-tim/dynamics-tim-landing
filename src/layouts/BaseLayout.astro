@@ -89,9 +89,11 @@ const csp = [
     />
     {goatcounterConfigured && (
       <script
+        data-consent="analytics"
+        data-target="head"
         data-goatcounter={goatcounterUrl}
-        async
-        src="https://gc.zgo.at/count.js"
+        data-src="https://gc.zgo.at/count.js"
+        data-attr-async
       ></script>
     )}
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />

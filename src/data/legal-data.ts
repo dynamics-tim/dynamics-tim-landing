@@ -28,6 +28,7 @@ const defaultData: LegalData = {
   HOSTING: 'GitHub Pages',
   PROCESSORS: [
     'GitHub (Pages/CDN)',
+    'GoatCounter (Analytics-Dienst) - Betrieb durch Martin Tournoij (Irland); Datenhosting bei Hetzner in Finnland und Deutschland',
     'Cal.com (nur bei Terminbuchung)'
   ],
   CONTACT_RETENTION_MONTHS: 6
