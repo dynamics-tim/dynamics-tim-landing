@@ -32,18 +32,39 @@ const base = import.meta.env.BASE_URL ?? '/';
 const pushoverToken = import.meta.env.PUBLIC_PUSHOVER_TOKEN;
 const pushoverUser = import.meta.env.PUBLIC_PUSHOVER_USER;
 const pushoverConfigured = Boolean(pushoverToken && pushoverUser);
+const goatcounterUrl = import.meta.env.PUBLIC_GOATCOUNTER_URL;
 
+let goatcounterOrigin: string | null = null;
+let goatcounterConfigured = false;
+
+if (goatcounterUrl) {
+  try {
+    goatcounterOrigin = new URL(goatcounterUrl).origin;
+    goatcounterConfigured = true;
+  } catch {
+    goatcounterOrigin = null;
+  }
+}
+
+const scriptSources = ["'self'", "'unsafe-inline'"];
+const imgSources = ["'self'", "data:"];
 const connectSources = ["'self'"];
 
 if (pushoverConfigured) {
   connectSources.push('https://api.pushover.net');
 }
 
+if (goatcounterOrigin) {
+  scriptSources.push('https://gc.zgo.at');
+  connectSources.push(goatcounterOrigin);
+  imgSources.push(goatcounterOrigin);
+}
+
 const csp = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src ${scriptSources.join(' ')}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data:",
+  `img-src ${imgSources.join(' ')}`,
   "font-src 'self'",
   `connect-src ${connectSources.join(' ')}`,
   "frame-src 'self'",
@@ -66,6 +87,13 @@ const csp = [
       url={url}
       breadcrumbs={breadcrumbs}
     />
+    {goatcounterConfigured && (
+      <script
+        data-goatcounter={goatcounterUrl}
+        async
+        src="https://gc.zgo.at/count.js"
+      ></script>
+    )}
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <link rel="apple-touch-icon" sizes="180x180" href={`${base}apple-touch-icon.png`} />
     <link rel="manifest" href={`${base}manifest.webmanifest`} />
