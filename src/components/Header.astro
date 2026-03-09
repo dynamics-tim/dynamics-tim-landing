@@ -29,6 +29,7 @@ const navItems = [
         </a>
       ))}
       <a
+        id="nav-cta-desktop"
         href={to('contact')}
         data-astro-prefetch
         class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-brand-600 focus-visible:bg-brand-600 hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500 focus-visible:ring-offset-white"
@@ -37,6 +38,7 @@ const navItems = [
       </a>
     </nav>
     <a
+      id="nav-cta-mobile"
       href={to('contact')}
       data-astro-prefetch
       class="rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-brand-600 focus-visible:bg-brand-600 hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 md:hidden"
@@ -46,3 +48,73 @@ const navItems = [
     </a>
   </div>
 </header>
+
+<script>
+  (function () {
+    const desktopCta = document.getElementById('nav-cta-desktop') as HTMLAnchorElement | null;
+    const mobileCta = document.getElementById('nav-cta-mobile') as HTMLAnchorElement | null;
+    if (!desktopCta || !mobileCta) return;
+
+    // Re-assign to const after null check so TS narrows inside closures
+    const dCta = desktopCta!;
+    const mCta = mobileCta!;
+
+    // Derive base URL from the first nav link's href
+    const firstNavLink = document.querySelector('nav a.nav-link');
+    const base = firstNavLink ? new URL(firstNavLink.getAttribute('href') || '/', window.location.origin).pathname : '/';
+
+    const isHome =
+      window.location.pathname === '/' ||
+      window.location.pathname === base ||
+      window.location.pathname === `${base}index.html`;
+    const quizHref = isHome ? '#engagement-quiz' : `${base}#engagement-quiz`;
+
+    const stages = [
+      { threshold: 0, text: 'Kostenloses Erstgespräch', mobileText: 'Erstgespräch', href: `${base}contact/`, external: false },
+      { threshold: 0.3, text: 'Passenden Einstieg finden', mobileText: 'Quiz', href: quizHref, external: false },
+      { threshold: 0.7, text: '30-Min Slot buchen \u2192', mobileText: 'Buchen', href: 'https://cal.com/tim-friedrich/30min', external: true }
+    ];
+
+    let currentStage = -1;
+
+    function updateCta() {
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = document.documentElement.scrollHeight;
+      const pct = total > 0 ? scrolled / total : 0;
+
+      let newStage = 0;
+      for (let i = stages.length - 1; i >= 0; i--) {
+        if (pct >= stages[i].threshold) {
+          newStage = i;
+          break;
+        }
+      }
+
+      if (newStage !== currentStage) {
+        currentStage = newStage;
+        const s = stages[newStage];
+
+        dCta.textContent = s.text;
+        dCta.setAttribute('href', s.href);
+        mCta.textContent = s.mobileText;
+        mCta.setAttribute('href', s.href);
+
+        if (s.external) {
+          dCta.setAttribute('target', '_blank');
+          dCta.setAttribute('rel', 'noopener noreferrer');
+          mCta.setAttribute('target', '_blank');
+          mCta.setAttribute('rel', 'noopener noreferrer');
+        } else {
+          dCta.removeAttribute('target');
+          dCta.removeAttribute('rel');
+          mCta.removeAttribute('target');
+          mCta.removeAttribute('rel');
+        }
+      }
+    }
+
+    window.addEventListener('scroll', updateCta, { passive: true });
+    window.addEventListener('resize', updateCta, { passive: true });
+    updateCta();
+  })();
+</script>

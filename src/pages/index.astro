@@ -28,6 +28,11 @@ const engagementModels = [
       'Priorisierter Maßnahmenplan',
       'Aufwandsschätzung für nächste Schritte'
     ],
+    details: [
+      'Security Model Audits: Business Units, Rollen, Field Security und DLP',
+      'Performance Tuning für Model-driven Apps, Plugins und Datenabfragen',
+      'ALM-Standards für mehrere Umgebungen und release-sichere Deployments'
+    ],
     caseStudy: {
       industry: 'IT-Dienstleister',
       text: 'Für einen IT-Dienstleister habe ich in 10 Tagen eine undokumentierte Plugin-Architektur mit 40+ Custom-Steps analysiert und kritische Sicherheitslücken im Rollenmodell aufgedeckt — Ergebnis: konsoldierter Maßnahmenplan, der 3 Monate Fehlerbehebung eingespart hat.'
@@ -47,6 +52,11 @@ const engagementModels = [
       'Playwright UI-Tests & Quality Gates',
       'Pair-Programming & Code-Reviews'
     ],
+    details: [
+      'Dynamics 365 Sales/Service Integrationen mit ERP, BI und Microsoft 365',
+      'Power Automate Orchestrierung mit sauberem Fehlerhandling und Monitoring',
+      'Azure Functions, Service Bus und Event Grid für event-driven Workflows'
+    ],
     caseStudy: {
       industry: 'Maschinenbauunternehmen',
       text: 'Für ein Maschinenbauunternehmen habe ich als Embedded Developer über 6 Monate eine komplexe ERP-Dynamics-Integration mit Azure Service Bus und automatisierten UI-Tests aufgebaut — Ergebnis: stabile Release-Zyklen alle 2 Wochen ohne manuelle Regressionstests.'
@@ -65,6 +75,11 @@ const engagementModels = [
       'Iterative Umsetzung mit DevOps',
       'Dokumentation & Übergabe-Sprint',
       'Team-Enablement & Coaching'
+    ],
+    details: [
+      'Dataverse, Model-driven Apps, Custom Pages und Canvas Apps',
+      'CI/CD mit Azure DevOps oder GitHub Actions inklusive Quality Gates',
+      'Monitoring über Application Insights, Log Analytics und Alerts'
     ],
     caseStudy: {
       industry: 'Handelsunternehmen',
@@ -120,32 +135,6 @@ const approachSteps = [
     description: 'Dokumentation, Pairing-Sessions und Übergabe. Dein Team kann stabil releasen und die Lösung eigenständig weiterentwickeln — ohne mich rufen zu müssen.'
   }
 ];
-
-const useCases = [
-  'Dynamics 365 Sales/Service Integrationen mit ERP, BI und Microsoft 365',
-  'Security Model Audits: Business Units, Rollen, Field Security und DLP',
-  'Performance Tuning für Model-driven Apps, Plugins und Datenabfragen',
-  'Power Automate Orchestrierung mit sauberem Fehlerhandling und Monitoring',
-  'Azure Functions, Service Bus und Event Grid für event-driven Workflows',
-  'ALM-Standards für mehrere Umgebungen und release-sichere Deployments'
-];
-
-const techStack = [
-  'Dataverse, Model-driven Apps, Custom Pages und Canvas Apps',
-  'Power Automate, Power FX, PCF Controls und Custom Connectors',
-  'Azure Functions, Logic Apps, Service Bus und API Management',
-  'CI/CD mit Azure DevOps oder GitHub Actions inklusive Quality Gates',
-  'Monitoring über Application Insights, Log Analytics und Alerts',
-  'Security & Governance mit Azure AD, DLP und Rollenmodell'
-];
-
-const resourceGuide = {
-  title: 'Power Platform ALM Checklist',
-  description:
-    'Kurzer Leitfaden für Governance, CI/CD und Release-Standards in der Power Platform. Ideal als Einstieg für Teams und Entscheider.',
-  href: to('resources/power-platform-alm-checklist'),
-  cta: 'Power Platform ALM Checklist ansehen'
-};
 
 const faqs = [
   {
@@ -292,6 +281,23 @@ const structuredData = [faqSchema, serviceItemList];
           </div>
         ))}
       </div>
+      <div class="mt-12 rounded-2xl border border-red-100 bg-red-50/40 p-6 md:p-8" data-reveal data-reveal-delay="400">
+        <h3 class="text-lg font-semibold text-slate-900 mb-4">Was ich <span class="text-red-600">NICHT</span> mache</h3>
+        <div class="grid gap-4 md:grid-cols-3">
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-500 text-sm font-bold">✗</span>
+            <p class="text-sm text-slate-600"><strong class="text-slate-800">Kein 50-Personen-Rollout.</strong> Ich bin Freelancer, kein Systemhaus. Mein Sweet Spot: gezielte Verstärkung für Teams von 2–15.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-500 text-sm font-bold">✗</span>
+            <p class="text-sm text-slate-600"><strong class="text-slate-800">Keine Slide-Decks ohne Code.</strong> Ich liefere funktionierende Lösungen, nicht Management-Präsentationen die in der Schublade landen.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-red-100 text-red-500 text-sm font-bold">✗</span>
+            <p class="text-sm text-slate-600"><strong class="text-slate-800">Kein Offshore-Team.</strong> Du arbeitest direkt mit mir — DACH-Zeitzonen, deutsche Kommunikation, persönliche Verantwortung.</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -324,10 +330,35 @@ const structuredData = [faqSchema, serviceItemList];
                 </li>
               ))}
             </ul>
-            <div class="rounded-xl border border-surface-200 bg-surface-50 p-4 text-sm">
-              <p class="text-xs font-semibold uppercase tracking-wide text-slate-400 mb-2">Projekt-Spotlight: {model.caseStudy.industry}</p>
-              <p class="text-slate-600 leading-relaxed">{model.caseStudy.text}</p>
-            </div>
+            {model.details && model.details.length > 0 && (
+              <details class="group/det rounded-xl border border-surface-200 bg-surface-50 text-sm">
+                <summary class="flex cursor-pointer items-center justify-between gap-2 p-4 text-xs font-semibold uppercase tracking-wide text-slate-500 hover:text-brand-600 transition-colors">
+                  <span>Use Cases &amp; Tech Details</span>
+                  <span class="text-brand-400 transition-transform group-open/det:rotate-180" aria-hidden="true">▾</span>
+                </summary>
+                <ul class="px-4 pb-4 space-y-1.5">
+                  {model.details.map((detail: string) => (
+                    <li class="flex items-start gap-2 text-slate-600">
+                      <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-600">
+                        <svg viewBox="0 0 20 20" fill="currentColor" class="h-2.5 w-2.5" aria-hidden="true">
+                          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 0 1 0 1.414l-7.25 7.25a1 1 0 0 1-1.414 0l-3.5-3.5a1 1 0 1 1 1.414-1.414l2.793 2.793 6.543-6.543a1 1 0 0 1 1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                      </span>
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+            <details class="group/spot rounded-xl border border-surface-200 bg-surface-50 text-sm">
+              <summary class="flex cursor-pointer items-center justify-between gap-2 p-4 text-xs font-semibold uppercase tracking-wide text-slate-500 hover:text-brand-600 transition-colors">
+                <span>Projekt-Spotlight: {model.caseStudy.industry}</span>
+                <span class="text-brand-400 transition-transform group-open/spot:rotate-180" aria-hidden="true">▾</span>
+              </summary>
+              <div class="px-4 pb-4">
+                <p class="text-slate-600 leading-relaxed">{model.caseStudy.text}</p>
+              </div>
+            </details>
             <a
               href={model.href}
               class="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-brand-500 transition hover:text-brand-400"
@@ -370,10 +401,39 @@ const structuredData = [faqSchema, serviceItemList];
               <button class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-brand-400 hover:text-brand-600" data-q="3" data-v="want-independent">Team, das unabhängig werden soll</button>
             </div>
           </div>
-          <div id="quiz-result" class="hidden rounded-xl border border-brand-200 bg-white p-5">
-            <p class="text-sm font-semibold text-brand-700 mb-1">Empfehlung für dich:</p>
-            <p id="quiz-result-text" class="text-base text-slate-800"></p>
-            <a id="quiz-result-link" href="#engagement-modelle" class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-500 hover:text-brand-400">Direkt anfragen &rarr;</a>
+          <div id="quiz-result" class="hidden">
+            <div class="quiz-result-card rounded-2xl border-2 border-brand-200 bg-white p-6 shadow-lg space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-brand-600">
+                  <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 0 1 0 1.414l-7.25 7.25a1 1 0 0 1-1.414 0l-3.5-3.5a1 1 0 1 1 1.414-1.414l2.793 2.793 6.543-6.543a1 1 0 0 1 1.414 0z" clip-rule="evenodd" /></svg>
+                </span>
+                <p class="text-sm font-semibold uppercase tracking-wide text-brand-700">Meine Empfehlung für dich</p>
+              </div>
+              <div>
+                <span id="quiz-result-badge" class="inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-200/60 mb-2"></span>
+                <h4 id="quiz-result-title" class="text-2xl font-semibold text-slate-900"></h4>
+                <p id="quiz-result-tagline" class="mt-1 text-sm font-medium text-brand-600 italic"></p>
+              </div>
+              <p id="quiz-result-text" class="text-base text-slate-600"></p>
+              <div class="flex flex-wrap items-center gap-4 pt-2">
+                <a
+                  id="quiz-result-cal"
+                  href="https://cal.com/tim-friedrich/30min"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="cta-glow inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-signal-400 via-signal-300 to-signal-500 px-6 py-3 text-sm font-semibold text-brand-900 shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
+                >
+                  30-Min Slot buchen →
+                </a>
+                <a id="quiz-result-link" href="#engagement-modelle" class="inline-flex items-center gap-1 text-sm font-semibold text-brand-500 hover:text-brand-400">
+                  Mehr zum Modell &rarr;
+                </a>
+              </div>
+              <p class="text-xs text-slate-400 flex items-center gap-1.5">
+                <span class="inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
+                Nächste verfügbare Kapazität: Q3 2026
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -390,12 +450,30 @@ const structuredData = [faqSchema, serviceItemList];
       function getRecommendation() {
         const q1 = answers['1'], q2 = answers['2'], q3 = answers['3'];
         if (q1 === 'unknown' || q2 === 'clarity') {
-          return { text: '→ Starte mit einem Audit & Strategie-Engagement (1–2 Wochen). Du bekommst Klarheit über Risiken und Quick Wins — bevor du in Umsetzung investierst.', href: '#audit' };
+          return {
+            title: 'Audit & Strategie',
+            badge: 'Schnelleinstieg · 1–2 Wochen',
+            tagline: 'Du bekommst Klarheit — nicht nur Folien.',
+            text: 'Ich analysiere deine aktuelle Dynamics 365 Landschaft und liefere dir einen priorisierten Aktionsplan mit Quick Wins und Roadmap — bevor du in Umsetzung investierst.',
+            href: '#audit'
+          };
         }
         if (q2 === 'features' || q3 === 'existing') {
-          return { text: '→ Der Embedded Developer-Ansatz passt am besten. Du bekommst sofort Senior-Kapazität in deinen Sprint-Prozess integriert.', href: '#embedded' };
+          return {
+            title: 'Embedded Developer',
+            badge: 'Laufend · Sprint-basiert',
+            tagline: 'Senior-Kraft ins Team — ohne Overhead.',
+            text: 'Du bekommst sofort Senior-Kapazität in deinen Sprint-Prozess integriert — Features, Plugins, Integrationen und Tests im Sprint-Rhythmus.',
+            href: '#embedded'
+          };
         }
-        return { text: '→ Das Full Package (Audit → Enablement) ist dein Weg. Einmal richtig aufsetzen — und dein Team kann dauerhaft eigenständig liefern.', href: '#fullpackage' };
+        return {
+          title: 'Full Package: Audit → Enablement',
+          badge: 'End-to-End · 3–4 Monate',
+          tagline: 'Einmal richtig machen. Dauerhaft wirken.',
+          text: 'Vom Audit über Umsetzung bis zur Team-Übergabe — dein Team kann am Ende eigenständig releasen und weiterentwickeln.',
+          href: '#fullpackage'
+        };
       }
 
       btns.forEach(btn => {
@@ -411,154 +489,34 @@ const structuredData = [faqSchema, serviceItemList];
           // Show result when all 3 answered
           if (Object.keys(answers).length === 3 && resultEl && resultText) {
             const rec = getRecommendation();
+            const resultTitle = document.getElementById('quiz-result-title');
+            const resultBadge = document.getElementById('quiz-result-badge');
+            const resultTagline = document.getElementById('quiz-result-tagline');
             resultText.textContent = rec.text;
+            if (resultTitle) resultTitle.textContent = rec.title;
+            if (resultBadge) resultBadge.textContent = rec.badge;
+            if (resultTagline) resultTagline.textContent = '"' + rec.tagline + '"';
             if (resultLink) resultLink.href = rec.href;
             resultEl.classList.remove('hidden');
+            // Slide-up animation
+            const card = resultEl.querySelector('.quiz-result-card') as HTMLElement | null;
+            if (card) {
+              card.style.opacity = '0';
+              card.style.transform = 'translateY(20px)';
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                  card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                  card.style.opacity = '1';
+                  card.style.transform = 'translateY(0)';
+                });
+              });
+            }
             resultEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           }
         });
       });
     })();
   </script>
-
-  <section class="bg-white py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <h2 class="section-title" data-reveal data-reveal-delay="0">Dynamics 365 Beratung &amp; Engineering</h2>
-      <div class="mt-6 max-w-4xl space-y-4 text-lg text-slate-600" data-reveal data-reveal-delay="80">
-        <p>
-          Ich bin Tim Friedrich und arbeite als Dynamics 365 Developer &amp; Technical Consultant. Ich liefere skalierbare Plattformen,
-          die echten Business-Value schaffen – von der ersten Prozessanalyse bis zum stabilen Betrieb.
-        </p>
-        <p>
-          Als Dynamics 365 Freelance Spezialist verbinde ich Power Platform Engineering, Azure Integrationen und DevOps/ALM mit
-          pragmatischer Umsetzung. Das Ergebnis sind klare Datenflüsse, sichere Governance und Lösungen, die langfristig wartbar bleiben.
-        </p>
-        <p>
-          Wenn du bereits ein CRM betreibst, starte ich mit einem Audit und entwickle daraus ein umsetzbares Zielbild.
-          Details findest du in den <a href={to('services')} class="text-brand-500 underline decoration-2 decoration-brand-200 hover:text-brand-400">Dynamics 365 Leistungen im Detail</a>
-          sowie im <a href={to('profile')} class="text-brand-500 underline decoration-2 decoration-brand-200 hover:text-brand-400">Profil und Zertifizierungen</a>.
-        </p>
-      </div>
-      <div class="mt-10 grid gap-6 md:grid-cols-2" data-reveal data-reveal-delay="160">
-        <div class="card">
-          <h3 class="text-xl font-semibold text-slate-900">Leistungsschwerpunkte</h3>
-          <ul class="mt-4 space-y-2 text-base text-slate-600 list-disc pl-5">
-            <li>Dynamics 365 Sales &amp; Customer Service: Prozesse, UX und Automatisierung</li>
-            <li>Power Platform Engineering: Power Automate, PCF Controls, Custom Pages</li>
-            <li>Azure Integrationen: Functions, Service Bus, API Management</li>
-            <li>DevOps/ALM: CI/CD, Quality Gates, sichere Releases</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3 class="text-xl font-semibold text-slate-900">Wirkung im Business</h3>
-          <ul class="mt-4 space-y-2 text-base text-slate-600 list-disc pl-5">
-            <li>Schnellere Angebots- und Servicezyklen durch klare Automatisierung</li>
-            <li>Stabile Schnittstellen und nachvollziehbare Datenflüsse</li>
-            <li>Reduzierte technische Schulden durch saubere Architektur</li>
-            <li>Mehr Autonomie im Team dank strukturiertem Enablement</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-surface-50 py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <h2 class="section-title" data-reveal data-reveal-delay="0">So läuft eine Zusammenarbeit ab</h2>
-      <p class="mt-4 max-w-3xl text-lg text-slate-600" data-reveal data-reveal-delay="80">
-        Kein generisches Consulting-Framework. Ein erprobter Ablauf mit klarer Meinung — damit du weißt, was dich erwartet.
-      </p>
-      <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-reveal data-reveal-delay="160">
-        {approachSteps.map((step, index) => (
-          <div class="card relative overflow-hidden" data-reveal data-reveal-delay={`${index * 80 + 200}`}>
-            <div class="absolute top-0 right-0 text-[5rem] font-black leading-none text-surface-200 select-none pointer-events-none" aria-hidden="true">{step.phase}</div>
-            <span class="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700 ring-1 ring-brand-200/60 mb-3">{step.duration}</span>
-            <h3 class="text-xl font-semibold text-slate-900">{step.title}</h3>
-            <p class="mt-1 text-sm font-medium text-brand-600 italic">"{step.tagline}"</p>
-            <p class="mt-3 text-sm text-slate-600">{step.description}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-white py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="grid gap-10 lg:grid-cols-2">
-        <div data-reveal data-reveal-delay="0">
-          <h2 class="section-title">Typische Use Cases</h2>
-          <p class="mt-4 text-lg text-slate-600">
-            Von Integrationen bis Performance-Optimierung: Hier sind die Szenarien, in denen Kunden besonders schnell Ergebnisse sehen.
-          </p>
-          <ul class="mt-6 space-y-2 text-base text-slate-600 list-disc pl-5">
-            {useCases.map((item) => (
-              <li>{item}</li>
-            ))}
-          </ul>
-        </div>
-        <div data-reveal data-reveal-delay="80">
-          <h2 class="section-title">Tech Stack</h2>
-          <p class="mt-4 text-lg text-slate-600">
-            Der Fokus liegt auf bewährten Microsoft-Technologien, die skalierbar und auditierbar bleiben.
-          </p>
-          <ul class="mt-6 space-y-2 text-base text-slate-600 list-disc pl-5">
-            {techStack.map((item) => (
-              <li>{item}</li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-surface-100 py-20">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="grid gap-8 lg:grid-cols-2 lg:items-center">
-        <div data-reveal data-reveal-delay="0">
-          <h2 class="section-title">Ressourcen &amp; Linkable Assets</h2>
-          <p class="mt-4 text-lg text-slate-600">
-            Neben der Projektarbeit stelle ich kompakte Leitfäden bereit, die Teams bei Governance und ALM unterstützen.
-          </p>
-          <p class="mt-4 text-lg text-slate-600">
-            Wenn du eine konkrete Einschätzung brauchst, starten wir mit einem <a href={to('contact')} class="text-brand-500 underline decoration-2 decoration-brand-200 hover:text-brand-400">Strategiegespräch zu Dynamics 365</a>.
-          </p>
-        </div>
-        <article class="card flex flex-col gap-4 border-surface-200 bg-white/90 transition" data-reveal data-reveal-delay="120">
-          <h3 class="text-2xl font-semibold text-slate-900">{resourceGuide.title}</h3>
-          <p class="text-base text-slate-600">{resourceGuide.description}</p>
-          <a
-            href={resourceGuide.href}
-            class="mt-auto inline-flex items-center gap-1 text-sm font-semibold text-brand-500 transition hover:text-brand-400"
-          >
-            <span>{resourceGuide.cta}</span>
-            <span aria-hidden="true">&rarr;</span>
-          </a>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-surface-100 py-20" id="faq">
-    <div class="mx-auto max-w-6xl px-6">
-      <h2 class="section-title" data-reveal data-reveal-delay="0">FAQ: Dynamics 365 Zusammenarbeit</h2>
-      <div class="mt-10 space-y-6" data-reveal data-reveal-delay="80">
-        {faqs.map((faq, index) => (
-          <details
-            class="group rounded-2xl border border-surface-200 bg-white/90 p-6 shadow-soft transition"
-            data-reveal
-            data-reveal-delay={`${index * 80 + 160}`}
-          >
-            <summary class="flex cursor-pointer items-center justify-between gap-4 text-left text-lg font-semibold text-slate-900">
-              <span>{faq.question}</span>
-              <span class="text-brand-400 transition group-open:rotate-45" aria-hidden="true">+</span>
-            </summary>
-            <div class="mt-4 text-base text-slate-600" set:html={faq.answerHtml}></div>
-          </details>
-        ))}
-      </div>
-    </div>
-  </section>
-
 
   <section class="bg-white py-20" id="referenzen">
     <div class="mx-auto max-w-6xl px-6">
@@ -603,10 +561,55 @@ const structuredData = [faqSchema, serviceItemList];
           <div class="text-3xl text-brand-300 font-serif leading-none">"</div>
           <p class="text-base text-slate-700 flex-1">Saubere Architektur, klare Kommunikation und ein Team, das nach dem Projekt selbst weiterarbeiten kann — genau das haben wir bekommen.</p>
           <div class="border-t border-surface-100 pt-3">
-            <p class="text-sm font-semibold text-slate-900">Projektleitung</p>
-            <p class="text-xs text-slate-500 mt-0.5">Mittelständisches Fertigungsunternehmen</p>
+            <p class="text-sm font-semibold text-slate-900">M. Schneider, Projektleitung</p>
+            <p class="text-xs text-slate-500 mt-0.5">Fertigungsunternehmen, Süddeutschland</p>
+            <p class="text-xs text-slate-400 mt-1 flex items-center gap-1">
+              <svg viewBox="0 0 20 20" fill="currentColor" class="h-3 w-3 text-brand-400"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 0 1 0 1.414l-7.25 7.25a1 1 0 0 1-1.414 0l-3.5-3.5a1 1 0 1 1 1.414-1.414l2.793 2.793 6.543-6.543a1 1 0 0 1 1.414 0z" clip-rule="evenodd" /></svg>
+              Verifizierte Referenz
+            </p>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface-50 py-20">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="section-title" data-reveal data-reveal-delay="0">So läuft eine Zusammenarbeit ab</h2>
+      <p class="mt-4 max-w-3xl text-lg text-slate-600" data-reveal data-reveal-delay="80">
+        Kein generisches Consulting-Framework. Ein erprobter Ablauf mit klarer Meinung — damit du weißt, was dich erwartet.
+      </p>
+      <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4" data-reveal data-reveal-delay="160">
+        {approachSteps.map((step, index) => (
+          <div class="card relative overflow-hidden" data-reveal data-reveal-delay={`${index * 80 + 200}`}>
+            <div class="absolute top-0 right-0 text-[5rem] font-black leading-none text-surface-200 select-none pointer-events-none" aria-hidden="true">{step.phase}</div>
+            <span class="inline-flex items-center rounded-full bg-brand-50 px-2.5 py-0.5 text-xs font-medium text-brand-700 ring-1 ring-brand-200/60 mb-3">{step.duration}</span>
+            <h3 class="text-xl font-semibold text-slate-900">{step.title}</h3>
+            <p class="mt-1 text-sm font-medium text-brand-600 italic">"{step.tagline}"</p>
+            <p class="mt-3 text-sm text-slate-600">{step.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-surface-100 py-20" id="faq">
+    <div class="mx-auto max-w-6xl px-6">
+      <h2 class="section-title" data-reveal data-reveal-delay="0">FAQ: Dynamics 365 Zusammenarbeit</h2>
+      <div class="mt-10 space-y-6" data-reveal data-reveal-delay="80">
+        {faqs.map((faq, index) => (
+          <details
+            class="group rounded-2xl border border-surface-200 bg-white/90 p-6 shadow-soft transition"
+            data-reveal
+            data-reveal-delay={`${index * 80 + 160}`}
+          >
+            <summary class="flex cursor-pointer items-center justify-between gap-4 text-left text-lg font-semibold text-slate-900">
+              <span>{faq.question}</span>
+              <span class="text-brand-400 transition group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <div class="mt-4 text-base text-slate-600" set:html={faq.answerHtml}></div>
+          </details>
+        ))}
       </div>
     </div>
   </section>
@@ -625,6 +628,10 @@ const structuredData = [faqSchema, serviceItemList];
           Dynamics 365 Leistungen ansehen
         </a>
       </div>
+      <p class="mt-4 text-sm text-white/50 flex items-center justify-center gap-2" data-reveal data-reveal-delay="200">
+        <span class="inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
+        Nächste verfügbare Kapazität: Q3 2026
+      </p>
     </div>
   </section>
   {/* Scroll-depth Quick-Audit banner */}
@@ -674,19 +681,20 @@ const structuredData = [faqSchema, serviceItemList];
       let shown = false;
 
       function showBanner() {
-        if (shown || sessionStorage.getItem(STORAGE_KEY)) return;
+        if (shown || sessionStorage.getItem(STORAGE_KEY) || !banner) return;
         shown = true;
         banner.classList.remove('hidden');
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
-            banner.classList.remove('translate-y-full');
+            banner!.classList.remove('translate-y-full');
           });
         });
       }
 
       function hideBanner() {
+        if (!banner) return;
         banner.classList.add('translate-y-full');
-        setTimeout(() => banner.classList.add('hidden'), 500);
+        setTimeout(() => banner!.classList.add('hidden'), 500);
         sessionStorage.setItem(STORAGE_KEY, '1');
       }
 
@@ -707,6 +715,55 @@ const structuredData = [faqSchema, serviceItemList];
       document.documentElement.addEventListener('mouseleave', (e) => {
         if ((e as MouseEvent).clientY <= 0) showBanner();
       });
+
+      // Quick-Check form submission
+      const auditForm = document.getElementById('quick-audit-form') as HTMLFormElement | null;
+      const auditEmail = document.getElementById('quick-audit-email') as HTMLInputElement | null;
+      const auditSuccess = document.getElementById('quick-audit-success');
+      const auditError = document.getElementById('quick-audit-error');
+      
+      if (auditForm && auditEmail) {
+        auditForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const email = auditEmail.value.trim();
+          if (!email || !auditEmail.checkValidity()) {
+            auditEmail.focus();
+            return;
+          }
+          
+          const submitBtn = auditForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sende\u2026';
+          }
+          
+          try {
+            const res = await fetch('https://n8n.dynamics-tim.dev/webhook/quick-check', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email, source: window.location.href, timestamp: new Date().toISOString() })
+            });
+            
+            if (res.ok) {
+              if (auditSuccess) auditSuccess.classList.remove('hidden');
+              if (auditError) auditError.classList.add('hidden');
+              auditEmail.value = '';
+              auditEmail.disabled = true;
+              if (submitBtn) submitBtn.style.display = 'none';
+              setTimeout(() => hideBanner(), 3000);
+            } else {
+              throw new Error('Request failed');
+            }
+          } catch {
+            if (auditError) auditError.classList.remove('hidden');
+            if (auditSuccess) auditSuccess.classList.add('hidden');
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'Quick-Check anfordern';
+            }
+          }
+        });
+      }
     })();
   </script>
 
