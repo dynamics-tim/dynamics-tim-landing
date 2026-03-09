@@ -27,8 +27,8 @@ const testimonialRotatorScript = `${base}scripts/testimonial-rotator.js`;
   <div class="ambient-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
   <div class="floating-orb pointer-events-none absolute -right-24 top-20 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,_rgba(28,186,205,0.42),_transparent_70%)] blur-3xl mix-blend-screen" aria-hidden="true"></div>
   <div class="floating-orb floating-orb--delay pointer-events-none absolute -left-32 bottom-6 h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,_rgba(77,162,242,0.38),_transparent_65%)] blur-3xl mix-blend-screen" aria-hidden="true"></div>
-  <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-6 lg:flex-row lg:items-center lg:gap-16">
-    <div class="max-w-3xl space-y-6">
+  <div class="relative mx-auto max-w-4xl px-6">
+    <div class="space-y-6">
       <div class="flex items-center gap-6 flex-wrap">
         <a 
           href={to('profile')}
@@ -51,26 +51,32 @@ const testimonialRotatorScript = `${base}scripts/testimonial-rotator.js`;
           Dynamics 365 · Power Platform · Azure
         </div>
       </div>
+      <p class="text-sm font-semibold uppercase tracking-widest text-white/60" data-reveal data-reveal-delay="60">Dynamics 365 Developer &amp; Technical Consultant</p>
       <h1 class="font-heading text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl" data-reveal data-reveal-delay="80">
-        Dynamics 365 Developer &amp; Technical Consultant für<span class="hero-highlight-gradient"> skalierbare Plattformen,</span>
-        <span class="hero-highlight-underline"> die echten Business-Value schaffen</span>
+        <span class="hero-highlight-gradient">Dein CRM bremst dein Team aus?</span><br />
+        Ich mache Dynamics 365 zu dem System,<span class="hero-highlight-underline"> das Vertrieb und Service tatsächlich nutzen wollen.</span>
       </h1>
       <p class="max-w-2xl text-lg leading-relaxed text-brand-50/90 sm:text-xl" data-reveal data-reveal-delay="140">
-                Mit 4+ Jahren Erfahrung kombiniere ich Power Platform Engineering, Azure Integrationen, DevOps und Test Automation, um komplexe Prozesse in skalierbare und qualitätsgesicherte Anwendungen zu verwandeln.
+        20+ Dynamics 365 Projekte in Service &amp; Sales — von Mittelstand bis Enterprise. Ich kenne die Stolperfallen, bevor sie auftauchen, und liefere skalierbare Plattformen, die dein Team wirklich nutzt.
       </p>
-      <div class="flex flex-wrap items-center gap-4" data-reveal data-reveal-delay="200">
-        <a
-          href="mailto:hello@dynamics-tim.dev"
-          class="cta-glow hero-cta group inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-signal-400 via-signal-300 to-signal-500 px-7 py-3 text-base font-semibold text-brand-900 shadow-[0_24px_56px_-18px_rgba(255,185,0,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_76px_-20px_rgba(255,185,0,0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
-        >
-          <span>Kostenloses Erstgespräch</span>
-        </a>
-        <a
-          href={to('services')}
-          class="cta-outline hero-cta-outline inline-flex items-center justify-center rounded-2xl border border-white/35 bg-white/0 px-7 py-3 text-base font-semibold text-white/90 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
-        >
-          <span>Dynamics 365 Services entdecken</span>
-        </a>
+      <div class="space-y-3" data-reveal data-reveal-delay="200">
+        <div class="flex flex-wrap items-center gap-4">
+          <a
+            href="https://cal.com/tim-friedrich/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cta-glow hero-cta group inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-signal-400 via-signal-300 to-signal-500 px-7 py-3 text-base font-semibold text-brand-900 shadow-[0_24px_56px_-18px_rgba(255,185,0,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_76px_-20px_rgba(255,185,0,0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+          >
+            <span>30-Min Slot buchen →</span>
+          </a>
+          <a
+            href={to('services')}
+            class="cta-outline hero-cta-outline inline-flex items-center justify-center rounded-2xl border border-white/35 bg-white/0 px-7 py-3 text-base font-semibold text-white/90 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+          >
+            <span>Dynamics 365 Services entdecken</span>
+          </a>
+        </div>
+        <p class="text-sm text-white/60">Oder per Mail: <a href="mailto:hello@dynamics-tim.dev" class="underline text-white/80 hover:text-white transition-colors">hello@dynamics-tim.dev</a></p>
       </div>
       <ul class="mt-8 grid gap-3 text-base text-white/90 sm:grid-cols-3 hero-skills-list" data-reveal data-reveal-delay="260">
         {[
@@ -96,34 +102,7 @@ const testimonialRotatorScript = `${base}scripts/testimonial-rotator.js`;
         ))}
       </ul>
     </div>
-    <div
-      class="relative mx-auto w-full max-w-md"
-      data-reveal
-      data-reveal-delay="320"
-      data-testimonial-rotator
-      data-testimonial-items={JSON.stringify(testimonials)}
-    >
-      <div class="absolute -inset-8 rounded-3xl bg-gradient-to-br from-white/10 via-white/5 to-accent-200/20 blur-2xl"></div>
-      <div class="relative rounded-3xl border border-white/15 bg-white/95 p-6 text-left text-slate-800 shadow-[0_20px_60px_rgba(0,39,76,0.25)] transition-opacity duration-500 backdrop-blur-sm" data-testimonial-card>
-        <div class="space-y-4">
-          <p class="text-sm font-semibold uppercase tracking-wide text-brand-600" data-testimonial-title>{currentTestimonial.title}</p>
-          <p class="text-lg text-slate-700" data-testimonial-quote>
-            "{currentTestimonial.quote}"
-          </p>
-          <p class="text-sm font-medium text-slate-500" data-testimonial-source>{currentTestimonial.attribution}</p>
-        </div>
-      </div>
-      <div class="sr-only" role="status" aria-live="polite" data-testimonial-announcer>
-        {currentTestimonial.title} - {currentTestimonial.attribution}
-      </div>
-    </div>
   </div>
 </section>
-
-<script is:inline define:vars={{ scriptSrc: testimonialRotatorScript }}>
-  // Pass config to external script
-  window.__testimonialConfig = { scriptSrc };
-</script>
-<script src="/assets/js/testimonial-loader.js" defer></script>
 
 
