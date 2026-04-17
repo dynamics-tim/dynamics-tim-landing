@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "lastRun": "2026-04-17T16:25:29.776Z",
+  "detectedStack": {
+    "languages": ["typescript", "astro", "css", "mdx"],
+    "frameworks": ["astro", "tailwindcss", "react"],
+    "packageManager": "npm",
+    "testFramework": null,
+    "cicd": "github-actions"
+  },
+  "managedFiles": [
+    ".github/copilot-instructions.md",
+    ".github/instructions/astro.instructions.md",
+    ".github/instructions/styles.instructions.md",
+    ".github/instructions/content.instructions.md"
+  ]
+}

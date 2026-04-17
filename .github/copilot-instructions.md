@@ -84,3 +84,32 @@ After editing content, always run `npm run sync` to update TypeScript definition
 - Base URL configured in `astro.config.mjs` with environment override support
 - Sitemap excludes 404 page, includes robots.txt for SEO
 - All builds compressed (HTML/CSS/JS/Images) for performance
+
+<!-- managed-by: copilot-init -->
+
+## Code Style
+
+- Semicolons: yes · Single quotes in TS, double quotes in `.astro` templates
+- 2-space indent · Trailing commas: es5 · Max line width: 100
+- LF line endings · Prefix unused variables with `_`
+- Functions: camelCase · Components: PascalCase · Interfaces: PascalCase
+- Component props: always define an `interface Props` in the frontmatter
+- Destructure props via `Astro.props as Props` with defaults where appropriate
+
+## Patterns to Follow
+
+- Use relative imports (`../components/`, `../layouts/`) — path aliases `@/*` exist but are not the convention
+- Use `import.meta.env.BASE_URL` for all asset and link paths; wrap with a `to()` helper for page routes
+- Use `data-reveal` and `data-reveal-delay` attributes for scroll-triggered animations
+- Use `.card` CSS class with variant modifiers (`--on-dark`, `--resume`, `--compact`) via CSS custom properties
+- Always respect `prefers-reduced-motion` when adding animations
+- Run `npm run sync` after any content collection changes
+
+## Common Pitfalls
+
+- The `to()` URL helper is duplicated across components — if modifying, update all instances or extract to a shared util
+- Font paths in `global.css` use absolute `/assets/fonts/` but `BaseLayout.astro` uses `${base}assets/fonts/` — keep both in sync
+- CSP in `BaseLayout.astro` is dynamically built — when adding external resources, update the corresponding source array
+- Content collection schemas in `src/content/config.ts` use Zod — always validate with `npm run sync` after schema changes
+
+<!-- end-managed-by: copilot-init -->
