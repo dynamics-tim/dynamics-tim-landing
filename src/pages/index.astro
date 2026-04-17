@@ -236,7 +236,7 @@ const structuredData = [faqSchema, serviceItemList];
   <Hero />
 
   {/* Problem → Lösung → Ergebnis strip */}
-  <section class="bg-white py-16 border-b border-surface-100">
+  <section class="bg-white py-16 border-b border-surface-100 animate-on-scroll">
     <div class="mx-auto max-w-6xl px-6">
       <div class="grid gap-8 md:grid-cols-3">
         <div class="rounded-2xl border border-red-100 bg-red-50/60 p-6 space-y-3" data-reveal data-reveal-delay="0">
@@ -270,7 +270,7 @@ const structuredData = [faqSchema, serviceItemList];
     </div>
   </section>
 
-  <section class="bg-surface-100 py-20">
+  <section class="bg-surface-100 py-20 animate-on-scroll">
     <div class="mx-auto max-w-6xl px-6">
       <h2 class="section-title" data-reveal data-reveal-delay="0">Warum Tim?</h2>
       <div class="mt-10 grid gap-6 md:grid-cols-3" data-reveal data-reveal-delay="80">
@@ -301,7 +301,7 @@ const structuredData = [faqSchema, serviceItemList];
     </div>
   </section>
 
-  <section class="bg-surface-100 py-20" id="engagement-modelle">
+  <section class="bg-surface-100 py-20 animate-on-scroll" id="engagement-modelle">
     <div class="mx-auto max-w-6xl px-6">
       <div class="mb-10 max-w-3xl space-y-4">
         <h2 class="section-title" data-reveal data-reveal-delay="0">So arbeiten wir zusammen</h2>
@@ -518,7 +518,7 @@ const structuredData = [faqSchema, serviceItemList];
     })();
   </script>
 
-  <section class="bg-white py-20" id="referenzen">
+  <section class="bg-white py-20 animate-on-scroll" id="referenzen">
     <div class="mx-auto max-w-6xl px-6">
       <h2 class="section-title" data-reveal data-reveal-delay="0">Stimmen aus der Praxis</h2>
       <p class="mt-4 max-w-3xl text-lg text-slate-600" data-reveal data-reveal-delay="80">
@@ -536,15 +536,15 @@ const structuredData = [faqSchema, serviceItemList];
         <div class="card flex flex-col gap-4 bg-brand-900/95 text-white" data-reveal data-reveal-delay="280">
           <div class="grid grid-cols-3 gap-4 text-center">
             <div>
-              <p class="text-2xl font-bold text-signal-400">20+</p>
+              <p class="text-2xl font-bold text-signal-400" data-counter>20+</p>
               <p class="text-xs text-white/70 mt-0.5">D365 Projekte</p>
             </div>
             <div>
-              <p class="text-2xl font-bold text-signal-400">5+</p>
+              <p class="text-2xl font-bold text-signal-400" data-counter>5+</p>
               <p class="text-xs text-white/70 mt-0.5">Zertifizierungen</p>
             </div>
             <div>
-              <p class="text-2xl font-bold text-signal-400">Ø 3</p>
+              <p class="text-2xl font-bold text-signal-400" data-counter>Ø 3</p>
               <p class="text-xs text-white/70 mt-0.5">Mon. Audit→Go-Live</p>
             </div>
           </div>
@@ -573,7 +573,7 @@ const structuredData = [faqSchema, serviceItemList];
     </div>
   </section>
 
-  <section class="bg-surface-50 py-20">
+  <section class="bg-surface-50 py-20 animate-on-scroll">
     <div class="mx-auto max-w-6xl px-6">
       <h2 class="section-title" data-reveal data-reveal-delay="0">So läuft eine Zusammenarbeit ab</h2>
       <p class="mt-4 max-w-3xl text-lg text-slate-600" data-reveal data-reveal-delay="80">
@@ -593,7 +593,7 @@ const structuredData = [faqSchema, serviceItemList];
     </div>
   </section>
 
-  <section class="bg-surface-100 py-20" id="faq">
+  <section class="bg-surface-100 py-20 animate-on-scroll" id="faq">
     <div class="mx-auto max-w-6xl px-6">
       <h2 class="section-title" data-reveal data-reveal-delay="0">FAQ: Dynamics 365 Zusammenarbeit</h2>
       <div class="mt-10 space-y-6" data-reveal data-reveal-delay="80">
@@ -621,7 +621,7 @@ const structuredData = [faqSchema, serviceItemList];
         Lass uns im kostenlosen Erstgespräch klären, wie ich dein Team mit Senior-Level Expertise in Development und Technical Consulting unterstützen kann.
       </p>
       <div class="mt-8 flex flex-wrap justify-center gap-4" data-reveal data-reveal-delay="160">
-        <a href="https://outlook.office.com/bookwithme/user/c7bd6282644a4fcb82fd8cc491a921e5@dynamics-tim.dev?anonymous&ismsaljsauthenabled&ep=plink" target="_blank" rel="noopener noreferrer" class="cta-glow rounded-2xl bg-white px-6 py-3 text-base font-semibold text-brand-700 shadow-soft transition hover:bg-surface-200">
+        <a href="https://outlook.office.com/bookwithme/user/c7bd6282644a4fcb82fd8cc491a921e5@dynamics-tim.dev?anonymous&ismsaljsauthenabled&ep=plink" target="_blank" rel="noopener noreferrer" class="cta-glow rounded-2xl bg-white px-6 py-3 text-base font-semibold text-brand-700 shadow-soft transition hover:bg-surface-200 btn-pulse">
           30-Min Slot buchen →
         </a>
         <a href={to('services')} class="cta-outline rounded-2xl border border-white/60 px-6 py-3 text-base font-semibold text-white transition hover:bg-white/15">

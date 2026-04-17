@@ -105,13 +105,14 @@ const csp = [
     <link rel="preload" href={`${base}assets/fonts/inter-latin.woff2`} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={`${base}assets/fonts/sora-latin.woff2`} as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href={`${base}assets/css/consent.css`} />
+    <noscript><style>.animate-on-scroll, .animate-slide-left, .animate-slide-right, .animate-scale-up, .dashboard-entrance, .hero-stagger > *, .stagger-children > *, .quote-border-draw { opacity: 1 !important; transform: none !important; animation: none !important; } .faq-answer { grid-template-rows: 1fr !important; opacity: 1 !important; }</style></noscript>
   </head>
   <body class="min-h-screen bg-slate-50">
     {showHeader && <Header />}
     <main>
       <slot />
     </main>
-    {showFooter && <Footer transition:persist />}
+    {showFooter && <Footer />}
     <script src={`${base}assets/js/reveal.js`} defer></script>
     <script src={`${base}assets/js/consent.js`} defer></script>
     <script is:inline define:vars={{ 
@@ -133,6 +134,146 @@ const csp = [
       };
     </script>
     <script src={`${base}assets/js/lazy-loader.js`} defer></script>
+
+    <script>
+      // StratITIQ IntersectionObserver animation engine
+      const isMobile = window.innerWidth < 768;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-in');
+
+            if (entry.target.classList.contains('stagger-children') ||
+                entry.target.classList.contains('hero-stagger')) {
+              const children = entry.target.children;
+              for (let i = 0; i < children.length; i++) {
+                (children[i] as HTMLElement).style.animationDelay =
+                  entry.target.classList.contains('hero-stagger')
+                    ? `${0.1 + i * 0.15}s`
+                    : `${0.05 + i * 0.1}s`;
+              }
+            }
+
+            if (entry.target.classList.contains('dashboard-entrance')) {
+              const nestedStagger = entry.target.querySelector('.stagger-children');
+              if (nestedStagger) {
+                setTimeout(() => {
+                  nestedStagger.classList.add('animate-in');
+                  const children = nestedStagger.children;
+                  for (let i = 0; i < children.length; i++) {
+                    (children[i] as HTMLElement).style.animationDelay = `${0.05 + i * 0.1}s`;
+                  }
+                }, 1000);
+              }
+            }
+
+            entry.target.querySelectorAll('.checkmark-draw').forEach((el, i) => {
+              setTimeout(() => el.classList.add('animate-in'), i * 150);
+            });
+
+            entry.target.querySelectorAll('.dot-pulse-trigger').forEach((el, i) => {
+              const dot = el.querySelector('.dot-pulse');
+              if (dot) setTimeout(() => dot.classList.add('active'), i * 100);
+            });
+
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: isMobile ? 0.01 : 0.12,
+        rootMargin: isMobile ? '0px 0px -10px 0px' : '0px 0px -40px 0px',
+      });
+
+      document.querySelectorAll(
+        '.animate-on-scroll, .animate-slide-left, .animate-slide-right, .animate-scale-up, .dashboard-entrance, .quote-border-draw, .hero-stagger'
+      ).forEach(el => observer.observe(el));
+
+      // Counter Animation
+      (function animateCounters() {
+        const counterObserver = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const el = entry.target as HTMLElement;
+              const target = el.dataset.counterTarget || el.textContent || '0';
+              const numStr = target.replace(/[^\d.,]/g, '').replace(',', '.');
+              const targetNum = parseFloat(numStr);
+              if (isNaN(targetNum) || targetNum === 0) {
+                el.textContent = target;
+                counterObserver.unobserve(el);
+                return;
+              }
+              const isDecimal = target.includes(',') || target.includes('.');
+              const prefix = target.match(/^[^\d]*/)?.[0] || '';
+              const suffix = target.match(/[\d.,][^\d.,]*$/)?.[0]?.replace(/[\d.,]/g, '') || '';
+              const duration = 1200;
+              const start = performance.now();
+              function update(now: number) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = targetNum * eased;
+                if (isDecimal) {
+                  el.textContent = prefix + current.toFixed(1).replace('.', ',') + suffix;
+                } else {
+                  el.textContent = prefix + Math.round(current) + suffix;
+                }
+                if (progress < 1) requestAnimationFrame(update);
+                else el.textContent = target;
+              }
+              requestAnimationFrame(update);
+              counterObserver.unobserve(el);
+            }
+          });
+        }, { threshold: isMobile ? 0.1 : 0.5 });
+        document.querySelectorAll('[data-counter]').forEach(el => {
+          (el as HTMLElement).dataset.counterTarget = el.textContent || '';
+          counterObserver.observe(el);
+        });
+      })();
+
+      // Scroll Progress Bar
+      (function initScrollProgress() {
+        const bar = document.createElement('div');
+        bar.className = 'scroll-progress';
+        document.body.appendChild(bar);
+        function updateProgress() {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          bar.style.transform = `scaleX(${docHeight > 0 ? scrollTop / docHeight : 0})`;
+        }
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+      })();
+
+      // FAQ Smooth Accordion
+      document.querySelectorAll('.faq-smooth').forEach(details => {
+        const summary = details.querySelector('summary');
+        const answer = details.querySelector('.faq-answer');
+        if (!summary || !answer) return;
+        summary.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (details.hasAttribute('open')) {
+            answer.classList.remove('faq-open');
+            setTimeout(() => details.removeAttribute('open'), 350);
+          } else {
+            details.setAttribute('open', '');
+            requestAnimationFrame(() => requestAnimationFrame(() => answer.classList.add('faq-open')));
+          }
+        });
+      });
+
+      // Mouse-Follow Card Glow
+      document.querySelectorAll('.card-glow').forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = (card as HTMLElement).getBoundingClientRect();
+          const x = (e as MouseEvent).clientX - rect.left;
+          const y = (e as MouseEvent).clientY - rect.top;
+          const glow = getComputedStyle(document.documentElement).getPropertyValue('--accent-glow').trim();
+          (card as HTMLElement).style.background = `radial-gradient(300px circle at ${x}px ${y}px, rgba(${glow},0.06), transparent 60%)`;
+        });
+        card.addEventListener('mouseleave', () => { (card as HTMLElement).style.background = ''; });
+      });
+    </script>
   </body>
 </html>
 

@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
 
 interface Props {
   items: CollectionEntry<'timeline'>[];
@@ -8,13 +9,13 @@ interface Props {
 const { items } = Astro.props as Props;
 const rendered = await Promise.all(
   items.map(async (entry) => {
-    const { Content } = await entry.render();
+    const { Content } = await render(entry);
     return { entry, Content };
   })
 );
 ---
 
-<section class="bg-surface-100 py-20">
+<section class="bg-surface-100 py-20 animate-on-scroll">
   <div class="mx-auto max-w-6xl px-6">
     <div class="mb-10 max-w-3xl space-y-4">
       <h2 class="section-title">Erfahrung im Überblick</h2>
