@@ -96,7 +96,10 @@ const csp = [
         data-attr-async
       ></script>
     )}
-    <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
+    <link rel="icon" href={`${base}favicon.ico`} sizes="32x32" />
+    <link rel="icon" href={`${base}favicon-16x16.png`} type="image/png" sizes="16x16" />
+    <link rel="icon" href={`${base}favicon-32x32.png`} type="image/png" sizes="32x32" />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
     <link rel="apple-touch-icon" sizes="180x180" href={`${base}apple-touch-icon.png`} />
     <link rel="manifest" href={`${base}manifest.webmanifest`} />
     <link rel="preload" href={`${base}assets/fonts/inter-latin.woff2`} as="font" type="font/woff2" crossorigin />
