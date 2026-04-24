@@ -2,7 +2,7 @@
 applyTo: "**/*.astro"
 ---
 
-<!-- managed-by: copilot-init -->
+<!-- managed-by: preflight -->
 
 # Astro Component Conventions
 
@@ -29,4 +29,4 @@ applyTo: "**/*.astro"
 - Don't add `<script>` tags without considering CSP in `BaseLayout.astro`
 - Don't import global CSS anywhere except `BaseLayout.astro`
 
-<!-- end-managed-by: copilot-init -->
+<!-- end-managed-by: preflight -->

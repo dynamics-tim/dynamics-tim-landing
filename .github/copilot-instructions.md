@@ -1,115 +1,92 @@
+<!-- managed-by: preflight -->
+
 # Copilot Instructions - Tim Freelance Landing
 
-This is an Astro + Tailwind CSS static site for Tim Friedrich's Dynamics 365 freelancing services, deployed on GitHub Pages.
+This is an **Astro 6** + Tailwind CSS 3 static site for Tim Friedrich's Dynamics 365 freelancing services, deployed on GitHub Pages at `https://dynamics-tim.dev/`.
 
-## Project Architecture
+**Stack:** Astro 6 (SSG) · TypeScript (strict) · Tailwind CSS 3 · MDX content collections · GitHub Actions CI/CD
 
-### Core Framework
-- **Astro 5** with SSG output for static deployment
-- **Tailwind CSS** with custom design system (`brand`, `accent`, `surface` colors)
-- **MDX** for content collections (timeline, projects, certs)
-- **TypeScript** in strict mode throughout
-
-### Key Integrations
-- **GitHub Pages** deployment via `.github/workflows/deploy.yml`
-- **Pushover** notifications for visitor tracking (optional, env-controlled)
-- **Cal.com** integration for booking appointments
-- **Content Security Policy** with dynamic sources based on feature flags
-
-### Content Management
-Content is managed through **Content Collections** in `src/content/`:
-- `timeline/` - Career history as MDX files with company, dates, tags
-- `projects/` - Project showcases with tech stack and links  
-- `certs/` - Certifications with issuer and skills data
-
-Schema validation enforced via `src/content/config.ts` using Zod.
-
-## Development Patterns
-
-### Component Structure
-- `BaseLayout.astro` - Root layout with SEO, CSP, and script loading
-- `SeoHead.astro` - Centralized SEO with JSON-LD structured data
-- Components follow Astro's island architecture (minimal JS)
-
-### Styling Conventions
-- Custom Tailwind config with extended color palette and fonts
-- Uses `font-heading` (Sora) and `font-sans` (Inter) loaded as WOFF2
-- CSS utilities: `.card`, `.section-title` defined in `global.css`
-- Shadow utility: `shadow-soft` for consistent elevation
-
-### Asset Management
-- OG image auto-generated via `scripts/generate-og.mjs` on postinstall
-- Static assets in `public/` with base URL handling for GitHub Pages
-- Font preloading and CSS inlining for performance
-
-### Build & Deploy
-- `npm run dev` - Local development with HMR on :4321
-- `npm run build` - Production build with compression via `astro-compress`
-- `npm run sync` - Update content collections after changes
-- Auto-deployment on main branch pushes via GitHub Actions
-
-## Critical Commands
+## Build & Run Commands
 
 ```bash
-npm run sync    # Run after adding/editing content collections
-npm run lint    # ESLint for TypeScript + Astro (strict mode)
-npm run format  # Prettier with astro plugin
+npm install       # Install + runs postinstall: generates OG image and favicons
+npm run dev       # Dev server on :4321 with HMR
+npm run build     # Production SSG build (HTML/CSS/JS/images compressed via astro-compress)
+npm run preview   # Preview production build locally
+npm run sync      # Regenerate TypeScript types from content collections — run after any schema/content change
+npm run lint      # ESLint (TypeScript + Astro, --max-warnings 0)
+npm run format    # Prettier with astro plugin
 ```
-
-## Environment Configuration
-
-Optional Pushover integration via environment variables:
-```bash
-PUBLIC_PUSHOVER_TOKEN="app-token"
-PUBLIC_PUSHOVER_USER="user-key"  
-PUBLIC_PUSHOVER_TITLE="Custom title"     # Optional
-PUBLIC_PUSHOVER_MESSAGE="Custom message" # Optional, supports {path}/{url}
-```
-
-When configured, adds Pushover API to CSP and loads notification scripts.
-
-## Content Editing
-
-All content files are MDX with frontmatter validation. Examples:
-
-**Timeline entry**: Company, dates, location, tags, highlight flag
-**Project entry**: Title, summary, tech array, optional links, featured flag  
-**Cert entry**: Title, issuer, date, skills array, optional credential URL
-
-After editing content, always run `npm run sync` to update TypeScript definitions.
-
-## Deployment Notes
-
-- Site deployed to `https://dynamics-tim.dev/` with CNAME in public/
-- Base URL configured in `astro.config.mjs` with environment override support
-- Sitemap excludes 404 page, includes robots.txt for SEO
-- All builds compressed (HTML/CSS/JS/Images) for performance
-
-<!-- managed-by: copilot-init -->
 
 ## Code Style
 
 - Semicolons: yes · Single quotes in TS, double quotes in `.astro` templates
-- 2-space indent · Trailing commas: es5 · Max line width: 100
-- LF line endings · Prefix unused variables with `_`
-- Functions: camelCase · Components: PascalCase · Interfaces: PascalCase
-- Component props: always define an `interface Props` in the frontmatter
-- Destructure props via `Astro.props as Props` with defaults where appropriate
+- 2-space indent · Trailing commas: es5 · Max line width: 100 chars · LF line endings
+- Prefix unused variables with `_`
+- Functions: camelCase · Components/Interfaces: PascalCase
+- Always define `interface Props` in Astro component frontmatter; destructure via `Astro.props as Props`
+- Relative imports (`../components/`, `../layouts/`) — path aliases `@/*` exist but are not the convention
 
-## Patterns to Follow
+## Architecture
 
-- Use relative imports (`../components/`, `../layouts/`) — path aliases `@/*` exist but are not the convention
-- Use `import.meta.env.BASE_URL` for all asset and link paths; wrap with a `to()` helper for page routes
-- Use `data-reveal` and `data-reveal-delay` attributes for scroll-triggered animations
-- Use `.card` CSS class with variant modifiers (`--on-dark`, `--resume`, `--compact`) via CSS custom properties
-- Always respect `prefers-reduced-motion` when adding animations
-- Run `npm run sync` after any content collection changes
+```
+src/
+  components/   Astro components (island architecture — minimal client-side JS)
+  content/      MDX content collections: timeline/, projects/, certs/
+  layouts/      BaseLayout.astro (SEO, CSP, font loading), SeoHead.astro (JSON-LD)
+  pages/        Astro pages (SSG routes, trailingSlash: always)
+  styles/       global.css — .card, .section-title, .nav-link CSS utilities
+  data/         Static data files
+public/         Static assets, CNAME (GitHub Pages custom domain)
+scripts/        generate-og.mjs, generate-favicons.mjs (run on npm install)
+```
+
+**Key patterns:**
+- Use `import.meta.env.BASE_URL` for all asset paths; use the `to()` helper for page routes (normalizes trailing slashes for GitHub Pages compatibility)
+- The `to()` helper is currently duplicated across components — update all instances if modifying, or extract to a shared util
+- React 18 is a peer dependency for Astro islands only — do not build standalone React components
+- Font paths: `global.css` uses absolute `/assets/fonts/`; `BaseLayout.astro` uses `${base}assets/fonts/` — keep both in sync
+- Use `data-reveal` / `data-reveal-delay` attributes for scroll-triggered animations
+
+## Key Integrations
+
+- **GitHub Pages** — deployed via `.github/workflows/deploy.yml` on main push
+- **Pushover** — optional visitor notifications via env vars (`PUBLIC_PUSHOVER_TOKEN`, `PUBLIC_PUSHOVER_USER`, `PUBLIC_PUSHOVER_TITLE`, `PUBLIC_PUSHOVER_MESSAGE`). When set, the Pushover API is added to the CSP and notification scripts are loaded.
+- **Cal.com** — booking widget integration
+- **CSP** — dynamically built in `BaseLayout.astro`; update the corresponding source array when adding any external resource
+
+## Content Collections (`src/content/`)
+
+Schemas defined in `src/content/config.ts` using Zod. Run `npm run sync` after any change.
+
+- `timeline/` — `title, company, startDate, endDate?, location?, tags[], highlight?`
+- `projects/` — `title, summary, link?, repo?, tech[], featured?`
+- `certs/` — `title, issuer, issued, credentialUrl?, skills[]`
+
+Tags and skills arrays use consistent casing across entries (e.g., `"Dynamics 365"`, not `"dynamics365"`).
+
+## Styling System
+
+- **Colors:** `brand` (blue) · `accent` (teal) · `surface` (grays) · `signal` (gold/amber) — always use Tailwind theme tokens, never raw color values
+- **Fonts:** `font-sans` = Inter · `font-heading` = Sora — both loaded as WOFF2 with `font-display: swap`
+- **Elevation:** `shadow-soft` only — do not invent new shadows
+- **CSS utilities:** `.card` (with `.card--on-dark`, `.card--resume`, `.card--compact` variants) · `.section-title` · `.nav-link`
+- All animations MUST have `prefers-reduced-motion: reduce` overrides
+- Use `cubic-bezier(0.16, 1, 0.3, 1)` as the standard easing curve
 
 ## Common Pitfalls
 
-- The `to()` URL helper is duplicated across components — if modifying, update all instances or extract to a shared util
-- Font paths in `global.css` use absolute `/assets/fonts/` but `BaseLayout.astro` uses `${base}assets/fonts/` — keep both in sync
-- CSP in `BaseLayout.astro` is dynamically built — when adding external resources, update the corresponding source array
-- Content collection schemas in `src/content/config.ts` use Zod — always validate with `npm run sync` after schema changes
+- Never use `<a href="/page">` — always route through `base` or `to()` for GitHub Pages compatibility
+- Don't add `<script>` tags without updating the CSP in `BaseLayout.astro`
+- Don't import global CSS anywhere except `BaseLayout.astro`
+- Content collection schema mismatches break the build — always validate with `npm run sync`
+- Don't add `@font-face` declarations without also updating the preload links in `BaseLayout.astro`
 
-<!-- end-managed-by: copilot-init -->
+## Maintenance
+
+This file was generated by `@preflight`. Re-run `@preflight` when:
+- Adding new frameworks, languages, or major integrations
+- Upgrading Astro major versions
+- Changing content collection schemas significantly
+
+<!-- end-managed-by: preflight -->

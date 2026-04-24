@@ -2,7 +2,7 @@
 applyTo: "src/content/**/*.mdx, src/content/**/*.md, src/content/config.ts"
 ---
 
-<!-- managed-by: copilot-init -->
+<!-- managed-by: preflight -->
 
 # Content Collection Rules
 
@@ -26,4 +26,4 @@ All schemas use Zod validation. After any schema change, run `npm run sync`.
 4. Run `npm run sync` to generate TypeScript types
 5. Query with `getCollection('name')` in Astro components
 
-<!-- end-managed-by: copilot-init -->
+<!-- end-managed-by: preflight -->

@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "pluginVersion": "1.2.2",
+  "lastRun": "2026-04-24T09:38:52.976Z",
+  "detectedStack": {
+    "languages": ["typescript", "astro", "css", "mdx"],
+    "frameworks": ["astro", "tailwindcss"],
+    "packageManager": "npm",
+    "testFramework": null,
+    "cicd": "github-actions"
+  },
+  "managedFiles": [
+    ".github/copilot-instructions.md",
+    ".github/instructions/astro.instructions.md",
+    ".github/instructions/styles.instructions.md",
+    ".github/instructions/content.instructions.md"
+  ],
+  "reminderDaysThreshold": 30
+}

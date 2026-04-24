@@ -2,7 +2,7 @@
 applyTo: "**/*.css, tailwind.config.js, postcss.config.js"
 ---
 
-<!-- managed-by: copilot-init -->
+<!-- managed-by: preflight -->
 
 # Styling Conventions
 
@@ -28,4 +28,4 @@ applyTo: "**/*.css, tailwind.config.js, postcss.config.js"
 - Don't use raw color values — always reference the Tailwind theme tokens
 - Don't add animations without `prefers-reduced-motion` support
 
-<!-- end-managed-by: copilot-init -->
+<!-- end-managed-by: preflight -->
