@@ -1,5 +1,5 @@
 ---
-applyTo: "src/content/**/*.mdx, src/content/**/*.md, src/content/config.ts"
+applyTo: "src/content/**/*.mdx, src/content/**/*.md, src/content.config.ts"
 ---
 
 <!-- managed-by: preflight -->

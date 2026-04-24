@@ -37,6 +37,7 @@ src/
   pages/        Astro pages (SSG routes, trailingSlash: always)
   styles/       global.css — .card, .section-title, .nav-link CSS utilities
   data/         Static data files
+  scripts/      Pushover notification script (`pushover-notifier.ts`)
 public/         Static assets, CNAME (GitHub Pages custom domain)
 scripts/        generate-og.mjs, generate-favicons.mjs (run on npm install)
 ```
@@ -57,7 +58,7 @@ scripts/        generate-og.mjs, generate-favicons.mjs (run on npm install)
 
 ## Content Collections (`src/content/`)
 
-Schemas defined in `src/content/config.ts` using Zod. Run `npm run sync` after any change.
+Schemas defined in `src/content.config.ts` using Zod. Run `npm run sync` after any change.
 
 - `timeline/` — `title, company, startDate, endDate?, location?, tags[], highlight?`
 - `projects/` — `title, summary, link?, repo?, tech[], featured?`

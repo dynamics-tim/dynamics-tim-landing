@@ -11,6 +11,10 @@ applyTo: "**/*.css, tailwind.config.js, postcss.config.js"
 - Fonts: `font-sans` = Inter, `font-heading` = Sora — both loaded as WOFF2 with `font-display: swap`
 - Elevation: use `shadow-soft` (`0 18px 48px rgba(0, 39, 76, 0.12)`) — do not invent new shadows
 
+## Tailwind Plugins
+- `@tailwindcss/forms` — resets form element styles; use it for consistent input/select/textarea styling
+- `@tailwindcss/typography` — drives `.prose` containers used in content collection pages
+
 ## Tailwind Patterns
 - Use `@apply` sparingly — only in `@layer components` for shared patterns (`.card`, `.section-title`)
 - Prefer utility classes directly in Astro templates over custom CSS
