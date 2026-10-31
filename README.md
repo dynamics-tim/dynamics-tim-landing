@@ -23,6 +23,7 @@ Anschließend ist die Seite unter [http://localhost:4321](http://localhost:4321)
 | `npm run lint`    | ESLint (TypeScript + Astro) in Strict-Mode                |
 | `npm run format`  | Prettier Formatting für das gesamte Projekt               |
 | `npm run sync`    | Content Collections synchronisieren (`src/content/*`)     |
+| `npm run test:e2e`| Playwright: Quiz-Smoke-Tests + Quiz-Logik-Tabelle         |
 
 ## 🔔 Echtzeit-Besuchsbenachrichtigungen
 
@@ -40,7 +41,9 @@ PUBLIC_PUSHOVER_TITLE="Neuer Besuch"
 PUBLIC_PUSHOVER_MESSAGE="Besuch auf {path}"
 ```
 
-`{path}` wird durch den aktuellen Pfad ersetzt, `{url}` liefert die vollständige URL. Sind Token und User-Key gesetzt, lädt das globale Layout automatisch ein kleines Modul nach und erlaubt in der Content Security Policy Anfragen an `https://api.pushover.net`.
+Sind Token und User-Key gesetzt, lädt das globale Layout `public/scripts/pushover-notifier.js` im Leerlauf nach (einmal pro Session) und erlaubt in der Content Security Policy Anfragen an `https://api.pushover.net`.
+
+> Hinweis: Der Notifier verwendet aktuell zufällige Nachrichten aus einer festen Liste; `PUBLIC_PUSHOVER_MESSAGE` wird derzeit nicht ausgewertet. An den Titel wird ein 🔥 angehängt.
 
 ## 📚 Content Collections
 
@@ -50,7 +53,7 @@ Die Seiten `Profil` und `Home` verwenden Content Collections:
 - `src/content/projects` – Projekt-Highlights mit Links, Tech-Stack und Beschreibung
 - `src/content/certs` – Zertifizierungen (Issuer, Datum, Skills)
 
-Neue Einträge können als `.mdx`-Dateien im jeweiligen Ordner angelegt werden. Frontmatter wird durch `src/content/config.ts` validiert.
+Neue Einträge können als `.mdx`-Dateien im jeweiligen Ordner angelegt werden. Frontmatter wird durch `src/content.config.ts` validiert.
 
 ## 🌐 Deployment auf GitHub Pages
 
@@ -59,9 +62,27 @@ Das Repository enthält ein Workflow (`.github/workflows/deploy.yml`), der bei j
 1. Node LTS installiert & Dependencies cached
 2. `npm ci && npm run build` ausführt
 3. das Build als Pages-Artefakt hochlädt
-4. via `actions/deploy-pages` auf die `gh-pages` Branch deployed
+4. via `actions/deploy-pages` auf GitHub Pages veröffentlicht
+
+Parallel laufen bei jedem Pull Request und Push auf `main` die Playwright-Tests (`.github/workflows/quiz-smoke.yml`). Achtung: Der Deploy wartet nicht auf die Tests.
 
 Die Seite ist unter `https://dynamics-tim.dev/` erreichbar. Domain & Basis-Pfad sind in `astro.config.mjs` hinterlegt.
+
+## ✏️ Inhalte pflegen
+
+Texte stehen nicht in den Templates, sondern in **`src/data/`**:
+
+| Datei                          | Inhalt                                                         |
+| ------------------------------ | -------------------------------------------------------------- |
+| `site.ts`                      | E-Mail, Buchungslink, Verfügbarkeit, Social Links, SEO-Links   |
+| `home.ts`                      | Startseite: Hero-Skills, Problem/Lösung, FAQ, Ablauf, Stimmen  |
+| `engagement-models.ts`         | Die drei Engagement-Modelle (Startseite + Quiz-Ergebnis)       |
+| `engagement-quiz.ts`           | Quiz-Fragen, Antworten, Punkte, Befund-/Risiko-Texte           |
+| `services.ts`                  | Leistungsseite                                                 |
+| `profile.ts`                   | Profilseite: Schwerpunkte & Highlights                         |
+| `legal-data.ts`                | Impressum/Datenschutz-Angaben                                  |
+
+Timeline, Projekte und Zertifikate sind MDX-Dateien in `src/content/`.
 
 ## 🗓️ Verfügbarkeit pflegen
 
@@ -83,11 +104,16 @@ Alle Stellen auf der Website (Hero, Quick-Check, CTA) lesen diesen Wert aus — 
 ```
 ├── public/                 # Statische Assets (Favicon, OG-Image, Manifest)
 ├── src/
-│   ├── components/         # Wiederverwendbare UI-Komponenten
+│   ├── components/         # UI-Komponenten (home/ = Sektionen der Startseite)
 │   ├── content/            # MDX Content Collections (Timeline, Projekte, Certs)
-│   ├── layouts/            # Basislayouts & globale Includes
+│   ├── data/               # Alle Texte & Konfiguration
+│   ├── layouts/            # BaseLayout (Head, CSP, globale Skripte)
+│   ├── lib/                # Reine Logik ohne DOM (Quiz-Empfehlung)
 │   ├── pages/              # Astro Seitenrouten (SSG)
-│   └── styles/             # Tailwind Basestyles
+│   ├── scripts/            # Client-Skripte (Animationen, Quiz)
+│   ├── styles/             # Tailwind Basestyles
+│   └── utils/              # url.ts, csp.ts, structured-data.ts
+├── tests/                  # Playwright-Tests
 ├── astro.config.mjs        # Astro Config mit Integrationen
 ├── tailwind.config.js      # Tailwind + Plugins (Typography, Forms)
 ├── tsconfig.json           # TypeScript Strict Mode + Aliase
