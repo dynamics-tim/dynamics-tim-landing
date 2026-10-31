@@ -6,7 +6,7 @@ path-specific rules in [`.github/instructions/`](.github/instructions/) — read
 
 ## Workflow
 
-- `main` deploys automatically to GitHub Pages (`deploy.yml`) — never push to `main`
+- `main` deploys automatically to GitHub Pages (`deploy.yml`, gated by the Playwright tests) — never push to `main`
   directly; work on a branch and open a PR.
 - Copy/content changes go into `src/data/*.ts` or `src/content/**/*.mdx`, not into templates.
 - Commit messages: Conventional Commits, see

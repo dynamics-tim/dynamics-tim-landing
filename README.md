@@ -43,7 +43,7 @@ PUBLIC_PUSHOVER_MESSAGE="Besuch auf {path}"
 
 Sind Token und User-Key gesetzt, lädt das globale Layout `public/scripts/pushover-notifier.js` im Leerlauf nach (einmal pro Session) und erlaubt in der Content Security Policy Anfragen an `https://api.pushover.net`.
 
-> Hinweis: Der Notifier verwendet aktuell zufällige Nachrichten aus einer festen Liste; `PUBLIC_PUSHOVER_MESSAGE` wird derzeit nicht ausgewertet. An den Titel wird ein 🔥 angehängt.
+> Hinweis: Der Notifier verwendet aktuell zufällige Nachrichten aus einer festen Liste; `PUBLIC_PUSHOVER_MESSAGE` wird derzeit nicht ausgewertet. An den Titel wird ein 🔥 angehängt (ohne `PUBLIC_PUSHOVER_TITLE`: „Neuer Besuch🔥“).
 
 ## 📚 Content Collections
 
@@ -64,7 +64,7 @@ Das Repository enthält ein Workflow (`.github/workflows/deploy.yml`), der bei j
 3. das Build als Pages-Artefakt hochlädt
 4. via `actions/deploy-pages` auf GitHub Pages veröffentlicht
 
-Parallel laufen bei jedem Pull Request und Push auf `main` die Playwright-Tests (`.github/workflows/quiz-smoke.yml`). Achtung: Der Deploy wartet nicht auf die Tests.
+Vor dem Build laufen die Playwright-Tests (`.github/workflows/quiz-smoke.yml`) — schlagen sie fehl, wird **nicht** deployed. Bei jedem Pull Request laufen dieselben Tests als Check.
 
 Die Seite ist unter `https://dynamics-tim.dev/` erreichbar. Domain & Basis-Pfad sind in `astro.config.mjs` hinterlegt.
 

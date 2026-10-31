@@ -2,9 +2,8 @@ name: Quiz smoke tests
 
 on:
   pull_request:
-  push:
-    branches:
-      - main
+  # Also called by deploy.yml: a push to main only deploys if these tests pass
+  workflow_call:
 
 permissions:
   contents: read

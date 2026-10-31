@@ -61,7 +61,7 @@ tests/          Playwright: quiz E2E smoke test + quiz logic table test
 
 ## Key Integrations
 
-- **GitHub Pages** — deployed via `.github/workflows/deploy.yml` on main push
+- **GitHub Pages** — deployed via `.github/workflows/deploy.yml` on main push, only after the Playwright tests (`quiz-smoke.yml`, called as reusable workflow) pass
 - **Pushover** — optional visitor notifications via env vars (`PUBLIC_PUSHOVER_TOKEN`, `PUBLIC_PUSHOVER_USER`, `PUBLIC_PUSHOVER_TITLE`, `PUBLIC_PUSHOVER_MESSAGE`). When set, the Pushover API is added to the CSP and notification scripts are loaded.
 - **Cal.com** — booking widget integration
 - **CSP** — built by `buildCsp()` in `src/utils/csp.ts`; add new external origins there
