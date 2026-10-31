@@ -33,6 +33,8 @@ document.querySelectorAll<HTMLElement>('[data-pitch-video]').forEach((root) => {
   const render = () => {
     const playing = !video.paused && !video.ended;
     overlay.dataset.hidden = String(playing);
+    overlay.tabIndex = playing ? -1 : 0;
+    overlay.setAttribute('aria-hidden', String(playing));
     playToggle.setAttribute('aria-label', playing ? 'Video pausieren' : 'Video abspielen');
     pauseIcon?.classList.toggle('hidden', !playing);
     playIcon?.classList.toggle('hidden', playing);

@@ -62,7 +62,7 @@ const config = {
         ink,
         lime,
         paper: { DEFAULT: '#F4F5F0', 50: '#FAFBF7', 100: '#F4F5F0', 200: '#ECEEE6' },
-        ember: { 400: '#FF5A4F', 500: '#FD4136', 600: '#D92D22' },
+        ember: { 400: '#FF5A4F', 500: '#FD4136', 600: '#D92D22', 700: '#B3241B' },
         // Legacy names, remapped onto the new system
         brand: {
           50: '#F7FCE8',

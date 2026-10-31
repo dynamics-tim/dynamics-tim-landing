@@ -66,6 +66,6 @@ export const collaborationFormats = [
   {
     title: 'Review & Coaching',
     description:
-      'Health Check für bestehende Lösungen inklusive Code-Reviews, Pairing Sessions und Enablement der internen Entwickler:innen.',
+      'Review bestehender Lösungen inklusive Code-Reviews, Pairing-Sessions und Enablement der internen Entwickler:innen.',
   },
 ];

@@ -40,6 +40,8 @@ const { class: className = '' } = Astro.props as Props;
       class="absolute inset-0 grid place-items-center bg-ink-950/30 text-paper transition-opacity duration-300 data-[hidden=true]:pointer-events-none data-[hidden=true]:opacity-0"
       data-play-overlay
       data-hidden="true"
+      tabindex="-1"
+      aria-hidden="true"
       aria-label="Video abspielen"
     >
       <span class="grid h-16 w-16 place-items-center rounded-full bg-lime-500 text-ink-950 shadow-lg">

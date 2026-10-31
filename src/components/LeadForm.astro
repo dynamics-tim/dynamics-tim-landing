@@ -38,6 +38,7 @@ const dark = tone === 'dark';
 const fieldClass = dark ? 'field field-dark' : 'field';
 const labelClass = dark ? 'field-label !text-paper' : 'field-label';
 const mutedClass = dark ? 'text-ink-300' : 'text-ink-500';
+const errorClass = dark ? 'field-error !text-ember-400' : 'field-error';
 const messageRequired = kind !== 'healthcheck';
 const f = (name: string) => `${id}-${name}`;
 ---
@@ -85,7 +86,7 @@ const f = (name: string) => `${id}-${name}`;
           maxlength={LEAD_LIMITS.name}
           aria-describedby={f('name-error')}
         />
-        <p id={f('name-error')} class="field-error" data-error-for="name" hidden></p>
+        <p id={f('name-error')} class={errorClass} data-error-for="name" hidden></p>
       </div>
       <div>
         <label for={f('email')} class={labelClass}>E-Mail <span aria-hidden="true">*</span></label>
@@ -100,7 +101,7 @@ const f = (name: string) => `${id}-${name}`;
           maxlength={LEAD_LIMITS.email}
           aria-describedby={f('email-error')}
         />
-        <p id={f('email-error')} class="field-error" data-error-for="email" hidden></p>
+        <p id={f('email-error')} class={errorClass} data-error-for="email" hidden></p>
       </div>
       <div>
         <label for={f('company')} class={labelClass}>Firma <span class={`font-normal ${mutedClass}`}>(optional)</span></label>
@@ -113,14 +114,14 @@ const f = (name: string) => `${id}-${name}`;
           maxlength={LEAD_LIMITS.company}
           aria-describedby={f('company-error')}
         />
-        <p id={f('company-error')} class="field-error" data-error-for="company" hidden></p>
+        <p id={f('company-error')} class={errorClass} data-error-for="company" hidden></p>
       </div>
       <div>
         <label for={f('role')} class={labelClass}>Rolle <span class={`font-normal ${mutedClass}`}>(optional)</span></label>
         <select id={f('role')} name="role" class={fieldClass} aria-describedby={f('role-error')}>
           {ROLE_OPTIONS.map((option) => <option value={option.value}>{option.label}</option>)}
         </select>
-        <p id={f('role-error')} class="field-error" data-error-for="role" hidden></p>
+        <p id={f('role-error')} class={errorClass} data-error-for="role" hidden></p>
       </div>
     </div>
 
@@ -140,7 +141,7 @@ const f = (name: string) => `${id}-${name}`;
         aria-describedby={f('message-error')}
         data-message
       ></textarea>
-      <p id={f('message-error')} class="field-error" data-error-for="message" hidden></p>
+      <p id={f('message-error')} class={errorClass} data-error-for="message" hidden></p>
     </div>
 
     <!-- Honeypot: invisible for humans, tempting for bots. Never fill programmatically. -->
@@ -163,7 +164,7 @@ const f = (name: string) => `${id}-${name}`;
           Details und Widerruf in der <a href={to('datenschutz')} class={dark ? 'font-semibold text-lime-400 hover:text-paper' : 'link-underline'}>Datenschutzerklärung</a>. <span aria-hidden="true">*</span>
         </span>
       </label>
-      <p id={f('consent-error')} class="field-error" data-error-for="consent" hidden></p>
+      <p id={f('consent-error')} class={errorClass} data-error-for="consent" hidden></p>
     </div>
 
     <div class="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
@@ -178,16 +179,16 @@ const f = (name: string) => `${id}-${name}`;
     </div>
 
     <p class="sr-only" role="status" aria-live="polite" data-status></p>
-    <div class="hidden rounded-2xl border p-5 text-sm" data-fallback role="alert">
+    <div class={`hidden rounded-2xl border p-5 text-sm ${dark ? 'border-ember-400/40 bg-ember-500/10' : 'border-ember-700/25 bg-ember-500/5'}`} data-fallback role="alert">
       <p class={dark ? 'text-paper' : 'text-ink-900'} data-fallback-text></p>
-      <a href={site.contact.mailto} class="btn btn-dark mt-4 !min-h-[2.75rem]" data-fallback-link>
+      <a href={site.contact.mailto} class={`btn mt-4 !min-h-[2.75rem] ${dark ? 'btn-primary' : 'btn-dark'}`} data-fallback-link>
         <Icon name="mail" class="h-4 w-4" />
         E-Mail öffnen
       </a>
     </div>
   </form>
 
-  <div class="hidden" data-success tabindex="-1">
+  <div class="hidden outline-none" data-success tabindex="-1">
     <div class={`rounded-3xl border p-8 ${dark ? 'border-lime-500/30 bg-lime-500/10' : 'border-lime-700/20 bg-lime-50'}`}>
       <span class="grid h-12 w-12 place-items-center rounded-full bg-lime-500 text-ink-950">
         <Icon name="check" class="h-6 w-6" />
@@ -196,6 +197,30 @@ const f = (name: string) => `${id}-${name}`;
       <p class={`mt-2 leading-relaxed ${dark ? 'text-ink-200' : 'text-ink-700'}`} data-success-text>
         Ich melde mich innerhalb von zwei Werktagen persönlich bei dir.
       </p>
+    </div>
+    <div class="mt-8">
+      <p class={`eyebrow ${dark ? 'text-ink-400' : 'text-ink-500'}`}>Wie es weitergeht</p>
+      <ol class="mt-4 space-y-4">
+        {
+          [
+            ['Ich lese deine Angaben persönlich', 'Kein Bot, kein Vertriebsteam. Deine Nachricht landet direkt bei mir.'],
+            ['Antwort innerhalb von zwei Werktagen', 'Mit einer ehrlichen Einschätzung, ob und wie ich helfen kann.'],
+            ['Optional: 30 Minuten sprechen', 'Wenn du nicht warten willst, buch dir direkt einen Termin.'],
+          ].map(([title, text], index) => (
+            <li class="flex gap-4">
+              <span class={`grid h-8 w-8 shrink-0 place-items-center rounded-full font-mono text-sm ${dark ? 'bg-white/10 text-lime-400' : 'bg-ink-950 text-lime-400'}`}>{index + 1}</span>
+              <span>
+                <span class={`block font-semibold ${dark ? 'text-paper' : 'text-ink-950'}`}>{title}</span>
+                <span class={`block text-sm ${dark ? 'text-ink-300' : 'text-ink-600'}`}>{text}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+      <a href={site.contact.bookingUrl} target="_blank" rel="noopener noreferrer" class={`btn mt-8 ${dark ? 'btn-primary' : 'btn-dark'}`}>
+        <Icon name="calendar" class="h-5 w-5" />
+        Termin buchen
+      </a>
     </div>
   </div>
 

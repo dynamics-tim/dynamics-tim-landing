@@ -1,8 +1,8 @@
 /**
  * DOM wiring for components/LeadForm.astro.
  *
- * Flow: prefetch + solve the proof-of-work challenge in the background as soon as the form
- * is near the viewport → validate → POST (text/plain JSON, no cookies, no referrer path) →
+ * Flow: fetch + solve the proof-of-work challenge in the background as soon as the visitor
+ * focuses a field → validate → POST (text/plain JSON, no cookies, no referrer path) →
  * success view. Anything unexpected falls back to a pre-filled e-mail so no lead is lost.
  * User input is only ever written with textContent / form values — never as HTML.
  */
@@ -122,15 +122,8 @@ function initForm(form: HTMLFormElement) {
     return pow;
   };
 
-  const warmUp = new IntersectionObserver(
-    ([entry]) => {
-      if (!entry.isIntersecting) return;
-      warmUp.disconnect();
-      preparePow();
-    },
-    { rootMargin: '400px 0px' }
-  );
-  warmUp.observe(form);
+  // Only fetch the challenge once the visitor starts filling in the form (intent) — no request
+  // to the lead server just because someone scrolled past it (privacy policy relies on this).
   form.addEventListener('focusin', () => preparePow(), { once: true });
 
   // ── Kind switch (contact ⇄ recruiter) ──

@@ -83,7 +83,7 @@
   /* ── Buttons ────────────────────────────────────────── */
 
   .btn {
-    @apply inline-flex min-h-[3rem] items-center justify-center gap-2 whitespace-nowrap rounded-full px-6 py-3 text-[0.95rem] font-semibold tracking-tightish no-underline;
+    @apply inline-flex min-h-[3rem] items-center justify-center gap-2 rounded-full px-6 py-3 text-center sm:whitespace-nowrap text-[0.95rem] font-semibold tracking-tightish no-underline;
     transition:
       transform 240ms var(--ease-out),
       background-color 200ms ease,
@@ -92,8 +92,10 @@
       box-shadow 240ms var(--ease-out);
   }
 
-  .btn:hover {
-    transform: translateY(-1px);
+  @media (hover: hover) {
+    .btn:hover {
+      transform: translateY(-1px);
+    }
   }
 
   .btn:active {
@@ -185,7 +187,7 @@
   }
 
   .field-error {
-    @apply mt-1.5 text-sm font-medium text-ember-600;
+    @apply mt-1.5 text-sm font-medium text-ember-700;
   }
 
   /* ── Legacy components (profile, legal and resource pages) ── */

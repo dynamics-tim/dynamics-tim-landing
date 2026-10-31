@@ -24,13 +24,13 @@ const ctaHref = isHome ? '#health-check' : to('check');
   <div class="mx-auto flex max-w-page items-center justify-between gap-6 px-5 py-3 sm:px-8">
     <a href={base} class="group flex items-center gap-3 text-paper no-underline hover:text-paper" aria-label="Tim Friedrich, zur Startseite">
       <span class="grid h-9 w-9 place-items-center rounded-xl bg-lime-500 font-extrabold tracking-tight text-ink-950 transition-transform duration-300 group-hover:-rotate-6">tf</span>
-      <span class="hidden flex-col leading-tight sm:flex">
+      <span class="hidden flex-col whitespace-nowrap leading-tight sm:flex">
         <span class="text-[0.95rem] font-bold tracking-tight">Tim Friedrich</span>
         <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink-300">Dynamics 365</span>
       </span>
     </a>
 
-    <nav class="hidden items-center gap-8 md:flex" aria-label="Hauptnavigation">
+    <nav class="hidden items-center gap-8 lg:flex" aria-label="Hauptnavigation">
       {
         navItems.map((item) => (
           <a
@@ -51,7 +51,7 @@ const ctaHref = isHome ? '#health-check' : to('check');
       </a>
       <button
         type="button"
-        class="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-paper md:hidden"
+        class="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-paper lg:hidden"
         aria-expanded="false"
         aria-controls="mobile-nav"
         aria-label="Menü öffnen"
@@ -62,7 +62,7 @@ const ctaHref = isHome ? '#health-check' : to('check');
     </div>
   </div>
 
-  <div id="mobile-nav" class="hidden border-t border-white/10 md:hidden" data-mobile-nav>
+  <div id="mobile-nav" class="hidden border-t border-white/10 lg:hidden" data-mobile-nav>
     <nav class="mx-auto flex max-w-page flex-col gap-1 px-5 py-4" aria-label="Mobile Navigation">
       {
         navItems.map((item) => (
@@ -107,7 +107,7 @@ const ctaHref = isHome ? '#health-check' : to('check');
         toggle.focus();
       }
     });
-    window.matchMedia('(min-width: 768px)').addEventListener('change', (event) => {
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (event) => {
       if (event.matches) setOpen(false);
     });
   }

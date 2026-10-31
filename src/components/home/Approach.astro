@@ -11,7 +11,7 @@ import { approachIntro, approachSteps } from '../../data/home';
         approachSteps.map((step, index) => (
           <li class="flex flex-col bg-paper-50 p-8" data-reveal data-reveal-delay={String(index * 70)}>
             <div class="flex items-center justify-between">
-              <span class="display text-5xl text-ink-950/15">{step.phase}</span>
+              <span class="display text-5xl text-ink-950/15" aria-hidden="true">{step.phase}</span>
               <span class="eyebrow text-lime-800">{step.duration}</span>
             </div>
             <h3 class="mt-8 text-2xl font-extrabold tracking-tightish text-ink-950">{step.title}</h3>

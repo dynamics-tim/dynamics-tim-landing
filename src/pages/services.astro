@@ -63,7 +63,7 @@ const serviceListSchema = serviceItemListSchema(
           <article id={model.id} class="panel grid scroll-mt-28 gap-10 p-8 sm:p-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16" data-reveal>
             <div>
               <div class="flex items-center gap-4">
-                <span class="display text-5xl text-ink-950/15">0{index + 1}</span>
+                <span class="display text-5xl text-ink-950/15" aria-hidden="true">0{index + 1}</span>
                 <span class="eyebrow text-lime-800">{model.badge}</span>
               </div>
               <h2 class="section-title mt-6 !text-4xl">{model.title}</h2>
