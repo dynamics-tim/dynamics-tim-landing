@@ -26,29 +26,8 @@ export const site = {
   },
 
   social: {
-    /** Used in the footer */
-    github: 'https://github.com/tecktim',
-    /** Used in the footer */
+    github: 'https://github.com/dynamics-tim',
     linkedin: 'https://www.linkedin.com/in/tim-friedrich-37a166203/',
-    /**
-     * Used on the profile page.
-     * NOTE: differs from `linkedin` above — kept as-is during the refactoring,
-     * consolidate once the correct profile URL is confirmed.
-     */
-    linkedinProfilePage: 'https://www.linkedin.com/in/tim-friedrich-dynamics365/',
-  },
-
-  seo: {
-    /**
-     * `sameAs` links in the Person JSON-LD (SeoHead).
-     * NOTE: these differ from `social` above — kept as-is during the
-     * refactoring, consolidate once the correct URLs are confirmed.
-     */
-    sameAs: [
-      'https://github.com/tim-freelance',
-      'https://www.linkedin.com/in/tim-friedrich',
-      'https://www.youtube.com/@tim-freelance',
-    ],
   },
 } as const;
 

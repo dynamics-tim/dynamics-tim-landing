@@ -7,7 +7,7 @@ const endpoint = 'https://api.pushover.net/1/messages.json';
 if (!token || !user) {
   console.warn('Pushover notifier disabled: missing pushover token or user');
 } else {
-  const title = config.pushoverTitle+"🔥";
+  const title = `${config.pushoverTitle || 'Neuer Besuch'}🔥`;
   
   // Use a global flag to prevent multiple notifications across page navigations
   if (!window.__pushoverNotificationSent) {
@@ -19,19 +19,19 @@ if (!token || !user) {
   const sessionSent = sessionStorage.getItem(sessionKey) === 'true';
 
   const funnyMessages = [
-    "� Jemand hat sich verirrt. Dynamics-Experte gesucht? 🤷‍♂️",
+    "🧭 Jemand hat sich verirrt. Dynamics-Experte gesucht? 🤷‍♂️",
     "🚀 Besucher! Wahrscheinlich vom CV beeindruckt... oder verwirrt 😏",
     "🕵️ Verdächtiger klickt rum. Hoffentlich nicht die Konkurrenz 👀",
     "🎪 Schaulustiger detektiert! Zeit für den Verkaufsmodus? 💸",
-    "� +1 Webseitenbesucher. Noch 999.999 bis zum Durchbruch 📈",
-    "� Website glüht vor Aktivität! (OK, war nur ein Klick) 🌡️",
-    "� Plot Twist: Jemand surft tatsächlich hier rum 🤯",
-    "🚁 Radar meldet: Potenzieller Kunde in Sichtweite! �",
-    "� Treffer! Entweder Interesse oder falscher Tab �",
-    "🎵 Ding! Jemand scrollt durch dein Lebenswerk �",
-    "� Breaking: Mensch besucht Website. Sensation! 📰",
-    "� Achievement: Wieder jemand überzeugt... oder gelangweilt 😴",
-    "🎪 Manege frei! Der nächste Kunde... äh, Besucher! �"
+    "👀 +1 Webseitenbesucher. Noch 999.999 bis zum Durchbruch 📈",
+    "🔥 Website glüht vor Aktivität! (OK, war nur ein Klick) 🌡️",
+    "🎬 Plot Twist: Jemand surft tatsächlich hier rum 🤯",
+    "🚁 Radar meldet: Potenzieller Kunde in Sichtweite! 🎯",
+    "🎯 Treffer! Entweder Interesse oder falscher Tab 🙃",
+    "🎵 Ding! Jemand scrollt durch dein Lebenswerk 🎶",
+    "🚨 Breaking: Mensch besucht Website. Sensation! 📰",
+    "🏆 Achievement: Wieder jemand überzeugt... oder gelangweilt 😴",
+    "🎪 Manege frei! Der nächste Kunde... äh, Besucher! 🎉"
   ];
 
   const sendNotification = () => {
