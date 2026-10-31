@@ -15,6 +15,8 @@ export interface LegalData {
   HOSTING: string;
   PROCESSORS: string[];
   CONTACT_RETENTION_MONTHS: number;
+  /** Where the n8n lead workflow runs (hosting provider and location of n8n.dynamics-tim.dev) */
+  LEAD_HOSTING: string;
 }
 
 const defaultData: LegalData = {
@@ -32,7 +34,9 @@ const defaultData: LegalData = {
     'GoatCounter (Analytics-Dienst) - Betrieb durch Martin Tournoij (Irland); Datenhosting bei Hetzner in Finnland und Deutschland',
     'Microsoft Bookings (nur bei Terminbuchung)'
   ],
-  CONTACT_RETENTION_MONTHS: 6
+  CONTACT_RETENTION_MONTHS: 6,
+  // TODO(Tim): Hosting-Anbieter und Standort der n8n-Instanz ergänzen, z. B. "Hetzner Online GmbH, Rechenzentrum Falkenstein (Deutschland)"
+  LEAD_HOSTING: 'einem von mir selbst betriebenen Server (selbst gehostete n8n-Instanz unter n8n.dynamics-tim.dev)'
 };
 
 function sanitize(raw: Partial<LegalData>): Partial<LegalData> {
@@ -76,6 +80,10 @@ function sanitize(raw: Partial<LegalData>): Partial<LegalData> {
 
   if (Array.isArray(raw.PROCESSORS)) {
     sanitized.PROCESSORS = raw.PROCESSORS.map((processor) => String(processor).trim()).filter((processor) => processor.length > 0);
+  }
+
+  if (typeof raw.LEAD_HOSTING === 'string' && raw.LEAD_HOSTING.trim().length > 0) {
+    sanitized.LEAD_HOSTING = raw.LEAD_HOSTING.trim();
   }
 
   if (typeof raw.CONTACT_RETENTION_MONTHS === 'number' && Number.isFinite(raw.CONTACT_RETENTION_MONTHS)) {

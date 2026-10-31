@@ -37,16 +37,16 @@ src/
     Icon.astro  Inline SVG icon set — use instead of pasting <svg> markup
   content/      MDX content collections: timeline/, projects/, certs/
   data/         ALL copy & configuration (site.ts, home.ts, services.ts, profile.ts,
-                engagement-models.ts, engagement-quiz.ts, legal-data.ts)
+                engagement-models.ts, health-check.ts, legal-data.ts)
   layouts/      BaseLayout.astro (head, CSP, fonts, global scripts)
-  lib/          Pure, DOM-free logic (engagement-quiz.ts — unit tested)
+  lib/          Pure, DOM-free logic (health-check.ts scoring, lead.ts validation/PoW — unit tested)
   pages/        Astro pages (SSG routes, trailingSlash: always)
-  scripts/      Client-side TS modules (animations, quiz DOM wiring, storage keys)
+  scripts/      Client-side TS modules (animations, health-check + lead-form wiring, pitch video)
   styles/       global.css — .card, .section-title, .nav-link CSS utilities
   utils/        url.ts (to/asset/base), csp.ts, structured-data.ts, collections.ts
-public/         Static assets served as-is (reveal.js, consent.js, pushover-notifier.js)
-scripts/        generate-og.mjs, generate-favicons.mjs (run on npm install)
-tests/          Playwright: quiz E2E smoke test + quiz logic table test
+public/         Static assets served as-is (reveal.js, consent.js, media/pitch.mp4)
+scripts/        generate-og.mjs (copies scripts/assets/og-image.png), generate-favicons.mjs (run on npm install)
+tests/          Playwright: health-check + lead logic tables, E2E flows (n8n mocked via tests/fixtures.ts), page smoke tests
 ```
 
 **Key patterns:**
@@ -61,11 +61,12 @@ tests/          Playwright: quiz E2E smoke test + quiz logic table test
 
 ## Key Integrations
 
-- **GitHub Pages** — deployed via `.github/workflows/deploy.yml` on main push, only after the Playwright tests (`quiz-smoke.yml`, called as reusable workflow) pass
-- **Pushover** — optional visitor notifications via env vars (`PUBLIC_PUSHOVER_TOKEN`, `PUBLIC_PUSHOVER_USER`, `PUBLIC_PUSHOVER_TITLE`, `PUBLIC_PUSHOVER_MESSAGE`). When set, the Pushover API is added to the CSP and notification scripts are loaded.
+- **GitHub Pages** — deployed via `.github/workflows/deploy.yml` on main push, only after lint + Playwright tests (`e2e.yml`, called as reusable workflow) pass
+- **Lead endpoint (n8n)** — `site.leadApi` (`PUBLIC_LEAD_API`, default `https://n8n.dynamics-tim.dev/webhook/dt-lead`): `GET /challenge` (proof-of-work) and `POST /submit` (text/plain JSON). Workflow "Website-Leads · dynamics-tim.dev" validates with a whitelist that MIRRORS `src/lib/lead.ts` and the ids in `src/data/health-check.ts` — change both sides together. Never put secrets/tokens in `PUBLIC_*` variables: they ship to every visitor.
 - **Cal.com** — booking widget integration
 - **CSP** — built by `buildCsp()` in `src/utils/csp.ts`; add new external origins there
-- **Engagement quiz** — copy & scoring in `src/data/engagement-quiz.ts`, logic in `src/lib/engagement-quiz.ts` (pinned by `tests/engagement-quiz-logic.spec.ts`), DOM wiring in `src/scripts/engagement-quiz.ts`. Title/badge/tagline/case study come from `engagement-models.ts`
+- **Health-Check (lead magnet)** — copy & points in `src/data/health-check.ts`, scoring in `src/lib/health-check.ts` (pinned by `tests/health-check-logic.spec.ts`), DOM wiring in `src/scripts/health-check.ts`; answers (no PII) persist in sessionStorage via `src/scripts/health-store.ts`
+- **Lead forms** — `src/components/LeadForm.astro` + `src/scripts/lead-form.ts`; render user input only via `textContent`/form values, never `innerHTML`; failures fall back to a pre-filled `mailto:`
 
 ## Content Collections (`src/content/`)
 
@@ -79,8 +80,8 @@ Tags and skills arrays use consistent casing across entries (e.g., `"Dynamics 36
 
 ## Styling System
 
-- **Colors:** `brand` (blue) · `accent` (teal) · `surface` (grays) · `signal` (gold/amber) — always use Tailwind theme tokens, never raw color values
-- **Fonts:** `font-sans` = Inter · `font-heading` = Sora — both loaded as WOFF2 with `font-display: swap`
+- **Colors:** `ink` (near-black) · `lime` (signal) · `paper` (surfaces) · `ember` (problem accents); legacy `brand`/`accent`/`surface`/`signal`/`slate` are remapped onto them — always use theme tokens, never raw color values
+- **Fonts:** Inter variable (100–900) for body and headings, loaded as WOFF2 with `font-display: swap`; `font-mono` = system monospace
 - **Elevation:** `shadow-soft` only — do not invent new shadows
 - **CSS utilities:** `.card` (with `.card--on-dark`, `.card--resume`, `.card--compact` variants) · `.section-title` · `.nav-link`
 - All animations MUST have `prefers-reduced-motion: reduce` overrides
@@ -91,7 +92,7 @@ Tags and skills arrays use consistent casing across entries (e.g., `"Dynamics 36
 ```bash
 npm run lint        # must pass with 0 warnings
 npm run build
-npm run test:e2e    # Playwright: quiz smoke tests + quiz logic table
+npm run test:e2e    # Playwright: logic tables + E2E flows
 ```
 
 ## Common Pitfalls

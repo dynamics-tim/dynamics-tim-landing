@@ -1,0 +1,47 @@
+---
+import Icon from '../Icon.astro';
+import LeadForm from '../LeadForm.astro';
+import { contactIntro } from '../../data/home';
+import { site } from '../../data/site';
+import { asset } from '../../utils/url';
+
+interface Props {
+  /** Heading level: h1 on /contact/, h2 on the home page */
+  as?: 'h1' | 'h2';
+}
+
+const { as: Heading = 'h2' } = Astro.props as Props;
+---
+
+<section id="kontakt" class="ink-surface relative overflow-hidden py-24 sm:py-32" aria-labelledby="contact-title">
+  <div class="grid-lines pointer-events-none absolute inset-0 opacity-50" aria-hidden="true"></div>
+  <div class="relative mx-auto grid max-w-page gap-14 px-5 sm:px-8 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-20">
+    <div>
+      <p class="eyebrow text-lime-400" data-reveal>{contactIntro.eyebrow}</p>
+      <Heading id="contact-title" class="section-title mt-4 !text-paper" data-reveal data-reveal-delay="40">{contactIntro.title}</Heading>
+      <p class="mt-5 text-lg leading-relaxed text-ink-300" data-reveal data-reveal-delay="80">{contactIntro.text}</p>
+
+      <div class="panel-dark mt-10 p-6 sm:p-8" data-reveal data-reveal-delay="120">
+        <div class="flex items-center gap-4">
+          <img src={asset('images/tim-portrait.jpg')} alt="Tim Friedrich" width="64" height="64" class="h-16 w-16 rounded-full object-cover ring-2 ring-lime-500/60" loading="lazy" decoding="async" />
+          <div>
+            <p class="font-bold text-paper">{contactIntro.bookingTitle}</p>
+            <p class="flex items-center gap-2 text-sm text-ink-300"><span class="status-dot" aria-hidden="true"></span>Kapazität ab {site.availability.label}</p>
+          </div>
+        </div>
+        <p class="mt-5 text-sm leading-relaxed text-ink-300">{contactIntro.bookingText}</p>
+        <a href={site.contact.bookingUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary mt-6 w-full sm:w-auto">
+          <Icon name="calendar" class="h-5 w-5" />
+          30-Minuten-Termin buchen
+        </a>
+        <p class="mt-5 text-sm text-ink-400">
+          Oder per E-Mail: <a href={site.contact.mailto} class="font-semibold text-paper no-underline hover:text-lime-400">{site.contact.email}</a>
+        </p>
+      </div>
+    </div>
+
+    <div class="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 sm:p-10" data-reveal data-reveal-delay="100">
+      <LeadForm id="contact-lead" kind="contact" allowKindSwitch tone="dark" />
+    </div>
+  </div>
+</section>

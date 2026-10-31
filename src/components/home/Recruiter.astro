@@ -1,0 +1,34 @@
+---
+import Icon from '../Icon.astro';
+import { recruiter } from '../../data/home';
+import { to } from '../../utils/url';
+---
+
+<section id="recruiter" class="bg-paper pb-24 sm:pb-32" aria-labelledby="recruiter-title">
+  <div class="mx-auto max-w-page px-5 sm:px-8">
+    <div class="grid gap-10 rounded-[2rem] border border-ink-950/10 bg-white p-8 text-ink-950 sm:p-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-16">
+      <div>
+        <p class="eyebrow text-lime-800" data-reveal>{recruiter.eyebrow}</p>
+        <h2 id="recruiter-title" class="section-title mt-4" data-reveal data-reveal-delay="40">{recruiter.title}</h2>
+        <p class="mt-5 leading-relaxed text-ink-600" data-reveal data-reveal-delay="80">{recruiter.text}</p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row" data-reveal data-reveal-delay="120">
+          <a href="#kontakt" class="btn btn-dark" data-lead-kind="recruiter">
+            {recruiter.primaryCta}
+            <Icon name="arrow-right" class="btn-arrow h-4 w-4" />
+          </a>
+          <a href={to('profile')} class="btn btn-ghost">{recruiter.secondaryCta}</a>
+        </div>
+      </div>
+      <dl class="divide-y divide-ink-950/10 border-y border-ink-950/10">
+        {
+          recruiter.facts.map((fact, index) => (
+            <div class="grid gap-1 py-4 sm:grid-cols-[9rem_1fr] sm:gap-6" data-reveal data-reveal-delay={String(index * 50)}>
+              <dt class="eyebrow pt-1 text-ink-500">{fact.label}</dt>
+              <dd class="font-semibold text-ink-950">{fact.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,24 @@
+---
+import SectionHeader from '../SectionHeader.astro';
+import { approachIntro, approachSteps } from '../../data/home';
+---
+
+<section class="bg-paper py-24 sm:py-32" aria-labelledby="approach-title">
+  <div class="mx-auto max-w-page px-5 sm:px-8">
+    <SectionHeader id="approach-title" eyebrow={approachIntro.eyebrow} title={approachIntro.title} />
+    <ol class="mt-14 grid gap-px overflow-hidden rounded-3xl border border-ink-950/10 bg-ink-950/10 md:grid-cols-2 lg:grid-cols-4">
+      {
+        approachSteps.map((step, index) => (
+          <li class="flex flex-col bg-paper-50 p-8" data-reveal data-reveal-delay={String(index * 70)}>
+            <div class="flex items-center justify-between">
+              <span class="display text-5xl text-ink-950/15">{step.phase}</span>
+              <span class="eyebrow text-lime-800">{step.duration}</span>
+            </div>
+            <h3 class="mt-8 text-2xl font-extrabold tracking-tightish text-ink-950">{step.title}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-ink-600">{step.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

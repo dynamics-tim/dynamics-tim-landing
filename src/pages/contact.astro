@@ -1,55 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site } from '../data/site';
+import Contact from '../components/home/Contact.astro';
 ---
 
 <BaseLayout
   title="Kontakt"
-  description="Nimm Kontakt zu Tim Friedrich auf – Dynamics 365 Freelancer für Power Platform Engineering, Azure Integrationen & DevOps."
+  description="Projektanfrage oder Recruiter-Anfrage an Tim Friedrich, Dynamics 365 Freelancer. Antwort innerhalb von zwei Werktagen oder direkt einen 30-Minuten-Termin buchen."
   breadcrumbs={[
     { name: 'Startseite', url: '/' },
-    { name: 'Kontakt', url: '/contact/' }
+    { name: 'Kontakt', url: '/contact/' },
   ]}
 >
-  <section class="bg-surface-100 py-24 animate-on-scroll">
-    <div class="mx-auto max-w-3xl px-6 text-center">
-      <h1 class="section-title">Gemeinsam Dynamics 365 beschleunigen</h1>
-      <p class="mt-6 text-lg text-slate-600">
-        Teile dein Vorhaben oder buche direkt ein kostenloses Erstgespräch. Innerhalb von 48 Stunden erhältst du klare Vorschläge, wie wir Prozesse, Apps und Integrationen auf das nächste Level heben.
-      </p>
-      <div class="mt-10 flex flex-col gap-4">
-        <a
-          href={site.contact.mailto}
-          class="rounded-2xl bg-brand-500 px-6 py-3 text-base font-semibold text-white shadow-soft transition hover:bg-brand-400 hover:text-white focus-visible:text-white"
-        >
-          {site.contact.email}
-        </a>
-        <a
-          href={site.contact.bookingUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="rounded-2xl border border-brand-200/60 bg-white px-6 py-3 text-base font-semibold text-brand-600 transition hover:border-brand-300 hover:bg-surface-100"
-        >
-          Termin buchen (Outlook)
-        </a>
-      </div>
-      <div class="mt-12 grid gap-6 text-left sm:grid-cols-2 lg:grid-cols-3">
-        <div class="card">
-          <h2 class="text-xl font-semibold text-slate-900">Embedded Engineering</h2>
-          <p class="mt-2 text-sm text-slate-600">
-            Hands-on Power Platform Development im Team: C# Plugins, PCF Controls und DevOps-ready Delivery.
-          </p>
-        </div>
-        <div class="card">
-          <h2 class="text-xl font-semibold text-slate-900">Architecture Review</h2>
-          <p class="mt-2 text-sm text-slate-600">
-            Health Check für bestehende Dynamics 365 Lösungen mit Code-Quality-Analyse und priorisierten Optimierungen.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <Contact as="h1" />
 </BaseLayout>
-
-
-

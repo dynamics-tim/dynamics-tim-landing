@@ -1,18 +1,56 @@
 ---
-/** Standard section heading: `.section-title` h2 plus optional lead paragraph. */
+/**
+ * Standard section heading: mono eyebrow, `.section-title` h2 and optional lead paragraph.
+ * Use `tone="dark"` on ink sections.
+ */
 interface Props {
   title: string;
   subtitle?: string;
+  eyebrow?: string;
+  tone?: 'light' | 'dark';
+  align?: 'left' | 'center';
+  /** id for the h2 — reference it with aria-labelledby on the section */
+  id?: string;
   /** Adds scroll-reveal attributes (default: true) */
   reveal?: boolean;
+  class?: string;
 }
 
-const { title, subtitle, reveal = true } = Astro.props as Props;
+const {
+  title,
+  subtitle,
+  eyebrow,
+  tone = 'light',
+  align = 'left',
+  id,
+  reveal = true,
+  class: className = '',
+} = Astro.props as Props;
+
 const revealAttrs = (delay: number) =>
   reveal ? { 'data-reveal': '', 'data-reveal-delay': String(delay) } : {};
+
+const toneClasses = {
+  light: { eyebrow: 'text-lime-800', title: 'text-ink-950', subtitle: 'text-ink-600' },
+  dark: { eyebrow: 'text-lime-400', title: 'text-paper', subtitle: 'text-ink-300' },
+}[tone];
+const alignClass = align === 'center' ? 'mx-auto text-center' : '';
 ---
 
-<div class="mb-10 max-w-3xl space-y-4">
-  <h2 class="section-title" {...revealAttrs(0)}>{title}</h2>
-  {subtitle && <p class="text-lg text-slate-600" {...revealAttrs(80)}>{subtitle}</p>}
+<div class={`max-w-3xl space-y-4 ${alignClass} ${className}`}>
+  {
+    eyebrow && (
+      <p class={`eyebrow ${toneClasses.eyebrow}`} {...revealAttrs(0)}>
+        {eyebrow}
+      </p>
+    )
+  }
+  <h2 id={id} class={`section-title ${toneClasses.title}`} {...revealAttrs(40)}>{title}</h2>
+  {
+    subtitle && (
+      <p class={`text-lg leading-relaxed ${toneClasses.subtitle}`} {...revealAttrs(80)}>
+        {subtitle}
+      </p>
+    )
+  }
 </div>

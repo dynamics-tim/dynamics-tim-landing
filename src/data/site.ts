@@ -29,7 +29,25 @@ export const site = {
     github: 'https://github.com/dynamics-tim',
     linkedin: 'https://www.linkedin.com/in/tim-friedrich-37a166203/',
   },
+
+  /** Home base shown in hero, recruiter facts and footer */
+  location: 'Oberschwaben · Remote DACH',
+
+  /**
+   * Lead endpoint base (n8n workflow "Website-Leads · dynamics-tim.dev").
+   * `GET {leadApi}/challenge` issues a proof-of-work challenge, `POST {leadApi}/submit`
+   * accepts a lead. The URL is public by design — security lives server-side (see
+   * src/lib/lead.ts). Override with PUBLIC_LEAD_API, set it to "off" to disable the form.
+   */
+  // `import.meta.env` is undefined when this module runs outside Vite (Playwright unit tests)
+  leadApi: resolveLeadApi(import.meta.env?.PUBLIC_LEAD_API),
 } as const;
+
+function resolveLeadApi(value: string | undefined): string | null {
+  if (value === 'off') return null;
+  const url = value?.trim() || 'https://n8n.dynamics-tim.dev/webhook/dt-lead';
+  return /^https:\/\/[^\s/]+\/\S+$/.test(url) ? url.replace(/\/$/, '') : null;
+}
 
 /** Build a `mailto:` link with a pre-filled subject and (optional) body. */
 export function mailtoWith(subject: string, body?: string): string {

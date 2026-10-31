@@ -1,0 +1,192 @@
+---
+/**
+ * "Freitag, 17:58" — the pain story from the pitch video, plus an animated release pipeline
+ * that turns green when scrolled into view. Without JS (or with reduced motion) the
+ * pipeline renders in its final, all-green state.
+ */
+import Icon from '../Icon.astro';
+import { outcomes, story } from '../../data/home';
+---
+
+<section class="bg-paper py-24 sm:py-32" aria-labelledby="story-title">
+  <div class="mx-auto max-w-page px-5 sm:px-8">
+    <div class="grid gap-16 lg:grid-cols-2 lg:gap-20">
+      <div>
+        <p class="eyebrow flex items-center gap-2 text-ember-600" data-reveal>
+          <span class="h-1.5 w-1.5 rounded-full bg-ember-500" aria-hidden="true"></span>
+          {story.eyebrow}
+        </p>
+        <p class="display mt-6 text-[5.5rem] text-ink-950 sm:text-[7.5rem]" aria-hidden="true" data-reveal data-reveal-delay="40">
+          17:58
+        </p>
+        <h2 id="story-title" class="section-title mt-6" data-reveal data-reveal-delay="80">{story.title}</h2>
+        <p class="mt-5 max-w-xl text-lg leading-relaxed text-ink-600" data-reveal data-reveal-delay="120">{story.intro}</p>
+        <ul class="mt-8 space-y-4">
+          {
+            story.pains.map((pain, index) => (
+              <li class="flex gap-3 text-ink-800" data-reveal data-reveal-delay={String(140 + index * 40)}>
+                <span class="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-ember-500/10 text-ember-600">
+                  <Icon name="close" class="h-3.5 w-3.5" />
+                </span>
+                <span>{pain}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <div class="lg:pt-10" data-reveal data-reveal-delay="120">
+        <div class="ink-surface rounded-[2rem] p-7 text-lime-400 sm:p-10" data-pipeline>
+          <div class="flex items-center justify-between font-mono text-[0.65rem] uppercase tracking-[0.18em]">
+            <span class="text-lime-400">Azure DevOps</span>
+            <span class="text-ink-400">Release · Freitag 17:58</span>
+          </div>
+          <p class="mt-6 text-lg font-semibold text-paper">{story.pipelineTitle}</p>
+
+          <ol class="mt-8 space-y-0">
+            {
+              story.pipeline.map((step, index) => (
+                <li class="pipeline-step relative flex gap-4 pb-7 last:pb-0" data-step data-state="done">
+                  {index < story.pipeline.length - 1 && (
+                    <span class="pipeline-line absolute left-[0.9rem] top-8 h-[calc(100%-2rem)] w-px" aria-hidden="true" />
+                  )}
+                  <span class="pipeline-dot relative grid h-7 w-7 shrink-0 place-items-center rounded-full border" aria-hidden="true">
+                    <Icon name="check" class="pipeline-check h-4 w-4" />
+                  </span>
+                  <span>
+                    <span class="pipeline-title block text-xl font-bold tracking-tight">{step.title}</span>
+                    <span class="pipeline-detail block font-mono text-xs">{step.detail}</span>
+                  </span>
+                </li>
+              ))
+            }
+          </ol>
+
+          <div class="pipeline-done mt-10 flex items-baseline gap-4 border-t border-white/10 pt-8" data-pipeline-done>
+            <span class="display text-6xl text-lime-400 sm:text-7xl">{story.done.time}</span>
+            <span class="text-lg font-semibold text-paper">{story.done.text}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-24 grid gap-px overflow-hidden rounded-3xl border border-ink-950/10 bg-ink-950/10 md:grid-cols-3">
+      {
+        outcomes.map((outcome, index) => (
+          <article class="bg-paper-50 p-8 sm:p-10" data-reveal data-reveal-delay={String(index * 80)}>
+            <p class="font-mono text-sm text-lime-800">{outcome.kicker}</p>
+            <h3 class="mt-4 text-2xl font-extrabold tracking-tightish text-ink-950">{outcome.title}</h3>
+            <p class="mt-3 leading-relaxed text-ink-600">{outcome.text}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .pipeline-step .pipeline-dot {
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      color 300ms ease;
+  }
+  .pipeline-step[data-state='pending'] .pipeline-dot {
+    border-color: rgba(244, 245, 240, 0.25);
+    color: transparent;
+  }
+  .pipeline-step[data-state='pending'] .pipeline-title {
+    color: rgba(244, 245, 240, 0.35);
+  }
+  .pipeline-step[data-state='pending'] .pipeline-detail {
+    color: rgba(244, 245, 240, 0.25);
+  }
+  .pipeline-step[data-state='running'] .pipeline-dot {
+    border-color: theme('colors.lime.500');
+    color: transparent;
+    animation: pipeline-pulse 900ms ease-in-out infinite;
+  }
+  .pipeline-step[data-state='running'] .pipeline-title {
+    color: theme('colors.paper.DEFAULT');
+  }
+  .pipeline-step[data-state='running'] .pipeline-detail {
+    color: theme('colors.ink.300');
+  }
+  .pipeline-step[data-state='done'] .pipeline-dot {
+    background: theme('colors.lime.500');
+    border-color: theme('colors.lime.500');
+    color: theme('colors.ink.950');
+  }
+  .pipeline-step[data-state='done'] .pipeline-title {
+    color: theme('colors.paper.DEFAULT');
+  }
+  .pipeline-step[data-state='done'] .pipeline-detail {
+    color: theme('colors.lime.300');
+  }
+  .pipeline-line {
+    background: rgba(244, 245, 240, 0.15);
+  }
+  .pipeline-step[data-state='done'] .pipeline-line {
+    background: theme('colors.lime.500');
+  }
+  .pipeline-done {
+    transition:
+      opacity 500ms ease,
+      transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .pipeline-done[data-hidden='true'] {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  @keyframes pipeline-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(185, 236, 46, 0.45);
+    }
+    50% {
+      box-shadow: 0 0 0 8px rgba(185, 236, 46, 0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pipeline-step .pipeline-dot,
+    .pipeline-done {
+      transition: none;
+    }
+    .pipeline-step[data-state='running'] .pipeline-dot {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const STEP_MS = 650;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-pipeline]').forEach((pipeline) => {
+    if (reduceMotion) return; // keep the server-rendered final state
+    const steps = Array.from(pipeline.querySelectorAll<HTMLElement>('[data-step]'));
+    const done = pipeline.querySelector<HTMLElement>('[data-pipeline-done]');
+    steps.forEach((step) => (step.dataset.state = 'pending'));
+    if (done) done.dataset.hidden = 'true';
+
+    const run = () => {
+      steps.forEach((step, index) => {
+        window.setTimeout(() => (step.dataset.state = 'running'), index * STEP_MS);
+        window.setTimeout(() => (step.dataset.state = 'done'), index * STEP_MS + STEP_MS * 0.85);
+      });
+      window.setTimeout(() => {
+        if (done) done.dataset.hidden = 'false';
+      }, steps.length * STEP_MS + 150);
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        observer.disconnect();
+        run();
+      },
+      { threshold: 0.45 }
+    );
+    observer.observe(pipeline);
+  });
+</script>

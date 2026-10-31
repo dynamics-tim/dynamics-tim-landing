@@ -1,95 +1,88 @@
 ---
-import AvailabilityNote from './AvailabilityNote.astro';
 import Icon from './Icon.astro';
-import { heroProofPoints, heroSkills } from '../data/home';
+import PitchVideo from './PitchVideo.astro';
+import { clientLine, hero, heroStats } from '../data/home';
 import { site } from '../data/site';
-import { asset, to } from '../utils/url';
+import { asset } from '../utils/url';
 ---
 
-<section class="hero-ambient relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-accent-700 py-24 sm:py-28 lg:py-32 text-white">
-  <div class="ambient-glow pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(77,162,242,0.4),_transparent_65%)] mix-blend-screen" aria-hidden="true"></div>
-  <div class="ambient-gradient pointer-events-none absolute inset-0 blur-3xl" aria-hidden="true"></div>
-  <div class="ambient-grid pointer-events-none absolute inset-0" aria-hidden="true"></div>
-  <div class="floating-orb pointer-events-none absolute -right-24 top-20 h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle,_rgba(28,186,205,0.42),_transparent_70%)] blur-3xl mix-blend-screen" aria-hidden="true"></div>
-  <div class="floating-orb floating-orb--delay pointer-events-none absolute -left-32 bottom-6 h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle,_rgba(77,162,242,0.38),_transparent_65%)] blur-3xl mix-blend-screen" aria-hidden="true"></div>
-  <div class="relative mx-auto max-w-4xl px-6">
-    <div class="space-y-6">
-      <div class="flex items-center gap-6 flex-wrap">
-        <a 
-          href={to('profile')}
-          class="relative group cursor-pointer" 
-          data-reveal 
-          data-reveal-delay="0"
-          aria-label="Zum Profil von Tim Friedrich"
-        >
-          <div class="absolute -inset-1 rounded-full bg-gradient-to-br from-signal-400 via-accent-300 to-signal-500 opacity-75 blur-md animate-pulse group-hover:opacity-100 transition-opacity"></div>
-          <img 
-            src={asset('images/tim-portrait.jpg')}
-            alt="Tim Friedrich - Dynamics 365 Developer & Technical Consultant"
-            class="relative h-24 w-24 rounded-full object-cover ring-4 ring-white/20 shadow-xl group-hover:ring-white/40 transition-all duration-300 group-hover:scale-105"
-            width="96"
-            height="96"
-            loading="eager"
-          />
-        </a>
-        <div class="hero-badge badge-shimmer inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-sm font-medium text-white/90 shadow-soft backdrop-blur-md ring-1 ring-white/10" data-reveal data-reveal-delay="0">
-          Dynamics 365 · Power Platform · Azure
+<section class="ink-surface relative overflow-hidden" aria-labelledby="hero-title">
+  <div class="grid-lines pointer-events-none absolute inset-0" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-page px-5 pb-16 pt-12 sm:px-8 sm:pt-16 lg:pb-20 lg:pt-16">
+    <div class="grid items-center gap-14 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)] lg:gap-16">
+      <div>
+        <div class="flex flex-wrap items-center gap-3" data-reveal data-reveal-delay="0">
+          <span class="eyebrow text-ink-300">{hero.eyebrow}</span>
+          <span class="inline-flex items-center gap-2 rounded-full border border-lime-500/30 bg-lime-500/10 px-3 py-1 text-xs font-semibold text-lime-300">
+            <span class="status-dot" aria-hidden="true"></span>
+            Verfügbar ab {site.availability.label}
+          </span>
         </div>
-      </div>
-      <p class="text-sm font-semibold uppercase tracking-widest text-white/60" data-reveal data-reveal-delay="60">Dynamics 365 Developer &amp; Technical Consultant</p>
-      <h1 class="font-heading text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl" data-reveal data-reveal-delay="80">
-        <span class="hero-highlight-gradient">Dein CRM bremst dein Team aus?</span><br />
-        Ich mache Dynamics 365 zu dem System,<span class="hero-highlight-underline"> das Vertrieb und Service tatsächlich nutzen wollen.</span>
-      </h1>
-      <p class="max-w-2xl text-lg leading-relaxed text-brand-50/90 sm:text-xl" data-reveal data-reveal-delay="140">
-        20+ Dynamics 365 Projekte in Service &amp; Sales — von Mittelstand bis Enterprise. Ich kenne die Stolperfallen, bevor sie auftauchen, und liefere skalierbare Plattformen, die dein Team wirklich nutzt.
-      </p>
-      <div class="space-y-3" data-reveal data-reveal-delay="200">
-        <div class="flex flex-wrap items-center gap-4">
+
+        <h1 id="hero-title" class="display mt-6 text-[3.1rem] text-paper sm:text-7xl lg:text-[4.6rem] xl:text-[5.4rem]" data-reveal data-reveal-delay="60">
+          {hero.headline.lead}
+          <span class="block text-lime-400">{hero.headline.highlight}</span>
+        </h1>
+
+        <div class="mt-7 flex max-w-2xl items-start gap-4" data-reveal data-reveal-delay="120">
+          <img
+            src={asset('images/tim-portrait.jpg')}
+            alt=""
+            width="56"
+            height="56"
+            class="mt-1 hidden h-14 w-14 shrink-0 rounded-full object-cover ring-2 ring-lime-500/60 sm:block"
+            loading="eager"
+            decoding="async"
+          />
+          <p class="text-lg leading-relaxed text-ink-200 sm:text-xl">{hero.intro}</p>
+        </div>
+
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center" data-reveal data-reveal-delay="180">
+          <a href="#health-check" class="btn btn-primary !min-h-[3.5rem] !px-7 !text-base" data-cta="hero-healthcheck">
+            {hero.primaryCta}
+            <Icon name="arrow-right" class="btn-arrow h-5 w-5" />
+          </a>
           <a
             href={site.contact.bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="cta-glow hero-cta group inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-signal-400 via-signal-300 to-signal-500 px-7 py-3 text-base font-semibold text-brand-900 shadow-[0_24px_56px_-18px_rgba(255,185,0,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_76px_-20px_rgba(255,185,0,0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
+            class="btn btn-ghost-dark !min-h-[3.5rem] !px-7 !text-base"
+            data-cta="hero-booking"
           >
-            <span>30-Min Slot buchen →</span>
-          </a>
-          <a
-            href={to('services')}
-            class="cta-outline hero-cta-outline inline-flex items-center justify-center rounded-2xl border border-white/35 bg-white/0 px-7 py-3 text-base font-semibold text-white/90 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
-          >
-            <span>Dynamics 365 Services entdecken</span>
-          </a>
-          <a
-            href={to('#engagement-quiz')}
-            data-quiz-cta="hero"
-            class="hero-cta inline-flex items-center justify-center rounded-2xl border border-signal-300/70 bg-signal-400/10 px-7 py-3 text-base font-semibold text-signal-100 backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-signal-200 hover:bg-signal-400/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal-200 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
-          >
-            <span>In 60 Sekunden herausfinden</span>
+            <Icon name="calendar" class="h-5 w-5" />
+            {hero.secondaryCta}
           </a>
         </div>
-        <AvailabilityNote class="text-xs text-white/40 flex items-center gap-1.5" />
-        <p class="text-sm text-white/60">Oder per Mail: <a href={site.contact.mailto} class="underline text-white/80 hover:text-white transition-colors">{site.contact.email}</a></p>
-        <div class="flex flex-wrap items-center gap-3 text-sm text-white/50" data-reveal data-reveal-delay="220">
-          {heroProofPoints.map((point) => (
-            <span class="flex items-center gap-1.5"><span class="inline-block h-1.5 w-1.5 rounded-full bg-signal-400"></span>{point}</span>
-          ))}
-        </div>
+        <p class="mt-3 font-mono text-[0.7rem] uppercase tracking-[0.16em] text-ink-400" data-reveal data-reveal-delay="200">
+          {hero.primaryNote}
+        </p>
+        <a href="#recruiter" class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-ink-300 no-underline hover:text-lime-400" data-reveal data-reveal-delay="220">
+          {hero.recruiterLink}
+          <Icon name="arrow-right" class="h-4 w-4" />
+        </a>
       </div>
-      <ul class="mt-8 grid gap-3 text-base text-white/90 sm:grid-cols-3 hero-skills-list" data-reveal data-reveal-delay="260">
-        {heroSkills.map((item, index) => (
-          <li
-            class="hero-skill-card flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 px-3 py-2 shadow-soft backdrop-blur-sm transition-all duration-300"
-            style={`--skill-index: ${index}`}
-          >
-            <span class="hero-skill-icon flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-signal-400 transition-all duration-300">
-              <Icon name="check" class="h-4 w-4" />
-            </span>
-            <span class="hero-skill-text transition-all duration-300">{item}</span>
-          </li>
-        ))}
-      </ul>
+
+      <div class="mx-auto w-full max-w-[22rem] lg:max-w-none" data-reveal data-reveal-delay="160">
+        <PitchVideo />
+      </div>
+    </div>
+
+    <div class="mt-16 border-t border-white/10 pt-8">
+      <dl class="grid grid-cols-2 gap-y-8 sm:grid-cols-4">
+        {
+          heroStats.map((stat) => (
+            <div class="flex flex-col sm:border-l sm:border-white/10 sm:pl-6 sm:first:border-l-0 sm:first:pl-0">
+              <dt class="eyebrow order-2 mt-2 text-ink-400">{stat.label}</dt>
+              <dd class="display order-1 text-4xl text-paper sm:text-5xl" data-counter>{stat.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-ink-400">
+        <span class="eyebrow">{clientLine.label}</span>
+        {clientLine.names.map((name) => <span class="font-semibold text-ink-200">{name}</span>)}
+      </p>
     </div>
   </div>
 </section>
-

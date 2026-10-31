@@ -1,0 +1,251 @@
+---
+/**
+ * Lead form posting to the n8n lead endpoint (see src/lib/lead.ts for the security model).
+ *
+ * - `kind="healthcheck"`: attaches the visitor's health-check answers (recomputed client-side)
+ * - `kind="contact"` with `allowKindSwitch`: visitor picks "Projekt" or "Recruiter/Agentur"
+ *
+ * Without JS the form posts nowhere: the noscript hint offers e-mail instead.
+ * When the endpoint is unreachable the script falls back to a pre-filled e-mail.
+ */
+import Icon from './Icon.astro';
+import { LEAD_LIMITS, ROLE_OPTIONS, type LeadKind } from '../lib/lead';
+import { site } from '../data/site';
+import { to } from '../utils/url';
+
+interface Props {
+  /** Unique per page — prefixes all element ids */
+  id: string;
+  kind: LeadKind;
+  allowKindSwitch?: boolean;
+  tone?: 'light' | 'dark';
+  submitLabel?: string;
+  messageLabel?: string;
+  messagePlaceholder?: string;
+}
+
+const {
+  id,
+  kind,
+  allowKindSwitch = false,
+  tone = 'light',
+  submitLabel = 'Anfrage senden',
+  messageLabel = 'Worum geht es?',
+  messagePlaceholder = 'Kurz die Ausgangslage: Was läuft, was hakt, was ist das Ziel?',
+} = Astro.props as Props;
+
+const dark = tone === 'dark';
+const fieldClass = dark ? 'field field-dark' : 'field';
+const labelClass = dark ? 'field-label !text-paper' : 'field-label';
+const mutedClass = dark ? 'text-ink-300' : 'text-ink-500';
+const messageRequired = kind !== 'healthcheck';
+const f = (name: string) => `${id}-${name}`;
+---
+
+<div class="lead-form-root" data-lead-root>
+  <form
+    id={id}
+    class="space-y-5"
+    novalidate
+    data-lead-form
+    data-kind={kind}
+    data-endpoint={site.leadApi ?? ''}
+    data-mail={site.contact.email}
+    aria-describedby={f('privacy')}
+  >
+    {
+      allowKindSwitch && (
+        <fieldset>
+          <legend class={labelClass}>Ich bin …</legend>
+          <div class="mt-1 grid grid-cols-2 gap-2" role="radiogroup">
+            <label class="kind-option">
+              <input type="radio" name="kind" value="contact" checked class="peer sr-only" data-kind-radio />
+              <span class={`kind-chip ${dark ? 'kind-chip--dark' : ''}`}>Unternehmen mit Projekt</span>
+            </label>
+            <label class="kind-option">
+              <input type="radio" name="kind" value="recruiter" class="peer sr-only" data-kind-radio />
+              <span class={`kind-chip ${dark ? 'kind-chip--dark' : ''}`}>Recruiter / Agentur</span>
+            </label>
+          </div>
+        </fieldset>
+      )
+    }
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label for={f('name')} class={labelClass}>Name <span aria-hidden="true">*</span></label>
+        <input
+          id={f('name')}
+          name="name"
+          type="text"
+          class={fieldClass}
+          autocomplete="name"
+          required
+          minlength="2"
+          maxlength={LEAD_LIMITS.name}
+          aria-describedby={f('name-error')}
+        />
+        <p id={f('name-error')} class="field-error" data-error-for="name" hidden></p>
+      </div>
+      <div>
+        <label for={f('email')} class={labelClass}>E-Mail <span aria-hidden="true">*</span></label>
+        <input
+          id={f('email')}
+          name="email"
+          type="email"
+          inputmode="email"
+          class={fieldClass}
+          autocomplete="email"
+          required
+          maxlength={LEAD_LIMITS.email}
+          aria-describedby={f('email-error')}
+        />
+        <p id={f('email-error')} class="field-error" data-error-for="email" hidden></p>
+      </div>
+      <div>
+        <label for={f('company')} class={labelClass}>Firma <span class={`font-normal ${mutedClass}`}>(optional)</span></label>
+        <input
+          id={f('company')}
+          name="company"
+          type="text"
+          class={fieldClass}
+          autocomplete="organization"
+          maxlength={LEAD_LIMITS.company}
+          aria-describedby={f('company-error')}
+        />
+        <p id={f('company-error')} class="field-error" data-error-for="company" hidden></p>
+      </div>
+      <div>
+        <label for={f('role')} class={labelClass}>Rolle <span class={`font-normal ${mutedClass}`}>(optional)</span></label>
+        <select id={f('role')} name="role" class={fieldClass} aria-describedby={f('role-error')}>
+          {ROLE_OPTIONS.map((option) => <option value={option.value}>{option.label}</option>)}
+        </select>
+        <p id={f('role-error')} class="field-error" data-error-for="role" hidden></p>
+      </div>
+    </div>
+
+    <div>
+      <label for={f('message')} class={labelClass}>
+        <span data-message-label>{messageLabel}</span>
+        {messageRequired ? <span aria-hidden="true"> *</span> : <span class={`font-normal ${mutedClass}`}> (optional)</span>}
+      </label>
+      <textarea
+        id={f('message')}
+        name="message"
+        rows="4"
+        class={`${fieldClass} resize-y`}
+        maxlength={LEAD_LIMITS.message}
+        placeholder={messagePlaceholder}
+        required={messageRequired}
+        aria-describedby={f('message-error')}
+        data-message
+      ></textarea>
+      <p id={f('message-error')} class="field-error" data-error-for="message" hidden></p>
+    </div>
+
+    <!-- Honeypot: invisible for humans, tempting for bots. Never fill programmatically. -->
+    <div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+      <label for={f('website')}>Website (bitte leer lassen)</label>
+      <input id={f('website')} name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div>
+      <label class={`flex cursor-pointer items-start gap-3 text-sm leading-relaxed ${dark ? 'text-ink-200' : 'text-ink-700'}`}>
+        <input
+          type="checkbox"
+          name="consent"
+          class="mt-0.5 h-5 w-5 shrink-0 rounded border-ink-300 text-lime-700 focus:ring-lime-500"
+          required
+          aria-describedby={f('consent-error')}
+        />
+        <span>
+          Ich bin einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage gespeichert werden.
+          Details und Widerruf in der <a href={to('datenschutz')} class={dark ? 'font-semibold text-lime-400 hover:text-paper' : 'link-underline'}>Datenschutzerklärung</a>. <span aria-hidden="true">*</span>
+        </span>
+      </label>
+      <p id={f('consent-error')} class="field-error" data-error-for="consent" hidden></p>
+    </div>
+
+    <div class="flex flex-col gap-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
+      <button type="submit" class="btn btn-primary !min-h-[3.25rem] !px-7" data-submit>
+        <span data-submit-label>{submitLabel}</span>
+        <Icon name="arrow-right" class="btn-arrow h-5 w-5" />
+      </button>
+      <p id={f('privacy')} class={`flex items-center gap-2 text-xs ${mutedClass}`}>
+        <Icon name="shield" class="h-4 w-4 shrink-0" />
+        Verschlüsselt übertragen · kein Newsletter · keine Weitergabe
+      </p>
+    </div>
+
+    <p class="sr-only" role="status" aria-live="polite" data-status></p>
+    <div class="hidden rounded-2xl border p-5 text-sm" data-fallback role="alert">
+      <p class={dark ? 'text-paper' : 'text-ink-900'} data-fallback-text></p>
+      <a href={site.contact.mailto} class="btn btn-dark mt-4 !min-h-[2.75rem]" data-fallback-link>
+        <Icon name="mail" class="h-4 w-4" />
+        E-Mail öffnen
+      </a>
+    </div>
+  </form>
+
+  <div class="hidden" data-success tabindex="-1">
+    <div class={`rounded-3xl border p-8 ${dark ? 'border-lime-500/30 bg-lime-500/10' : 'border-lime-700/20 bg-lime-50'}`}>
+      <span class="grid h-12 w-12 place-items-center rounded-full bg-lime-500 text-ink-950">
+        <Icon name="check" class="h-6 w-6" />
+      </span>
+      <p class={`mt-5 text-2xl font-extrabold tracking-tightish ${dark ? 'text-paper' : 'text-ink-950'}`}>Danke, ist angekommen.</p>
+      <p class={`mt-2 leading-relaxed ${dark ? 'text-ink-200' : 'text-ink-700'}`} data-success-text>
+        Ich melde mich innerhalb von zwei Werktagen persönlich bei dir.
+      </p>
+    </div>
+  </div>
+
+  <noscript>
+    <p class={`mt-4 text-sm ${mutedClass}`}>
+      Das Formular benötigt JavaScript. Schreib mir alternativ direkt an
+      <a href={site.contact.mailto}>{site.contact.email}</a>.
+    </p>
+  </noscript>
+</div>
+
+<style>
+  .kind-chip {
+    display: flex;
+    min-height: 3rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    border: 1px solid rgb(7 9 6 / 0.15);
+    padding: 0.5rem 0.75rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: theme('colors.ink.700');
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+  .kind-chip--dark {
+    border-color: rgb(255 255 255 / 0.15);
+    color: theme('colors.ink.200');
+  }
+  .peer:checked + .kind-chip {
+    border-color: theme('colors.ink.950');
+    background: theme('colors.ink.950');
+    color: theme('colors.paper.DEFAULT');
+  }
+  .peer:checked + .kind-chip--dark {
+    border-color: theme('colors.lime.500');
+    background: theme('colors.lime.500');
+    color: theme('colors.ink.950');
+  }
+  .peer:focus-visible + .kind-chip {
+    outline: 2px solid theme('colors.lime.600');
+    outline-offset: 3px;
+  }
+</style>
+
+<script>
+  import '../scripts/lead-form';
+</script>

@@ -1,73 +1,164 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ServicesGrid from '../components/ServicesGrid.astro';
-import { collaborationFormats, coreServices } from '../data/services';
+import Icon from '../components/Icon.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import { engagementModels } from '../data/engagement-models';
+import { collaborationFormats, coreServices, servicesHero } from '../data/services';
 import { site } from '../data/site';
+import { to } from '../utils/url';
 import { getPageUrls, serviceItemListSchema } from '../utils/structured-data';
 
 const { canonicalUrl, personId } = getPageUrls(Astro.site, Astro.url);
 
 const serviceListSchema = serviceItemListSchema(
   'Dynamics 365 Leistungen & Consulting',
-  coreServices.map((service) => ({
-    name: service.title,
-    description: service.description,
-    url: new URL(`#${service.id ?? ''}`, canonicalUrl).toString(),
-  })),
+  [
+    ...engagementModels.map((model) => ({
+      name: model.title,
+      description: model.description,
+      url: new URL(`#${model.id}`, canonicalUrl).toString(),
+    })),
+    ...coreServices.map((service) => ({
+      name: service.title,
+      description: service.description,
+      url: new URL(`#${service.id ?? ''}`, canonicalUrl).toString(),
+    })),
+  ],
   personId
 );
 ---
 
 <BaseLayout
   title="Leistungen"
-  description="Dynamics 365 Leistungen für Prozessdesign, Power Platform Engineering, Azure Integrationen und DevOps Enablement."
+  description="Dynamics 365 Leistungen: Audit & Strategie, Embedded Developer im Sprint oder Full Package von Analyse bis Enablement. Plugins, PCF, Power Automate, Azure-Integration, ALM und Tests."
   breadcrumbs={[
     { name: 'Startseite', url: '/' },
-    { name: 'Leistungen', url: '/services/' }
+    { name: 'Leistungen', url: '/services/' },
   ]}
 >
-  <section class="bg-surface-100 py-20 animate-on-scroll">
-    <div class="mx-auto max-w-5xl px-6 text-center">
-      <h1 class="section-title">Leistungen im Überblick</h1>
-      <p class="mt-6 text-lg text-slate-600">
-        Ich verstärke dein Dynamics 365 Team als Professional/Senior Developer und Technical Consultant. Embedded im Team, mit Fokus auf Plugins, Scripts, CI/CD Optimization, Requirements Engineering, und Wissenstransfer.
-      </p>
+  <section class="ink-surface relative overflow-hidden" aria-labelledby="services-hero-title">
+    <div class="grid-lines pointer-events-none absolute inset-0" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-page px-5 pb-20 pt-16 sm:px-8 sm:pt-24">
+      <p class="eyebrow text-lime-400" data-reveal>{servicesHero.eyebrow}</p>
+      <h1 id="services-hero-title" class="display mt-5 max-w-4xl text-5xl text-paper sm:text-7xl" data-reveal data-reveal-delay="40">
+        {servicesHero.title}
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-300" data-reveal data-reveal-delay="80">{servicesHero.text}</p>
+      <nav class="mt-10 flex flex-wrap gap-3" aria-label="Engagement-Modelle" data-reveal data-reveal-delay="120">
+        {
+          engagementModels.map((model) => (
+            <a href={`#${model.id}`} class="btn btn-ghost-dark !min-h-[2.5rem] !py-2 !text-sm">
+              {model.title}
+            </a>
+          ))
+        }
+      </nav>
     </div>
   </section>
 
-  <ServicesGrid
-    heading="Kernkompetenzen"
-    subheading="Strategie, Umsetzung und Betrieb – abgestimmt auf Dynamics 365 Sales & Service."
-    items={coreServices}
-  />
+  <section class="bg-paper py-24 sm:py-28" aria-label="Engagement-Modelle">
+    <div class="mx-auto max-w-page space-y-6 px-5 sm:px-8">
+      {
+        engagementModels.map((model, index) => (
+          <article id={model.id} class="panel grid scroll-mt-28 gap-10 p-8 sm:p-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-16" data-reveal>
+            <div>
+              <div class="flex items-center gap-4">
+                <span class="display text-5xl text-ink-950/15">0{index + 1}</span>
+                <span class="eyebrow text-lime-800">{model.badge}</span>
+              </div>
+              <h2 class="section-title mt-6 !text-4xl">{model.title}</h2>
+              <p class="mt-3 text-lg font-semibold text-ink-700">{model.tagline}</p>
+              <p class="mt-4 leading-relaxed text-ink-600">{model.description}</p>
+              <ul class="mt-6 space-y-2.5">
+                {model.features.map((feature) => (
+                  <li class="flex gap-3 text-ink-800">
+                    <Icon name="check" class="mt-1 h-4 w-4 shrink-0 text-lime-700" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <a href={to('contact')} class="btn btn-dark mt-8">
+                {model.cta}
+                <Icon name="arrow-right" class="btn-arrow h-4 w-4" />
+              </a>
+            </div>
+            <div class="flex flex-col gap-6">
+              <div class="rounded-2xl bg-paper p-6">
+                <p class="eyebrow text-ink-500">Typische Themen</p>
+                <ul class="mt-4 space-y-3 text-sm leading-relaxed text-ink-700">
+                  {model.details.map((detail) => (
+                    <li class="flex gap-3">
+                      <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-lime-600" aria-hidden="true" />
+                      {detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div class="ink-surface rounded-2xl p-6">
+                <p class="eyebrow text-lime-400">Beispielprojekt · {model.caseStudy.industry}</p>
+                <p class="mt-3 leading-relaxed text-ink-200">{model.caseStudy.text}</p>
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
 
-  <section class="bg-gradient-to-br from-brand-900 via-brand-800 to-accent-600 py-20 text-white animate-on-scroll">
-    <div class="mx-auto max-w-6xl px-6">
-      <h2 class="section-title text-white">Zusammenarbeitsmodelle</h2>
-      <div class="mt-10 grid gap-6 md:grid-cols-3">
-        {collaborationFormats.map((format) => (
-          <div class="card card--on-dark text-left">
-            <h3 class="text-xl font-semibold text-white">{format.title}</h3>
-            <p class="mt-3 text-sm text-slate-200">{format.description}</p>
-          </div>
-        ))}
+  <section class="border-y border-ink-950/10 bg-paper-50 py-24 sm:py-28" aria-labelledby="core-title">
+    <div class="mx-auto max-w-page px-5 sm:px-8">
+      <SectionHeader id="core-title" eyebrow="Kernkompetenzen" title="Was ich technisch mitbringe" subtitle="Strategie, Umsetzung und Betrieb für Dynamics 365 Sales & Service." />
+      <div class="mt-14 grid gap-px overflow-hidden rounded-3xl border border-ink-950/10 bg-ink-950/10 md:grid-cols-2 lg:grid-cols-3">
+        {
+          coreServices.map((service, index) => (
+            <article id={service.id} class="scroll-mt-28 bg-white p-8" data-reveal data-reveal-delay={String((index % 3) * 60)}>
+              <p class="font-mono text-sm text-lime-800">{String(index + 1).padStart(2, '0')}</p>
+              <h3 class="mt-4 text-xl font-extrabold tracking-tightish text-ink-950">{service.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-ink-600">{service.description}</p>
+            </article>
+          ))
+        }
+        <article class="flex flex-col justify-between bg-ink-950 p-8 text-paper">
+          <p class="text-xl font-extrabold tracking-tightish">Nicht sicher, was ihr braucht?</p>
+          <a href={to('check')} class="btn btn-primary mt-6 self-start">
+            Health-Check starten
+            <Icon name="arrow-right" class="btn-arrow h-4 w-4" />
+          </a>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="bg-surface-50 py-20 animate-scale-up">
-    <div class="mx-auto max-w-5xl px-6 text-center">
-      <h2 class="text-3xl font-semibold text-slate-900 sm:text-4xl">Lass uns sprechen</h2>
-      <p class="mt-4 text-lg text-slate-600">
-        Schicke mir deine Anforderungen oder buche direkt einen Termin. Ich melde mich innerhalb von 48 Stunden mit konkreten Vorschlägen zum Vorgehen.
-      </p>
-      <a
-        href={site.contact.mailto}
-        class="mt-8 inline-flex items-center rounded-2xl bg-brand-500 px-6 py-3 text-base font-semibold text-white shadow-soft transition hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200"
-      >
-        Kostenloses Erstgespräch vereinbaren
-      </a>
+  <section class="bg-paper py-24 sm:py-28" aria-labelledby="formats-title">
+    <div class="mx-auto max-w-page px-5 sm:px-8">
+      <SectionHeader id="formats-title" eyebrow="Formate" title="Kleine Einstiege" />
+      <div class="mt-12 grid gap-5 md:grid-cols-3">
+        {
+          collaborationFormats.map((format) => (
+            <article class="panel p-8" data-reveal>
+              <h3 class="text-xl font-extrabold tracking-tightish text-ink-950">{format.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-ink-600">{format.description}</p>
+            </article>
+          ))
+        }
+      </div>
     </div>
   </section>
+
+  <section class="ink-surface py-24" aria-labelledby="services-cta-title">
+    <div class="mx-auto flex max-w-page flex-col items-start justify-between gap-8 px-5 sm:px-8 lg:flex-row lg:items-center">
+      <h2 id="services-cta-title" class="display max-w-2xl text-4xl text-paper sm:text-5xl">
+        Lass uns schauen, <span class="text-lime-400">wo es bei euch hakt.</span>
+      </h2>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <a href={site.contact.bookingUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+          <Icon name="calendar" class="h-5 w-5" />
+          Erstgespräch buchen
+        </a>
+        <a href={to('contact')} class="btn btn-ghost-dark">Anfrage schreiben</a>
+      </div>
+    </div>
+  </section>
+
   <script type="application/ld+json" set:html={JSON.stringify(serviceListSchema)} />
 </BaseLayout>

@@ -7,9 +7,11 @@ applyTo: "**/*.css, tailwind.config.js, postcss.config.js"
 # Styling Conventions
 
 ## Design System
-- Color palette: `brand` (blue), `accent` (teal), `surface` (light grays), `signal` (gold/amber)
-- Fonts: `font-sans` = Inter, `font-heading` = Sora — both loaded as WOFF2 with `font-display: swap`
-- Elevation: use `shadow-soft` (`0 18px 48px rgba(0, 39, 76, 0.12)`) — do not invent new shadows
+- Identity follows the pitch video: near-black `ink` (50–950), signal `lime` (300–500 on dark, 700–800 as text on light), warm `paper` surfaces, `ember` red only for "problem" accents
+- Legacy tokens `brand`, `accent`, `surface`, `signal` and `slate` are remapped onto this system (keeps profile/legal pages consistent) — prefer the new names in new code
+- Fonts: Inter variable (wght 100–900) for everything (`font-sans` = `font-heading`); `font-mono` = system monospace for `.eyebrow` labels
+- Components in `global.css`: `.btn` + `.btn-primary|-dark|-ghost|-ghost-dark`, `.panel`, `.panel-dark`, `.ink-surface`, `.grid-lines`, `.field`, `.eyebrow`, `.display`, `.section-title`
+- Elevation: prefer hairline borders (`border-ink-950/10`); `shadow-soft` only where depth is needed
 
 ## Tailwind Plugins
 - `@tailwindcss/forms` — resets form element styles; use it for consistent input/select/textarea styling
@@ -19,7 +21,7 @@ applyTo: "**/*.css, tailwind.config.js, postcss.config.js"
 - Use `@apply` sparingly — only in `@layer components` for shared patterns (`.card`, `.section-title`)
 - Prefer utility classes directly in Astro templates over custom CSS
 - Card component uses CSS custom properties for variants (`--card-bg`, `--card-lift`, etc.)
-- Available card variants: `.card--on-dark`, `.card--resume`, `.card--compact`
+- Available card variants: `.card--on-dark`, `.card--resume`, `.card--compact` (legacy, used by profile components)
 
 ## Animations
 - All animations MUST have a `prefers-reduced-motion: reduce` override that disables them

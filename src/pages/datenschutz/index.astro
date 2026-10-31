@@ -10,7 +10,8 @@ const {
   PROCESSORS,
   CONTACT_RETENTION_MONTHS,
   DPO,
-  HOSTING
+  HOSTING,
+  LEAD_HOSTING
 } = legalData;
 
 const processorList = Array.isArray(PROCESSORS) ? PROCESSORS : [];
@@ -63,6 +64,30 @@ const processorList = Array.isArray(PROCESSORS) ? PROCESSORS : [];
           Die Daten werden grundsätzlich nach Ablauf von {CONTACT_RETENTION_MONTHS} Monaten gelöscht, sofern keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
         </p>
 
+        <h3>Kontakt- und Auswertungsformular</h3>
+        <p>
+          Wenn Sie eines der Formulare auf dieser Website absenden (Projektanfrage, Recruiter-Anfrage oder Anforderung einer persönlichen Health-Check-Auswertung), verarbeite ich die von Ihnen eingegebenen Daten: Name, E-Mail-Adresse, optional Firma, Rolle und Nachricht, bei der Health-Check-Auswertung zusätzlich Ihre Antworten und das berechnete Ergebnis. Außerdem werden der Zeitpunkt, die Seite, von der aus Sie das Formular gesendet haben, und die Version dieser Datenschutzhinweise gespeichert.
+        </p>
+        <p>
+          Die Übertragung erfolgt verschlüsselt (HTTPS) an eine Automatisierungsplattform (n8n) auf {LEAD_HOSTING}. Dort werden die Angaben geprüft und in einer Datenbanktabelle gespeichert. Ich erhalte eine Benachrichtigung über den Messenger-Dienst Telegram, die <strong>keine</strong> personenbezogenen Daten enthält (nur Art der Anfrage und ggf. den Health-Check-Score). Eine automatische E-Mail an Ihre Adresse wird nicht versendet; ich antworte Ihnen persönlich.
+        </p>
+        <p>
+          Zum Schutz vor Spam und Missbrauch löst Ihr Browser vor dem Absenden eine kleine Rechenaufgabe (Proof-of-Work), es wird ein unsichtbares Prüffeld ausgewertet und die Anzahl der Anfragen begrenzt. Hierfür wird Ihre IP-Adresse ausschließlich flüchtig in Form eines täglich wechselnden, gekürzten Hash-Werts für maximal eine Stunde verwendet und nicht im Klartext gespeichert. Es werden keine Cookies gesetzt und keine Dienste Dritter (z. B. reCAPTCHA) eingebunden.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Anbahnung eines Vertrags auf Ihre Anfrage hin) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der sicheren und missbrauchsfreien Bereitstellung der Formulare). Die Angaben werden automatisch nach {CONTACT_RETENTION_MONTHS} Monaten gelöscht, sofern daraus kein Vertragsverhältnis entsteht oder gesetzliche Aufbewahrungspflichten entgegenstehen. Sie können jederzeit Auskunft oder Löschung per E-Mail an <a href={`mailto:${EMAIL}`}>{EMAIL}</a> verlangen.
+        </p>
+
+        <h3>Dynamics 365 Health-Check</h3>
+        <p>
+          Der Health-Check wird vollständig in Ihrem Browser berechnet. Ihre Antworten werden für die Dauer der Browsersitzung im Sitzungsspeicher (sessionStorage) Ihres Endgeräts abgelegt, damit das Ergebnis beim Neuladen der Seite erhalten bleibt. Diese Speicherung ist für die von Ihnen ausdrücklich gewünschte Funktion unbedingt erforderlich (§ 25 Abs. 2 Nr. 2 TDDDG) und endet mit dem Schließen des Tabs. An mich übermittelt werden die Antworten nur, wenn Sie aktiv eine persönliche Auswertung über das Formular anfordern (siehe oben).
+        </p>
+
+        <h3>Pitch-Video</h3>
+        <p>
+          Das Video auf der Startseite wird direkt von dieser Website ausgeliefert (kein YouTube, Vimeo o. Ä.). Es werden dabei keine zusätzlichen Daten an Dritte übermittelt.
+        </p>
+
         <h3>Terminbuchung über Microsoft Bookings</h3>
         <p>
           Verlinkungen auf Microsoft Bookings führen zu einer externen Website (outlook.office.com). Erst wenn Sie dort aktiv einen Termin buchen, werden personenbezogene Daten (Name, Kontaktdaten, Meeting-Inhalte) durch Microsoft im Auftrag verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Bitte beachten Sie die Datenschutzhinweise von Microsoft.
@@ -93,7 +118,7 @@ const processorList = Array.isArray(PROCESSORS) ? PROCESSORS : [];
 
         <h2>Pflicht zur Bereitstellung</h2>
         <p>
-          Die Bereitstellung personenbezogener Daten ist für den rein informatorischen Besuch der Website nicht erforderlich. Für die Kontaktaufnahme per E-Mail sind jedoch mindestens Kontaktdaten notwendig, um auf Ihr Anliegen reagieren zu können.
+          Die Bereitstellung personenbezogener Daten ist für den rein informatorischen Besuch der Website nicht erforderlich. Für die Kontaktaufnahme per E-Mail oder Formular sind jedoch mindestens Name und E-Mail-Adresse notwendig, um auf Ihr Anliegen reagieren zu können.
         </p>
 
         <h2>Betroffenenrechte</h2>

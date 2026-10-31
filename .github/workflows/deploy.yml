@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   tests:
-    uses: ./.github/workflows/quiz-smoke.yml
+    uses: ./.github/workflows/e2e.yml
 
   build:
     needs: tests
@@ -43,10 +43,8 @@ jobs:
         run: npm run build
         env:
           PUBLIC_BASE_URL: ${{ steps.pages.outputs.base_url }}
-          PUBLIC_PUSHOVER_TOKEN: ${{ secrets.PUBLIC_PUSHOVER_TOKEN }}
-          PUBLIC_PUSHOVER_USER: ${{ secrets.PUBLIC_PUSHOVER_USER }}
-          PUBLIC_PUSHOVER_TITLE: ${{ secrets.PUBLIC_PUSHOVER_TITLE }}
-          PUBLIC_PUSHOVER_MESSAGE: ${{ secrets.PUBLIC_PUSHOVER_MESSAGE }}
+          # Optional override of the n8n lead endpoint (default in src/data/site.ts)
+          PUBLIC_LEAD_API: ${{ vars.PUBLIC_LEAD_API }}
           PUBLIC_GOATCOUNTER_URL: ${{ vars.PUBLIC_GOATCOUNTER_URL }}
 
       - name: Upload production artifacts

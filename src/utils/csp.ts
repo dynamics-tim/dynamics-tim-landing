@@ -4,19 +4,19 @@
  * Add new external origins here (and only here) when integrating a service.
  */
 export interface CspOptions {
-  /** Pushover visit notifications enabled (PUBLIC_PUSHOVER_TOKEN/USER set) */
-  pushover?: boolean;
   /** Origin of the GoatCounter endpoint, if analytics is configured */
   goatcounterOrigin?: string | null;
+  /** Origin of the n8n lead endpoint (site.leadApi), if the forms are enabled */
+  leadOrigin?: string | null;
 }
 
-export function buildCsp({ pushover = false, goatcounterOrigin = null }: CspOptions = {}): string {
+export function buildCsp({ goatcounterOrigin = null, leadOrigin = null }: CspOptions = {}): string {
   const scriptSources = ["'self'", "'unsafe-inline'"];
   const imgSources = ["'self'", 'data:'];
   const connectSources = ["'self'"];
 
-  if (pushover) {
-    connectSources.push('https://api.pushover.net');
+  if (leadOrigin) {
+    connectSources.push(leadOrigin);
   }
 
   if (goatcounterOrigin) {
@@ -32,9 +32,11 @@ export function buildCsp({ pushover = false, goatcounterOrigin = null }: CspOpti
     `img-src ${imgSources.join(' ')}`,
     "font-src 'self'",
     `connect-src ${connectSources.join(' ')}`,
+    "media-src 'self'",
     "frame-src 'self'",
+    "object-src 'none'",
     "base-uri 'self'",
-    "form-action 'self'",
+    "form-action 'self' mailto:",
   ].join('; ');
 }
 

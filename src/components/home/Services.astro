@@ -1,0 +1,56 @@
+---
+import Icon from '../Icon.astro';
+import SectionHeader from '../SectionHeader.astro';
+import { engagementModels } from '../../data/engagement-models';
+import { servicesIntro } from '../../data/home';
+import { to } from '../../utils/url';
+---
+
+<section class="bg-paper py-24 sm:py-32" aria-labelledby="services-title">
+  <div class="mx-auto max-w-page px-5 sm:px-8">
+    <div class="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+      <SectionHeader id="services-title" eyebrow={servicesIntro.eyebrow} title={servicesIntro.title} subtitle={servicesIntro.text} />
+      <a href={to('services')} class="btn btn-ghost shrink-0" data-reveal>
+        Alle Leistungen
+        <Icon name="arrow-right" class="btn-arrow h-4 w-4" />
+      </a>
+    </div>
+
+    <div class="mt-14 grid gap-5 lg:grid-cols-3">
+      {
+        engagementModels.map((model, index) => {
+          const featured = model.id === 'embedded';
+          return (
+            <article
+              class:list={[
+                'flex flex-col rounded-3xl border p-8 transition-transform duration-500 hover:-translate-y-1 motion-reduce:transition-none motion-reduce:hover:translate-y-0',
+                featured ? 'border-ink-950 bg-ink-950 text-paper' : 'border-ink-950/10 bg-white',
+              ]}
+              data-reveal
+              data-reveal-delay={String(index * 80)}
+            >
+              <p class:list={['eyebrow', featured ? 'text-lime-400' : 'text-lime-800']}>{model.badge}</p>
+              <h3 class:list={['mt-5 text-2xl font-extrabold tracking-tightish', featured ? 'text-paper' : 'text-ink-950']}>{model.title}</h3>
+              <p class:list={['mt-2 font-medium', featured ? 'text-lime-300' : 'text-ink-700']}>{model.tagline}</p>
+              <p class:list={['mt-4 leading-relaxed', featured ? 'text-ink-300' : 'text-ink-600']}>{model.description}</p>
+              <ul class="mt-6 space-y-2.5">
+                {model.features.map((feature) => (
+                  <li class:list={['flex gap-3 text-sm', featured ? 'text-ink-200' : 'text-ink-700']}>
+                    <Icon name="check" class:list={['mt-0.5 h-4 w-4 shrink-0', featured ? 'text-lime-400' : 'text-lime-700']} />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <div class="mt-auto pt-8">
+                <a href={to(`services#${model.id}`)} class:list={['inline-flex items-center gap-2 text-sm font-semibold no-underline', featured ? 'text-lime-400 hover:text-paper' : 'text-ink-950 hover:text-lime-800']}>
+                  Details & Beispielprojekt
+                  <Icon name="arrow-right" class="h-4 w-4" />
+                </a>
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

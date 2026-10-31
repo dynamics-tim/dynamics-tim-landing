@@ -1,6 +1,13 @@
 /**
  * Content of the services page (`src/pages/services.astro`).
+ * The three engagement models come from `engagement-models.ts`.
  */
+
+export const servicesHero = {
+  eyebrow: 'Leistungen',
+  title: 'Senior-Know-how für Dynamics 365, genau da, wo es fehlt.',
+  text: 'Ich verstärke Dynamics-365-Teams als Developer und Technical Consultant: Plugins, PCF, Power Automate, Azure-Integrationen, ALM und Tests. Drei Modelle, je nachdem, wo ihr gerade steht.',
+};
 
 export interface ServiceItem {
   title: string;

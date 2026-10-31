@@ -1,43 +1,79 @@
 ---
 import { site } from '../data/site';
-import { to } from '../utils/url';
+import { base, to } from '../utils/url';
 
 const currentYear = new Date().getFullYear();
-const legalLinks = [
-  { href: to('impressum'), label: 'Impressum' },
-  { href: to('datenschutz'), label: 'Datenschutz' },
+
+const columns = [
+  {
+    title: 'Seiten',
+    links: [
+      { href: base, label: 'Start' },
+      { href: to('services'), label: 'Leistungen' },
+      { href: to('check'), label: 'Health-Check' },
+      { href: to('profile'), label: 'Profil' },
+      { href: to('contact'), label: 'Kontakt' },
+    ],
+  },
+  {
+    title: 'Ressourcen',
+    links: [
+      { href: to('resources/power-platform-alm-checklist'), label: 'Power Platform ALM-Checkliste' },
+      { href: site.social.linkedin, label: 'LinkedIn', external: true },
+      { href: site.social.github, label: 'GitHub', external: true },
+    ],
+  },
 ];
 ---
 
-<footer class="footer-ambient bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 py-12 text-white" data-reveal data-reveal-delay="120">
-  <div class="mx-auto flex max-w-6xl flex-col gap-8 px-6 md:flex-row md:justify-between">
-    <div class="max-w-lg">
-      <p class="text-lg font-semibold text-white/90">Tim Friedrich - Dynamics 365 Freelancer</p>
-      <p class="mt-2 text-sm text-white/70">
-        Dynamics 365 Sales &amp; Service, Azure Integration und Power Platform - umgesetzt mit Microsoft Best Practices.
-      </p>
-    </div>
-    <div class="flex flex-col gap-4 text-sm font-medium text-white/80 md:text-right">
-      <div class="flex flex-wrap items-center gap-4 md:justify-end">
-        <a href={site.contact.mailto} class="hover:text-white">{site.contact.email}</a>
-        <a href={site.social.github} class="hover:text-white">GitHub</a>
-        <a href={site.social.linkedin} class="hover:text-white">LinkedIn</a>
+<footer class="ink-surface border-t border-white/10">
+  <div class="mx-auto max-w-page px-5 pb-10 pt-16 sm:px-8">
+    <div class="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
+      <div class="max-w-md">
+        <p class="display text-4xl text-paper sm:text-5xl">
+          Dein CRM verdient<br /><span class="text-lime-400">bessere Releases.</span>
+        </p>
+        <p class="mt-6 flex items-center gap-2 text-sm text-ink-300">
+          <span class="status-dot" aria-hidden="true"></span>
+          Nächste freie Kapazität: {site.availability.label}
+        </p>
+        <a href={site.contact.mailto} class="mt-3 inline-block text-lg font-semibold text-paper no-underline hover:text-lime-400">
+          {site.contact.email}
+        </a>
       </div>
-      <div class="flex flex-wrap items-center gap-4 md:justify-end">
-        {legalLinks.map((link) => (
-          <a class="hover:text-white" href={link.href} data-astro-prefetch>{link.label}</a>
-        ))}
-        <button
-          type="button"
-          class="rounded px-2 py-1 text-left text-sm text-white/80 underline-offset-2 hover:text-white hover:underline"
-          data-consent-manage
-        >
-          Einwilligung widerrufen
+      {
+        columns.map((column) => (
+          <div>
+            <p class="eyebrow text-ink-400">{column.title}</p>
+            <ul class="mt-4 space-y-3">
+              {column.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="text-sm text-ink-200 no-underline hover:text-paper"
+                    {...('external' in link && link.external
+                      ? { target: '_blank', rel: 'noopener noreferrer' }
+                      : {})}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-16 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-ink-400 sm:flex-row sm:items-center sm:justify-between">
+      <p class="font-mono uppercase tracking-[0.14em]">© {currentYear} Tim Friedrich · {site.location}</p>
+      <div class="flex flex-wrap items-center gap-5">
+        <a class="text-ink-300 no-underline hover:text-paper" href={to('impressum')}>Impressum</a>
+        <a class="text-ink-300 no-underline hover:text-paper" href={to('datenschutz')}>Datenschutz</a>
+        <button type="button" class="text-ink-300 hover:text-paper" data-consent-manage>
+          Cookie-Einstellungen
         </button>
       </div>
     </div>
-  </div>
-  <div class="mt-8 text-center text-xs text-white/60">
-    &copy; {currentYear} Tim Friedrich. Alle Rechte vorbehalten.
   </div>
 </footer>

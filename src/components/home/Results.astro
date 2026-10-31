@@ -1,0 +1,57 @@
+---
+import SectionHeader from '../SectionHeader.astro';
+import { caseResults, resultsIntro, testimonials } from '../../data/home';
+
+const [lead, ...others] = testimonials;
+---
+
+<section class="border-y border-ink-950/10 bg-paper-50 py-24 sm:py-32" aria-labelledby="results-title">
+  <div class="mx-auto max-w-page px-5 sm:px-8">
+    <SectionHeader id="results-title" eyebrow={resultsIntro.eyebrow} title={resultsIntro.title} />
+
+    <div class="mt-14 grid gap-5 md:grid-cols-3">
+      {
+        caseResults.map((item, index) => (
+          <article class="panel flex flex-col p-8" data-reveal data-reveal-delay={String(index * 80)}>
+            <p class="display text-4xl text-ink-950 sm:text-5xl">{item.metric}</p>
+            <h3 class="mt-5 text-lg font-bold text-ink-950">{item.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-600">{item.text}</p>
+            <p class="eyebrow mt-auto pt-6 text-lime-800">{item.context}</p>
+          </article>
+        ))
+      }
+    </div>
+
+    {
+      lead && (
+        <figure class="mt-20 grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.6fr)] lg:items-end">
+          <blockquote class="display text-3xl leading-[1.1] text-ink-950 sm:text-[2.75rem]" data-reveal>
+            <span class="text-lime-700" aria-hidden="true">„</span>
+            {lead.quote}
+            <span class="text-lime-700" aria-hidden="true">“</span>
+          </blockquote>
+          <figcaption class="border-l-2 border-lime-500 pl-5" data-reveal data-reveal-delay="80">
+            <p class="font-bold text-ink-950">{lead.author}</p>
+            <p class="text-sm text-ink-600">{lead.company}</p>
+          </figcaption>
+        </figure>
+      )
+    }
+
+    {
+      others.length > 0 && (
+        <div class:list={['mt-14 grid gap-5', others.length > 1 ? 'md:grid-cols-2' : 'lg:ml-auto lg:max-w-2xl']}>
+          {others.map((item) => (
+            <figure class="panel p-8" data-reveal>
+              <blockquote class="text-lg leading-relaxed text-ink-800">„{item.quote}“</blockquote>
+              <figcaption class="mt-5 text-sm">
+                <span class="font-bold text-ink-950">{item.author}</span>
+                <span class="text-ink-500"> · {item.company}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

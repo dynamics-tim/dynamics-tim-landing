@@ -1,25 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import EngagementQuiz from '../components/EngagementQuiz.astro';
-import { to } from '../utils/url';
+import HealthCheck from '../components/HealthCheck.astro';
+import { healthCheckIntro } from '../data/home';
 ---
 
 <BaseLayout
-  title="Dynamics 365 Engagement-Check"
-  description="Finde in drei Fragen heraus, welches Dynamics 365 Engagement-Modell zu deinem Team passt."
-  breadcrumbs={[{ name: 'Engagement-Check', url: '/check/' }]}
+  title="Dynamics 365 Health-Check"
+  description="Wie release-fähig ist euer Dynamics 365? Acht Fragen, sofortiger Score pro Bereich und die drei größten Hebel. Kostenlos und ohne Anmeldung."
+  breadcrumbs={[
+    { name: 'Startseite', url: '/' },
+    { name: 'Health-Check', url: '/check/' },
+  ]}
 >
-  <section class="bg-surface-100 py-16">
-    <div class="mx-auto max-w-6xl px-6">
-      <div class="mb-10 max-w-3xl space-y-4">
-        <p class="text-sm font-semibold uppercase tracking-wide text-brand-600">Engagement-Check</p>
-        <h1 class="section-title">Welcher Einstieg passt zu eurem Dynamics 365 Setup?</h1>
-        <p class="text-lg text-slate-600">
-          Beantworte drei Fragen und erhalte in unter 60 Sekunden eine konkrete Empfehlung.
-        </p>
-      </div>
+  <section class="ink-surface border-b border-white/10 pb-4 pt-16 sm:pt-24">
+    <div class="mx-auto max-w-page px-5 sm:px-8">
+      <p class="eyebrow text-lime-400">{healthCheckIntro.eyebrow}</p>
+      <h1 class="display mt-5 max-w-4xl text-5xl text-paper sm:text-7xl">{healthCheckIntro.title}</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-ink-300">{healthCheckIntro.text}</p>
     </div>
   </section>
-  {/* The engagement models live on the home page, so result links point there */}
-  <EngagementQuiz modelLinkBase={to('/')} />
+  <HealthCheck showIntro={false} />
 </BaseLayout>
