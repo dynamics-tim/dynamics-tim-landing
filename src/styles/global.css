@@ -180,6 +180,20 @@
 
   .field-dark {
     @apply border-white/15 bg-white/[0.04] text-paper placeholder:text-ink-400;
+    /* Native pickers (select list, autofill) render dark instead of light-on-white */
+    color-scheme: dark;
+  }
+
+  /* Option lists inherit the field colour — set both explicitly (dark rule must come last) */
+  .field option {
+    background-color: theme('colors.paper.50');
+    color: theme('colors.ink.950');
+  }
+
+  .field-dark option,
+  .field-dark optgroup {
+    background-color: theme('colors.ink.900');
+    color: theme('colors.paper.DEFAULT');
   }
 
   .field-dark:focus {
