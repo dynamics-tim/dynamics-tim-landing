@@ -15,7 +15,7 @@ export const base: string = import.meta.env.BASE_URL ?? '/';
  * @example
  * to('services')          // => '/services/'
  * to('/profile')          // => '/profile/'
- * to('#engagement-quiz')  // => '/#engagement-quiz'
+ * to('#health-check')     // => '/#health-check'
  * to('contact#form')      // => '/contact/#form'
  */
 export function to(path: string): string {

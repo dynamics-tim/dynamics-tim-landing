@@ -17,8 +17,10 @@ path-specific rules in [`.github/instructions/`](.github/instructions/) — read
 ```bash
 npm run lint       # 0 warnings allowed
 npm run build
-npm run test:e2e   # Playwright (quiz smoke test + quiz logic table)
+npm run test:e2e   # Playwright (health-check/lead logic tables + E2E flows, n8n mocked)
 ```
 
-If you change quiz scoring in `src/data/engagement-quiz.ts`, update the expectation
-table in `tests/engagement-quiz-logic.spec.ts` deliberately.
+If you change health-check scoring in `src/data/health-check.ts`, update the expectation
+table in `tests/health-check-logic.spec.ts` deliberately. Renaming a question id or option
+value, or changing a limit in `src/lib/lead.ts`, also requires updating the n8n workflow
+"Website-Leads · dynamics-tim.dev" (node "Prüfen & entscheiden") — it whitelists them.

@@ -1,4 +1,4 @@
-name: Quiz smoke tests
+name: E2E tests
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  quiz-smoke:
+  e2e:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,11 +28,11 @@ jobs:
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
 
-      - name: Run quiz smoke tests
+      - name: Lint
+        run: npm run lint
+
+      - name: Run Playwright tests (health-check, lead form, pages)
         run: npm run test:e2e
         env:
-          PUBLIC_PUSHOVER_TOKEN: ""
-          PUBLIC_PUSHOVER_USER: ""
-          PUBLIC_PUSHOVER_TITLE: ""
-          PUBLIC_PUSHOVER_MESSAGE: ""
+          # Tests mock the n8n endpoints; the default lead URL is used so the CSP matches prod
           PUBLIC_GOATCOUNTER_URL: ${{ vars.PUBLIC_GOATCOUNTER_URL }}

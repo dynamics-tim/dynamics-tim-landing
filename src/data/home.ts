@@ -2,116 +2,143 @@
  * Content of the landing page (`src/pages/index.astro`).
  *
  * Copy changes belong here — the section components only handle layout.
+ * Voice: direct, "du", concrete outcomes over technology lists. The visual and verbal
+ * motifs (Freitag 17:58 → 18:01 grün, "Dein CRM verdient bessere Releases") come from
+ * the pitch video so site and video tell the same story.
  */
 import { to } from '../utils/url';
 import { site } from './site';
 
 /* ── Hero ─────────────────────────────────────────────── */
 
-export const heroSkills = [
-  'C# Plugins & Power Automate',
-  'Azure Integrations',
-  'UI Test Automation (Playwright)',
-  'Customization & Configuration',
-  'Custom Controls (PCF)',
-  'Azure DevOps, Clean ALM & Observability',
+export const hero = {
+  eyebrow: 'Dynamics 365 · Power Platform · Azure',
+  headline: { lead: 'Dein CRM verdient', highlight: 'bessere Releases.' },
+  intro:
+    'Ich bin Tim, Senior Dynamics 365 Developer & Technical Consultant. Ich bringe gewachsene Dynamics-365-Systeme in Ordnung: saubere Plugins, automatisierte Releases, Monitoring. Und ein Team, das danach selbst weiterkommt.',
+  primaryCta: 'Kostenlosen Health-Check starten',
+  primaryNote: '8 Fragen · 2 Minuten · sofort Ergebnis',
+  secondaryCta: 'Erstgespräch buchen',
+  recruiterLink: 'Recruiter oder Agentur? Profil & Verfügbarkeit',
+};
+
+export const heroStats = [
+  { value: '20+', label: 'D365-Projekte' },
+  { value: '5+', label: 'Jahre Dynamics 365' },
+  { value: '5+', label: 'Zertifizierungen' },
+  { value: 'Ø 3', label: 'Monate Audit → Go-live' },
 ];
 
-export const heroProofPoints = [
-  '20+ Projekte',
-  'ORBIS SE, Maschinenbau, Handel',
-  'Ø 3 Monate Audit → Go-Live',
+export const clientLine = {
+  label: 'Projekte u. a. für',
+  names: ['ORBIS SE', 'Maschinenbau', 'IT-Services', 'Handel'],
+};
+
+/** Accessible description of the (text-only, music-backed) pitch video */
+export const pitchTranscript = [
+  'Freitag, 17:58. Release nach Prod.',
+  'Ohne Netz und doppelten Boden? Was soll schon schiefgehen. Nicht bei mir.',
+  'Build, Playwright: 214 von 214 UI-Tests bestanden, Quality Gate: 0 kritische Befunde, Deploy.',
+  '18:01. Grün. Wochenende.',
+  'Ich bin Tim. Im Code wie im Ring: Technik schlägt Kraft.',
+  'Home Base Oberschwaben. Direkt, persönlich, kein Offshore.',
+  '20+ Dynamics-365-Projekte, Azure-Integrationen.',
+  'Dein CRM verdient bessere Releases. dynamics-tim.dev. 30 Minuten Erstgespräch, kostenlos.',
 ];
 
-/* ── Problem → Lösung → Ergebnis ──────────────────────── */
+/* ── Story: Freitag, 17:58 ────────────────────────────── */
 
-export type StripTone = 'problem' | 'solution' | 'result';
+export const story = {
+  eyebrow: 'Freitag · 17:58 · Release → Prod',
+  title: 'Kennst du das Gefühl kurz vor dem Deploy?',
+  intro:
+    'In vielen Dynamics-365-Teams ist jedes Release ein kleines Wagnis. Nicht, weil die Leute schlecht sind, sondern weil das System über Jahre gewachsen ist.',
+  pains: [
+    'Plugins, die bei jedem Update brechen und keiner weiß genau, warum',
+    'Solution-Export per Hand, Checkliste im Kopf einer einzigen Person',
+    'Fehler fallen erst auf, wenn der Vertrieb anruft',
+    'Excel-Listen neben dem CRM, weil es im System zu umständlich ist',
+  ],
+  pipelineTitle: 'So sieht es aus, wenn die Pipeline die Arbeit macht',
+  pipeline: [
+    { title: 'Build', detail: 'pac solution pack · dotnet build' },
+    { title: 'Playwright', detail: '214/214 UI-Tests bestanden' },
+    { title: 'Quality Gate', detail: 'Solution Checker · 0 kritisch' },
+    { title: 'Deploy', detail: 'Managed Solution → PROD' },
+  ],
+  done: { time: '18:01', text: 'Grün. Wochenende.' },
+};
 
-export interface StripColumn {
-  tone: StripTone;
-  label: string;
-  items: string[];
-}
-
-export const problemSolutionStrip: StripColumn[] = [
+export const outcomes = [
   {
-    tone: 'problem',
-    label: 'Euer Status Quo',
-    items: [
-      'Fragile Plugins, die bei jedem Update brechen',
-      'Manuelle Prozesse, die niemand gerne macht',
-      'Releases, die alle nervös machen',
-      'Kein Team, das die Lösung eigenständig pflegen kann',
-    ],
+    kicker: '01',
+    title: 'Releases ohne Herzklopfen',
+    text: 'CI/CD mit Managed Solutions und Quality Gates. Jedes Release läuft gleich, egal wer es anstößt.',
   },
   {
-    tone: 'solution',
-    label: 'Was ich ändere',
-    items: [
-      'Saubere Plugin-Architektur mit Testabdeckung',
-      'Automatisierte Workflows mit robustem Fehlerhandling',
-      'CI/CD-Pipelines mit Quality Gates',
-      'Enablement, das Wissen im Team hält',
-    ],
+    kicker: '02',
+    title: 'Fehler, bevor Nutzer sie sehen',
+    text: 'Tests für die kritischen Prozesse und Monitoring mit Alerting statt Anrufen aus dem Vertrieb.',
   },
   {
-    tone: 'result',
-    label: 'Euer Ergebnis',
-    items: [
-      'Schnellere Release-Zyklen ohne Überraschungen',
-      'Confidence bei jedem Deployment',
-      'Ein Team, das selbstständig weiterentwickelt',
-      'CRM, das Vertrieb und Service wirklich nutzen',
-    ],
-  },
-];
-
-/* ── Warum Tim? ───────────────────────────────────────── */
-
-export const valueBullets = [
-  {
-    title: 'Embedded ins Team',
-    description:
-      'Ich verstärke dein bestehendes Team mit Senior-Level Expertise in Dynamics 365 Development und Consulting.',
-  },
-  {
-    title: 'Full-Stack Power Platform',
-    description:
-      'Canvas Apps, React/TypeScript-PCFs, C# Plugins und Automatisierung aus einer Hand.',
-  },
-  {
-    title: 'Release-Sicherheit inklusive',
-    description:
-      'Azure DevOps, Code-Quality-Gates und Monitoring sorgen für planbare Deployments ohne Überraschungen.',
-  },
-];
-
-export const notDoing = [
-  {
-    title: 'Kein 50-Personen-Rollout.',
-    text: 'Ich bin Freelancer, kein Systemhaus. Mein Sweet Spot: gezielte Verstärkung für Teams von 2–15.',
-  },
-  {
-    title: 'Keine Slide-Decks ohne Code.',
-    text: 'Ich liefere funktionierende Lösungen, nicht Management-Präsentationen die in der Schublade landen.',
-  },
-  {
-    title: 'Kein Offshore-Team.',
-    text: 'Du arbeitest direkt mit mir — DACH-Zeitzonen, deutsche Kommunikation, persönliche Verantwortung.',
+    kicker: '03',
+    title: 'Ein Team, das selbst weiterkommt',
+    text: 'Dokumentation, Pairing und saubere Übergabe. Das Wissen bleibt bei euch, nicht bei mir.',
   },
 ];
 
-/* ── Stimmen aus der Praxis ───────────────────────────── */
+/* ── Health-Check section ─────────────────────────────── */
+
+export const healthCheckIntro = {
+  eyebrow: 'Kostenlos · 8 Fragen · 2 Minuten',
+  title: 'Wie release-fähig ist euer Dynamics 365?',
+  text: 'Acht Fragen zu Releases, Qualität, Betrieb und Team. Du bekommst sofort einen Score mit Einordnung pro Bereich und die drei größten Hebel. Auf Wunsch schaue ich mir dein Ergebnis persönlich an.',
+  bullets: ['Ergebnis sofort im Browser', 'Keine Anmeldung nötig', 'Persönliche Einschätzung optional'],
+};
+
+/* ── Leistungen (teaser, details on /services) ───────── */
+
+export const servicesIntro = {
+  eyebrow: 'Zusammenarbeit',
+  title: 'Drei Wege, wie ich helfe',
+  text: 'Je nachdem, wo ihr steht: Klarheit verschaffen, im Sprint mitliefern oder das Ganze von Analyse bis Übergabe verantworten.',
+};
+
+/* ── Belege ───────────────────────────────────────────── */
+
+export const resultsIntro = {
+  eyebrow: 'Ergebnisse',
+  title: 'Was am Ende übrig bleibt',
+};
+
+export const caseResults = [
+  {
+    metric: '10 Tage',
+    title: 'Bestandsaufnahme statt Blindflug',
+    text: 'Undokumentierte Plugin-Architektur mit 40+ Custom Steps analysiert, Lücken im Rollenmodell aufgedeckt. Der Maßnahmenplan sparte rund drei Monate Fehlerbehebung.',
+    context: 'IT-Dienstleister · Audit',
+  },
+  {
+    metric: 'alle 2 Wochen',
+    title: 'Releases ohne manuelle Regression',
+    text: 'ERP-Integration über Azure Service Bus plus automatisierte UI-Tests. Seitdem laufen Releases im Zwei-Wochen-Takt ohne manuelle Regressionstests.',
+    context: 'Maschinenbau · Embedded, 6 Monate',
+  },
+  {
+    metric: '12 Wochen',
+    title: 'Bis das Team allein deployt',
+    text: 'Dynamics 365 Sales von Audit bis Übergabe. Danach hat das interne Team neue Features eigenständig ausgeliefert, ohne externen Support.',
+    context: 'Handel · Full Package',
+  },
+];
 
 export interface Testimonial {
   quote: string;
   author: string;
   company: string;
-  verified?: boolean;
 }
 
-/** Exactly two quotes: rendered left and right of the stats card (see home/References.astro). */
-export const testimonials: [Testimonial, Testimonial] = [
+export const testimonials: Testimonial[] = [
   {
     quote:
       'Tim überzeugte durch seine exzellente Analysefähigkeit und fand für alle auftretenden Probleme ausnahmslos gute Lösungen.',
@@ -120,57 +147,62 @@ export const testimonials: [Testimonial, Testimonial] = [
   },
   {
     quote:
-      'Saubere Architektur, klare Kommunikation und ein Team, das nach dem Projekt selbst weiterarbeiten kann — genau das haben wir bekommen.',
+      'Saubere Architektur, klare Kommunikation und ein Team, das nach dem Projekt selbst weiterarbeiten kann. Genau das haben wir bekommen.',
     author: 'M. Schneider, Projektleitung',
     company: 'Fertigungsunternehmen, Süddeutschland',
-    verified: true,
   },
 ];
 
-export const stats = [
-  { value: '20+', label: 'D365 Projekte' },
-  { value: '5+', label: 'Zertifizierungen' },
-  { value: 'Ø 3', label: 'Mon. Audit→Go-Live' },
-];
-
-export const focusIndustries = ['Maschinenbau', 'IT-Services', 'Handel'];
-
 /* ── Ablauf ───────────────────────────────────────────── */
+
+export const approachIntro = {
+  eyebrow: 'Ablauf',
+  title: 'Vom ersten Gespräch zum stabilen Release',
+};
 
 export const approachSteps = [
   {
     phase: '01',
     duration: 'Woche 1–2',
     title: 'Audit',
-    tagline: 'Ich bringe die Wahrheit ans Licht — auch die unbequeme.',
-    description:
-      'Ist-Analyse von Architektur, Security Model, Datenflüssen und ALM-Setup. Am Ende weißt du genau, wo die größten Risiken und schnellsten Wins liegen — nicht was du hören willst, sondern was du brauchst.',
+    text: 'Architektur, Security, Datenflüsse und ALM. Am Ende weißt du, wo die größten Risiken und schnellsten Wins liegen.',
   },
   {
     phase: '02',
     duration: 'Woche 2–3',
     title: 'Konzeption',
-    tagline: 'Kein Slide-Deck. Ein echter Plan.',
-    description:
-      'Technisches Zielbild, priorisiertes Backlog und messbare Erfolgskennzahlen. Stakeholder werden früh eingebunden — damit Überraschungen in der Umsetzung die Ausnahme sind, nicht die Regel.',
+    text: 'Zielbild, priorisiertes Backlog und messbare Ziele. Kein Foliensatz, sondern ein umsetzbarer Plan.',
   },
   {
     phase: '03',
     duration: 'Woche 3–10',
     title: 'Umsetzung',
-    tagline: 'Keine Big-Bang-Releases. Kleine Increments, jedes getestet.',
-    description:
-      'Iterative Implementierung mit Plugins, Automationen, Integrationen — und Tests für alles Business-kritische. DevOps und Quality Gates laufen von Anfang an mit, nicht am Ende.',
+    text: 'Kleine, getestete Increments. Pipeline und Quality Gates laufen von Anfang an mit, nicht erst am Ende.',
   },
   {
     phase: '04',
     duration: 'Woche 9–12',
     title: 'Enablement',
-    tagline: 'Ich gehe. Dein Team bleibt handlungsfähig.',
-    description:
-      'Dokumentation, Pairing-Sessions und Übergabe. Dein Team kann stabil releasen und die Lösung eigenständig weiterentwickeln — ohne mich rufen zu müssen.',
+    text: 'Dokumentation, Pairing und Übergabe. Dein Team kann danach eigenständig weiterentwickeln.',
   },
 ];
+
+/* ── Recruiter & Agenturen ────────────────────────────── */
+
+export const recruiter = {
+  eyebrow: 'Für Recruiter & Agenturen',
+  title: 'Die Fakten auf einen Blick',
+  text: 'Ich arbeite direkt mit Unternehmen und gern auch über Agenturen. Wenn du eine passende Dynamics-365-Rolle hast, schick mir die Eckdaten.',
+  facts: [
+    { label: 'Rolle', value: 'Senior Dynamics 365 Developer · Technical Consultant' },
+    { label: 'Erfahrung', value: '5+ Jahre Dynamics 365 · 20+ Projekte' },
+    { label: 'Schwerpunkte', value: 'C# Plugins · PCF · Power Automate · Azure Integration · ALM/DevOps' },
+    { label: 'Verfügbar', value: `ab ${site.availability.label}` },
+    { label: 'Einsatz', value: `${site.location} · vor Ort nach Absprache` },
+  ],
+  primaryCta: 'Projektanfrage senden',
+  secondaryCta: 'Vollständiges Profil',
+};
 
 /* ── FAQ ──────────────────────────────────────────────── */
 
@@ -185,40 +217,48 @@ export interface Faq {
   plainAnswer?: string;
 }
 
-const faqLinkClass =
-  'text-brand-500 underline decoration-2 decoration-brand-200 hover:text-brand-400';
+const faqLinkClass = 'link-underline';
 
 export const faqs: Faq[] = [
   {
     question: 'Was kostet die Zusammenarbeit?',
     answer:
-      'Ich arbeite auf Tagessatz-Basis. Je nach Scope und Engagement-Modell liegt ein typisches Projekt zwischen 5 und 25 Tagen. Im kostenlosen Erstgespräch klären wir den genauen Rahmen und ich erstelle dir eine transparente Aufwandsschätzung — ohne Überraschungen.',
+      'Ich arbeite auf Tagessatz-Basis. Ein typisches Projekt liegt je nach Scope zwischen 5 und 25 Tagen, ein Audit bei ein bis zwei Wochen. Im kostenlosen Erstgespräch klären wir den Rahmen, danach bekommst du eine transparente Aufwandsschätzung.',
   },
   {
-    question: 'Wie starte ich ein Dynamics 365 Projekt mit dir als Freelancer?',
-    answer: `Wir beginnen mit einem fokussierten Erstgespräch, in dem wir die wichtigsten Dynamics 365 Use Cases priorisieren und das weitere Vorgehen klären. Über das <a href="${site.contact.mailto}" class="${faqLinkClass}">Kontaktformular</a> oder per Mail erhältst du in 48 Stunden eine Roadmap inklusive Aufwandsschätzung.`,
+    question: 'Was passiert mit meinen Daten aus dem Health-Check?',
+    answer: `Der Score wird ausschließlich in deinem Browser berechnet. Nur wenn du aktiv eine persönliche Auswertung anforderst, werden deine Antworten zusammen mit Name und E-Mail an mich übermittelt, auf meinem eigenen Server gespeichert und nach spätestens sechs Monaten gelöscht. Details in der <a href="${to('datenschutz')}" class="${faqLinkClass}">Datenschutzerklärung</a>.`,
     plainAnswer:
-      'Wir starten mit einem Erstgespräch, in dem wir die wichtigsten Dynamics 365 Use Cases priorisieren und das weitere Vorgehen klären. Über das Kontaktformular oder per Mail erhältst du in 48 Stunden eine Roadmap inklusive Aufwandsschätzung.',
+      'Der Score wird ausschließlich im Browser berechnet. Nur bei einer aktiv angeforderten persönlichen Auswertung werden Antworten, Name und E-Mail übermittelt, auf einem eigenen Server gespeichert und nach spätestens sechs Monaten gelöscht.',
   },
   {
-    question: 'Unterstützt du auch bestehende Dynamics 365 Teams langfristig?',
-    answer: `Ja. Ich coache interne Entwickler:innen, führe gemeinsame Code-Reviews durch und implementiere Quality Gates sowie Automatisierung. Über den <a href="${to('profile')}" class="${faqLinkClass}">Profil-Bereich</a> findest du Referenzen und konkrete Technologien, die ich einbringe.`,
+    question: 'Arbeitest du auch über Agenturen und Recruiter?',
+    answer:
+      'Ja. Ich arbeite direkt mit Unternehmen und über Agenturen. Schick mir die Eckdaten der Rolle (Laufzeit, Auslastung, Remote-Anteil, Technologien) über das Kontaktformular.',
+  },
+  {
+    question: 'Unterstützt du bestehende Teams langfristig?',
+    answer: `Ja. Ich arbeite im Sprint mit, führe Code-Reviews durch, baue Quality Gates auf und coache interne Entwickler:innen. Referenzen und Technologien findest du im <a href="${to('profile')}" class="${faqLinkClass}">Profil</a>.`,
     plainAnswer:
-      'Ich unterstütze bestehende Dynamics 365 Teams mit Coaching, Code-Reviews, Quality Gates und Automatisierung. Referenzen und Technologien findest du im Profil-Bereich.',
+      'Ja. Ich arbeite im Sprint mit, führe Code-Reviews durch, baue Quality Gates auf und coache interne Entwickler:innen. Referenzen und Technologien stehen im Profil.',
   },
   {
-    question: 'Welche Dynamics 365 und Power Platform Technologien nutzt du?',
+    question: 'Mit welchen Technologien arbeitest du?',
     answer:
-      'Ich arbeite mit C# Plugins, Power Automate, PCF Controls, Azure Functions, Service Bus, Event Grid und Playwright für UI Test Automation. Diese Technologien ermöglichen es mir, skalierbare und effiziente Lösungen zu entwickeln, die den spezifischen Anforderungen von Dynamics 365 gerecht werden.',
+      'C# Plugins, PCF Controls (React/TypeScript), Power Automate, Custom Pages, Azure Functions, Service Bus, Event Grid, Azure DevOps bzw. GitHub Actions und Playwright für UI-Tests.',
   },
   {
-    question: 'Wie stellst du Security und Performance in Dynamics 365 sicher?',
-    answer:
-      'Ich prüfe Security Model, Rollen, Field Security und DLP-Regeln und optimiere Plugins, Abfragen und Client-Skripte. Dazu kommen Monitoring, Audit-Logs und klare Performance-Guidelines.',
-  },
-  {
-    question: 'Welche Deliverables bekomme ich nach dem Projektstart?',
-    answer:
-      'Du erhältst ein priorisiertes Backlog, ein technisches Zielbild, Empfehlungen für ALM/CI-CD sowie eine Roadmap für die nächsten Sprints. Bei Bedarf ergänze ich eine Referenzarchitektur und ein Enablement-Konzept.',
+    question: 'Wie schnell kannst du starten?',
+    answer: `Meine nächste freie Kapazität ist ab ${site.availability.label}. Ein Audit oder ein kurzer Technical Spike lässt sich oft auch früher einplanen. Frag einfach an.`,
   },
 ];
+
+/* ── Kontakt ──────────────────────────────────────────── */
+
+export const contactIntro = {
+  eyebrow: 'Kontakt',
+  title: 'Lass uns über dein Dynamics 365 sprechen.',
+  text: 'Erzähl mir kurz, wo es hakt. Ich melde mich innerhalb von zwei Werktagen persönlich, ohne Sales-Pitch.',
+  bookingTitle: 'Lieber direkt sprechen?',
+  bookingText: '30 Minuten, kostenlos, per Teams. Du schilderst die Lage, ich sage dir ehrlich, ob und wie ich helfen kann.',
+};

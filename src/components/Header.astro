@@ -1,137 +1,114 @@
 ---
+import Icon from './Icon.astro';
 import { site } from '../data/site';
-import { asset, base, to } from '../utils/url';
+import { base, to } from '../utils/url';
+
+const path = Astro.url.pathname;
+const isHome = path === base;
 
 const navItems = [
-  { label: 'Start', href: base },
   { label: 'Leistungen', href: to('services') },
+  { label: 'Health-Check', href: isHome ? '#health-check' : to('check') },
   { label: 'Profil', href: to('profile') },
   { label: 'Kontakt', href: to('contact') },
 ];
 
-/**
- * The header CTA changes with scroll depth (share of the page scrolled):
- * contact → quiz → booking. The client script below applies the stages.
- */
-const isHome = Astro.url.pathname === base;
-const ctaStages = [
-  {
-    threshold: 0,
-    text: 'Kostenloses Erstgespräch',
-    mobileText: 'Erstgespräch',
-    href: to('contact'),
-    external: false,
-  },
-  {
-    threshold: 0.15,
-    text: 'Passenden Einstieg finden',
-    mobileText: 'Quiz',
-    href: isHome ? '#engagement-quiz' : to('#engagement-quiz'),
-    external: false,
-  },
-  {
-    threshold: 0.7,
-    text: '30-Min Slot buchen →',
-    mobileText: 'Buchen',
-    href: site.contact.bookingUrl,
-    external: true,
-  },
-];
-
-const ctaFocusClass =
-  'hover:bg-brand-600 focus-visible:bg-brand-600 hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2';
+const isCurrent = (href: string) => !href.startsWith('#') && href !== base && path.startsWith(href);
+const ctaHref = isHome ? '#health-check' : to('check');
 ---
 
-<header
-  class="sticky top-0 z-50 border-b border-surface-200/80 bg-white/85 shadow-sm backdrop-blur"
-  data-cta-stages={JSON.stringify(ctaStages)}
->
-  <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-    <a href={base} data-astro-prefetch class="flex items-center gap-3 text-lg font-semibold text-brand-700 hover:text-brand-500">
-      <img src={asset('favicon.svg')} alt="Tim Friedrich Logo" class="h-10 w-10 rounded-xl shadow-soft" />
-      <span class="hidden sm:inline-block">Tim Friedrich · Dynamics 365</span>
+<header class="sticky top-0 z-50 border-b border-white/10 bg-ink-950/85 text-paper backdrop-blur-xl" data-site-header>
+  <a href="#main" class="sr-only-focusable absolute left-4 top-3 z-50 rounded-full bg-lime-500 px-4 py-2 text-sm font-semibold text-ink-950 no-underline">
+    Zum Inhalt springen
+  </a>
+  <div class="mx-auto flex max-w-page items-center justify-between gap-6 px-5 py-3 sm:px-8">
+    <a href={base} class="group flex items-center gap-3 text-paper no-underline hover:text-paper" aria-label="Tim Friedrich, zur Startseite">
+      <span class="grid h-9 w-9 place-items-center rounded-xl bg-lime-500 font-extrabold tracking-tight text-ink-950 transition-transform duration-300 group-hover:-rotate-6">tf</span>
+      <span class="hidden flex-col whitespace-nowrap leading-tight sm:flex">
+        <span class="text-[0.95rem] font-bold tracking-tight">Tim Friedrich</span>
+        <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink-300">Dynamics 365</span>
+      </span>
     </a>
-    <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-      {navItems.map((item) => (
-        <a href={item.href} class="nav-link" data-astro-prefetch>
-          {item.label}
-        </a>
-      ))}
-      <a
-        id="nav-cta-desktop"
-        data-quiz-cta="header"
-        data-header-cta="desktop"
-        href={to('contact')}
-        data-astro-prefetch
-        class={`rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-soft transition-colors ${ctaFocusClass} focus-visible:ring-offset-2 focus-visible:ring-brand-500 focus-visible:ring-offset-white`}
+
+    <nav class="hidden items-center gap-8 lg:flex" aria-label="Hauptnavigation">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class="nav-link !text-ink-200 hover:!text-paper aria-[current=page]:!text-paper"
+            aria-current={isCurrent(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <a href={ctaHref} class="btn btn-primary hidden !min-h-[2.5rem] !px-5 !py-2 !text-sm sm:inline-flex" data-cta="header">
+        Health-Check starten
+        <Icon name="arrow-right" class="btn-arrow h-4 w-4" />
+      </a>
+      <button
+        type="button"
+        class="grid h-10 w-10 place-items-center rounded-full border border-white/15 text-paper lg:hidden"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+        aria-label="Menü öffnen"
+        data-menu-toggle
       >
-        Kostenloses Erstgespräch
+        <Icon name="menu" class="h-5 w-5" />
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-nav" class="hidden border-t border-white/10 lg:hidden" data-mobile-nav>
+    <nav class="mx-auto flex max-w-page flex-col gap-1 px-5 py-4" aria-label="Mobile Navigation">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class="rounded-xl px-3 py-3 text-base font-semibold text-paper no-underline hover:bg-white/5 hover:text-paper"
+            aria-current={isCurrent(item.href) ? 'page' : undefined}
+            data-mobile-link
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a href={ctaHref} class="btn btn-primary mt-2" data-mobile-link>
+        Health-Check starten
+      </a>
+      <a href={site.contact.bookingUrl} target="_blank" rel="noopener noreferrer" class="btn btn-ghost-dark mt-2">
+        Erstgespräch buchen
       </a>
     </nav>
-    <a
-      id="nav-cta-mobile"
-      data-quiz-cta="header"
-      data-header-cta="mobile"
-      href={to('contact')}
-      data-astro-prefetch
-      class={`rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-soft transition-colors ${ctaFocusClass} focus-visible:ring-brand-400 md:hidden`}
-      aria-label="Kontakt aufnehmen"
-    >
-      Kontakt
-    </a>
   </div>
 </header>
 
 <script>
-  interface CtaStage {
-    threshold: number;
-    text: string;
-    mobileText: string;
-    href: string;
-    external: boolean;
-  }
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-mobile-nav]');
 
-  const header = document.querySelector<HTMLElement>('[data-cta-stages]');
-  const desktopCta = document.querySelector<HTMLAnchorElement>('[data-header-cta="desktop"]');
-  const mobileCta = document.querySelector<HTMLAnchorElement>('[data-header-cta="mobile"]');
-
-  if (header && desktopCta && mobileCta) {
-    const stages = JSON.parse(header.dataset.ctaStages ?? '[]') as CtaStage[];
-    let currentStage = -1;
-
-    const applyStage = (link: HTMLAnchorElement, text: string, stage: CtaStage) => {
-      link.textContent = text;
-      link.setAttribute('href', stage.href);
-      if (stage.external) {
-        link.setAttribute('target', '_blank');
-        link.setAttribute('rel', 'noopener noreferrer');
-      } else {
-        link.removeAttribute('target');
-        link.removeAttribute('rel');
-      }
+  if (toggle && panel) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+      panel.classList.toggle('hidden', !open);
     };
 
-    const updateCta = () => {
-      const scrolled = window.scrollY + window.innerHeight;
-      const total = document.documentElement.scrollHeight;
-      const depth = total > 0 ? scrolled / total : 0;
-
-      // Last stage whose threshold has been reached (stages are sorted ascending)
-      let newStage = 0;
-      stages.forEach((stage, index) => {
-        if (depth >= stage.threshold) newStage = index;
-      });
-
-      if (newStage !== currentStage) {
-        currentStage = newStage;
-        const stage = stages[newStage];
-        applyStage(desktopCta, stage.text, stage);
-        applyStage(mobileCta, stage.mobileText, stage);
+    toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    panel.querySelectorAll('[data-mobile-link]').forEach((link) =>
+      link.addEventListener('click', () => setOpen(false))
+    );
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
       }
-    };
-
-    window.addEventListener('scroll', updateCta, { passive: true });
-    window.addEventListener('resize', updateCta, { passive: true });
-    updateCta();
+    });
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
   }
 </script>

@@ -4,6 +4,7 @@ import Footer from '../components/Footer.astro';
 import SeoHead from '../components/SeoHead.astro';
 import type { Breadcrumb } from '../utils/structured-data';
 import { buildCsp, originOf } from '../utils/csp';
+import { site } from '../data/site';
 import { asset } from '../utils/url';
 import '../styles/global.css';
 
@@ -28,20 +29,10 @@ const {
 } = Astro.props as Props;
 
 const env = import.meta.env;
-const pushoverConfigured = Boolean(env.PUBLIC_PUSHOVER_TOKEN && env.PUBLIC_PUSHOVER_USER);
 const goatcounterUrl = env.PUBLIC_GOATCOUNTER_URL;
 const goatcounterOrigin = originOf(goatcounterUrl);
 
-const csp = buildCsp({ pushover: pushoverConfigured, goatcounterOrigin });
-
-/** Read by public/scripts/pushover-notifier.js */
-const pushoverConfig = {
-  pushoverToken: env.PUBLIC_PUSHOVER_TOKEN,
-  pushoverUser: env.PUBLIC_PUSHOVER_USER,
-  pushoverTitle: env.PUBLIC_PUSHOVER_TITLE,
-  pushoverMessage: env.PUBLIC_PUSHOVER_MESSAGE,
-};
-const pushoverScript = asset('scripts/pushover-notifier.js');
+const csp = buildCsp({ goatcounterOrigin, leadOrigin: originOf(site.leadApi ?? undefined) });
 
 /** Content stays visible without JS (all scroll animations start hidden). */
 const noscriptCss =
@@ -81,39 +72,18 @@ const noscriptCss =
     <link rel="manifest" href={asset('manifest.webmanifest')} />
     <!-- Keep in sync with the @font-face rules in styles/global.css -->
     <link rel="preload" href={asset('assets/fonts/inter-latin.woff2')} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={asset('assets/fonts/sora-latin.woff2')} as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#070906" />
     <link rel="stylesheet" href={asset('assets/css/consent.css')} />
     <noscript><style set:html={noscriptCss} /></noscript>
   </head>
-  <body class="min-h-screen bg-slate-50">
+  <body class="min-h-screen bg-paper">
     {showHeader && <Header />}
-    <main>
+    <main id="main" tabindex="-1" class="outline-none">
       <slot />
     </main>
     {showFooter && <Footer />}
     <script src={asset('assets/js/reveal.js')} defer></script>
     <script src={asset('assets/js/consent.js')} defer></script>
-    {
-      pushoverConfigured && (
-        <script is:inline define:vars={{ pushoverConfig, pushoverScript }}>
-          // Visit notification: load the notifier when the browser is idle
-          window.__pushoverConfig = pushoverConfig;
-          const loadNotifier = () => {
-            const script = document.createElement('script');
-            script.src = pushoverScript;
-            script.defer = true;
-            document.head.appendChild(script);
-          };
-          if ('requestIdleCallback' in window) {
-            requestIdleCallback(loadNotifier, { timeout: 1500 });
-          } else if (document.readyState === 'complete') {
-            setTimeout(loadNotifier, 200);
-          } else {
-            window.addEventListener('load', loadNotifier, { once: true });
-          }
-        </script>
-      )
-    }
     <script>
       import '../scripts/animations';
     </script>

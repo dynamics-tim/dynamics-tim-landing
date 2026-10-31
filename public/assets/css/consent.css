@@ -1,13 +1,15 @@
 :root {
-  --consent-radius: 16px;
-  --consent-shadow: 0 12px 40px rgba(0, 39, 76, 0.18);
-  --consent-bg: #ffffff;
-  --consent-text: #1f2937;
-  --consent-muted: #4b5563;
-  --consent-border: rgba(15, 23, 42, 0.08);
-  --consent-accent: #0062ac;
-  --consent-accent-hover: #004c84;
-  --consent-focus: 0 0 0 3px rgba(0, 98, 172, 0.35);
+  /* Matches the site tokens (tailwind.config.js): ink / paper / lime */
+  --consent-radius: 20px;
+  --consent-shadow: 0 24px 64px rgba(7, 9, 6, 0.35);
+  --consent-bg: #0e110c;
+  --consent-text: #f4f5f0;
+  --consent-muted: #cdd1c6;
+  --consent-border: rgba(244, 245, 240, 0.12);
+  --consent-accent: #b9ec2e;
+  --consent-accent-text: #070906;
+  --consent-accent-hover: #cdef5f;
+  --consent-focus: 0 0 0 3px rgba(185, 236, 46, 0.45);
 }
 
 .consent-hidden {
@@ -28,23 +30,23 @@
 
 .consent-banner {
   position: fixed;
-  left: 50%;
-  bottom: 24px;
-  transform: translateX(-50%);
-  width: min(960px, calc(100% - 32px));
+  left: 16px;
+  bottom: 16px;
+  width: min(420px, calc(100% - 32px));
   background: var(--consent-bg);
   color: var(--consent-text);
   border-radius: var(--consent-radius);
   box-shadow: var(--consent-shadow);
   border: 1px solid var(--consent-border);
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 .consent-banner__title {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 600;
   margin: 0 0 4px;
 }
@@ -52,26 +54,26 @@
 .consent-banner__text {
   margin: 0;
   color: var(--consent-muted);
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   line-height: 1.5;
 }
 
 .consent-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: 8px;
 }
 
 .consent-btn {
-  flex: 1 1 180px;
+  flex: 1 1 120px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
   border: 1px solid transparent;
-  padding: 12px 18px;
+  padding: 10px 14px;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   text-align: center;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
@@ -84,7 +86,7 @@
 
 .consent-btn--primary {
   background: var(--consent-accent);
-  color: #ffffff;
+  color: var(--consent-accent-text);
 }
 
 .consent-btn--primary:hover {
@@ -98,13 +100,13 @@
 }
 
 .consent-btn--ghost:hover {
-  background: rgba(0, 98, 172, 0.12);
+  background: rgba(185, 236, 46, 0.12);
 }
 
 .consent-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(7, 9, 6, 0.6);
   backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
@@ -199,10 +201,10 @@
   display: grid;
   place-items: center;
   padding: 32px;
-  border: 1px dashed rgba(15, 23, 42, 0.25);
+  border: 1px dashed rgba(7, 9, 6, 0.25);
   border-radius: 16px;
-  background: rgba(241, 245, 249, 0.75);
-  color: #1f2937;
+  background: rgba(244, 245, 240, 0.75);
+  color: #181c15;
   text-align: center;
   gap: 12px;
 }
@@ -216,23 +218,19 @@
   padding: 10px 18px;
   font-weight: 600;
   font-size: 0.95rem;
-  color: var(--consent-accent);
+  color: #0e110c;
   background: #ffffff;
   cursor: pointer;
 }
 
 .consent-placeholder__button:hover {
-  background: rgba(0, 98, 172, 0.1);
+  background: rgba(185, 236, 46, 0.2);
 }
 
 @media (max-width: 640px) {
   .consent-banner {
     bottom: 16px;
     padding: 20px;
-  }
-
-  .consent-actions {
-    flex-direction: column;
   }
 
   .consent-btn {
@@ -242,5 +240,45 @@
 
   .consent-modal {
     padding: 24px;
+  }
+}
+
+.consent-btn {
+  white-space: nowrap;
+}
+
+/* Desktop: slim bar at the bottom so the hero CTA stays visible */
+@media (min-width: 900px) {
+  .consent-banner {
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    width: min(1080px, calc(100% - 48px));
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    padding: 14px 16px 14px 22px;
+  }
+
+  .consent-banner > :first-child {
+    flex: 1 1 auto;
+  }
+
+  .consent-banner__title {
+    margin-bottom: 2px;
+    font-size: 0.9rem;
+  }
+
+  .consent-banner__text {
+    font-size: 0.8rem;
+  }
+
+  .consent-actions {
+    flex: 0 0 auto;
+    flex-wrap: nowrap;
+  }
+
+  .consent-btn {
+    flex: 0 0 auto;
   }
 }

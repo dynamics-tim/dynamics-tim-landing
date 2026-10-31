@@ -1,23 +1,18 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
-import EngagementQuiz from '../components/EngagementQuiz.astro';
-import ProblemSolutionStrip from '../components/home/ProblemSolutionStrip.astro';
-import WhyMe from '../components/home/WhyMe.astro';
-import EngagementModels from '../components/home/EngagementModels.astro';
-import References from '../components/home/References.astro';
-import ApproachSteps from '../components/home/ApproachSteps.astro';
+import HealthCheck from '../components/HealthCheck.astro';
+import Story from '../components/home/Story.astro';
+import Services from '../components/home/Services.astro';
+import Results from '../components/home/Results.astro';
+import Approach from '../components/home/Approach.astro';
+import Recruiter from '../components/home/Recruiter.astro';
 import Faq from '../components/home/Faq.astro';
-import FinalCta from '../components/home/FinalCta.astro';
-import QuickAuditBanner from '../components/home/QuickAuditBanner.astro';
+import Contact from '../components/home/Contact.astro';
 import { engagementModels } from '../data/engagement-models';
 import { faqs } from '../data/home';
 import { to } from '../utils/url';
-import {
-  faqPageSchema,
-  getPageUrls,
-  serviceItemListSchema,
-} from '../utils/structured-data';
+import { faqPageSchema, getPageUrls, serviceItemListSchema } from '../utils/structured-data';
 
 const { siteUrl, personId } = getPageUrls(Astro.site, Astro.url);
 
@@ -28,7 +23,7 @@ const structuredData = [
     engagementModels.map((model) => ({
       name: model.title,
       description: model.description,
-      url: new URL(to(model.href), siteUrl).toString(),
+      url: new URL(to(`services#${model.id}`), siteUrl).toString(),
     })),
     personId
   ),
@@ -37,19 +32,18 @@ const structuredData = [
 
 <BaseLayout
   title="Dynamics 365 Developer & Technical Consultant"
-  description="Dynamics 365 Freelancer für Service- & Sales-Prozesse: Power Platform Engineering, Azure Integrationen, DevOps & Enablement."
+  description="Dein CRM verdient bessere Releases: Dynamics 365 Freelancer für saubere Plugins, automatisierte Releases, Azure-Integrationen und Monitoring. Jetzt kostenlosen Health-Check machen."
   breadcrumbs={[{ name: 'Startseite', url: '/' }]}
 >
   <Hero />
-  <ProblemSolutionStrip />
-  <EngagementQuiz />
-  <WhyMe />
-  <EngagementModels />
-  <References />
-  <ApproachSteps />
+  <Story />
+  <HealthCheck />
+  <Services />
+  <Results />
+  <Approach />
+  <Recruiter />
   <Faq />
-  <FinalCta />
-  <QuickAuditBanner />
+  <Contact />
 
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
 </BaseLayout>

@@ -23,7 +23,7 @@
 ## Dienste & Verantwortung
 - Hosting/CDN: GitHub Pages / Fastly (Server-Logs, TLS-Termination).
 - Optionaler Terminservice: Cal.com (nur nach Klick, keine Auto-Initialisierung).
-- Schriftarten: Inter & Sora lokal (`public/assets/fonts/`).
+- Schriftarten: Inter (variabel) lokal (`public/assets/fonts/`).
 
 ## Rechtstexte & Variablen
 - Impressum: `src/pages/impressum/index.astro`

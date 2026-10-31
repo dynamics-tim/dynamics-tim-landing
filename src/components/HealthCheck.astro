@@ -1,0 +1,234 @@
+---
+/**
+ * Dynamics 365 Health-Check — the site's lead magnet.
+ * Questions/scoring: data/health-check.ts + lib/health-check.ts; wiring: scripts/health-check.ts.
+ * All questions are server-rendered (one visible at a time) so there is no layout flash.
+ */
+import Icon from './Icon.astro';
+import LeadForm from './LeadForm.astro';
+import { dimensions, healthQuestions } from '../data/health-check';
+import { healthCheckIntro } from '../data/home';
+import { site } from '../data/site';
+
+interface Props {
+  /** Render the intro column (false on /check/, which has its own page header) */
+  showIntro?: boolean;
+}
+
+const { showIntro = true } = Astro.props as Props;
+const dimensionLabel = Object.fromEntries(dimensions.map((d) => [d.id, d.label]));
+const total = healthQuestions.length;
+const RING_RADIUS = 52;
+const ringLength = 2 * Math.PI * RING_RADIUS;
+---
+
+<section id="health-check" class:list={['ink-surface relative overflow-hidden', showIntro ? 'py-24 sm:py-32' : 'pb-24 pt-10 sm:pb-32']} aria-labelledby="health-check-title">
+  <div class="grid-lines pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
+  <div class={`relative mx-auto grid max-w-page gap-14 px-5 sm:px-8 ${showIntro ? 'lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16' : ''}`}>
+    {
+      showIntro ? (
+        <div class="lg:sticky lg:top-28 lg:self-start">
+          <p class="eyebrow text-lime-400" data-reveal>{healthCheckIntro.eyebrow}</p>
+          <h2 id="health-check-title" class="section-title mt-4 !text-paper" data-reveal data-reveal-delay="40">
+            {healthCheckIntro.title}
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-ink-300" data-reveal data-reveal-delay="80">{healthCheckIntro.text}</p>
+          <ul class="mt-8 space-y-3">
+            {healthCheckIntro.bullets.map((bullet, index) => (
+              <li class="flex items-center gap-3 text-ink-200" data-reveal data-reveal-delay={String(100 + index * 40)}>
+                <span class="grid h-6 w-6 place-items-center rounded-full bg-lime-500/15 text-lime-400">
+                  <Icon name="check" class="h-3.5 w-3.5" />
+                </span>
+                {bullet}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <h2 id="health-check-title" class="sr-only">Health-Check</h2>
+      )
+    }
+
+    <div class="rounded-[2rem] bg-paper-50 p-6 text-ink-950 shadow-[0_40px_120px_-50px_rgba(185,236,46,0.45)] sm:p-10" data-health-check>
+      <!-- Questions -->
+      <div data-hc-questions>
+        <div class="flex items-center justify-between gap-4">
+          <p id="hc-step-label" class="eyebrow text-ink-500" aria-live="polite">Frage 1 von {total}</p>
+          <p class="eyebrow text-lime-800" data-hc-dimension>{dimensionLabel[healthQuestions[0].dimension]}</p>
+        </div>
+        <div class="mt-4 grid gap-1.5" style={`grid-template-columns: repeat(${total}, minmax(0, 1fr))`} aria-hidden="true" data-hc-progress>
+          {healthQuestions.map(() => <span class="h-1.5 rounded-full bg-ink-950/10 transition-colors duration-300" data-hc-bar />)}
+        </div>
+
+        {
+          healthQuestions.map((question, index) => (
+            <fieldset class:list={['mt-8', index > 0 && 'hidden']} data-hc-question={question.id} data-dimension-label={dimensionLabel[question.dimension]}>
+              <legend class="text-2xl font-extrabold leading-tight tracking-tightish text-ink-950 sm:text-3xl">{question.prompt}</legend>
+              <div class="mt-6 grid gap-3">
+                {question.options.map((option) => (
+                  <button
+                    type="button"
+                    class="hc-option group flex w-full items-center justify-between gap-4 rounded-2xl border border-ink-950/10 bg-white px-5 py-4 text-left text-base font-medium text-ink-900"
+                    data-hc-option={option.value}
+                    aria-pressed="false"
+                  >
+                    <span>{option.label}</span>
+                    <span class="hc-option-dot grid h-6 w-6 shrink-0 place-items-center rounded-full border border-ink-950/20" aria-hidden="true">
+                      <Icon name="check" class="h-3.5 w-3.5 opacity-0" />
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </fieldset>
+          ))
+        }
+
+        <div class="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
+          <button type="button" class="inline-flex items-center gap-2 text-sm font-semibold text-ink-600 hover:text-ink-950 disabled:invisible" data-hc-back disabled>
+            <Icon name="arrow-left" class="h-4 w-4" />
+            Zurück
+          </button>
+          <p class="text-xs text-ink-500">Deine Antworten bleiben in deinem Browser.</p>
+        </div>
+        <noscript>
+          <p class="mt-6 rounded-xl bg-ink-950/5 p-4 text-sm text-ink-700">
+            Der Health-Check braucht JavaScript. Schreib mir gern direkt an <a href={site.contact.mailto}>{site.contact.email}</a>.
+          </p>
+        </noscript>
+      </div>
+
+      <!-- Result -->
+      <div id="hc-result" class="hidden" tabindex="-1" data-hc-result>
+        <div class="flex flex-col gap-8 sm:flex-row sm:items-center">
+          <div class="relative h-36 w-36 shrink-0">
+            <svg viewBox="0 0 120 120" class="h-full w-full -rotate-90" aria-hidden="true">
+              <circle cx="60" cy="60" r={RING_RADIUS} fill="none" stroke-width="10" class="stroke-ink-950/10" />
+              <circle
+                cx="60"
+                cy="60"
+                r={RING_RADIUS}
+                fill="none"
+                stroke-width="10"
+                stroke-linecap="round"
+                class="hc-ring stroke-lime-500"
+                stroke-dasharray={ringLength.toFixed(2)}
+                stroke-dashoffset={ringLength.toFixed(2)}
+                data-hc-ring
+                data-length={ringLength.toFixed(2)}
+              />
+            </svg>
+            <div class="absolute inset-0 grid place-items-center text-center">
+              <div>
+                <span class="display block text-5xl text-ink-950" data-hc-score>0</span>
+                <span class="font-mono text-[0.65rem] uppercase tracking-[0.16em] text-ink-500">von 100</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <span class="inline-flex rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wider" data-hc-grade></span>
+            <p class="mt-3 text-2xl font-extrabold leading-tight tracking-tightish text-ink-950 sm:text-3xl" data-hc-headline></p>
+            <p class="mt-2 leading-relaxed text-ink-600" data-hc-text></p>
+          </div>
+        </div>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-2" data-hc-dimensions>
+          {
+            dimensions.map((dimension) => (
+              <div data-hc-dim={dimension.id}>
+                <div class="flex items-baseline justify-between text-sm">
+                  <span class="font-semibold text-ink-800">{dimension.label}</span>
+                  <span class="font-mono text-ink-500" data-hc-dim-value>–</span>
+                </div>
+                <div class="mt-2 h-2 overflow-hidden rounded-full bg-ink-950/10">
+                  <span class="hc-bar block h-full w-0 rounded-full" data-hc-dim-bar />
+                </div>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="mt-10">
+          <p class="eyebrow text-ink-500">Deine größten Hebel</p>
+          <ol class="mt-4 space-y-4" data-hc-levers></ol>
+        </div>
+
+        <div class="mt-10 rounded-2xl bg-ink-950 p-6 text-paper sm:p-8">
+          <p class="eyebrow text-lime-400">Meine Empfehlung</p>
+          <p class="mt-3 text-xl font-extrabold tracking-tightish" data-hc-rec-title></p>
+          <p class="mt-2 leading-relaxed text-ink-300" data-hc-rec-text></p>
+          <a href="#" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-lime-400 no-underline hover:text-paper" data-hc-rec-link>
+            Mehr dazu <Icon name="arrow-right" class="h-4 w-4" />
+          </a>
+        </div>
+
+        <div class="mt-10 border-t border-ink-950/10 pt-10" data-hc-lead>
+          <p class="text-2xl font-extrabold tracking-tightish text-ink-950 sm:text-3xl">Willst du wissen, wo du anfangen solltest?</p>
+          <p class="mt-3 max-w-2xl leading-relaxed text-ink-600">
+            Ich schaue mir dein Ergebnis persönlich an und schicke dir innerhalb von zwei Werktagen <strong class="text-ink-950">drei konkrete nächste Schritte</strong> für euer Setup. Kostenlos und ohne Sales-Pitch.
+          </p>
+          <div class="mt-8">
+            <LeadForm
+              id="hc-lead"
+              kind="healthcheck"
+              submitLabel="Persönliche Auswertung anfordern"
+              messageLabel="Gibt es etwas, das ich wissen sollte?"
+              messagePlaceholder="z. B. geplanter Go-live, größte Baustelle, Teamgröße"
+            />
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm">
+          <a href={site.contact.bookingUrl} target="_blank" rel="noopener noreferrer" class="link-underline">Lieber direkt 30 Minuten sprechen</a>
+          <button type="button" class="font-semibold text-ink-500 hover:text-ink-950" data-hc-restart>Health-Check neu starten</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hc-option {
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @media (hover: hover) {
+    .hc-option:hover {
+      border-color: theme('colors.ink.950');
+      transform: translateY(-1px);
+    }
+  }
+  .hc-option[aria-pressed='true'] {
+    border-color: theme('colors.ink.950');
+    background: theme('colors.lime.100');
+  }
+  .hc-option[aria-pressed='true'] .hc-option-dot {
+    border-color: theme('colors.ink.950');
+    background: theme('colors.ink.950');
+    color: theme('colors.lime.400');
+  }
+  .hc-option[aria-pressed='true'] .hc-option-dot svg {
+    opacity: 1;
+  }
+  .hc-ring {
+    transition: stroke-dashoffset 1100ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .hc-bar {
+    transition: width 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hc-option,
+    .hc-ring,
+    .hc-bar {
+      transition: none;
+    }
+    .hc-option:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  import '../scripts/health-check';
+</script>

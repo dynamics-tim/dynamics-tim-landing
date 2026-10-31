@@ -23,27 +23,44 @@ Anschließend ist die Seite unter [http://localhost:4321](http://localhost:4321)
 | `npm run lint`    | ESLint (TypeScript + Astro) in Strict-Mode                |
 | `npm run format`  | Prettier Formatting für das gesamte Projekt               |
 | `npm run sync`    | Content Collections synchronisieren (`src/content/*`)     |
-| `npm run test:e2e`| Playwright: Quiz-Smoke-Tests + Quiz-Logik-Tabelle         |
+| `npm run test:e2e`| Playwright: Health-Check- & Lead-Logik, E2E-Flows, Seiten  |
 
-## 🔔 Echtzeit-Besuchsbenachrichtigungen
+## 🎯 Lead-Funnel: Health-Check & Formulare
 
-Zum Empfangen einer Pushover-Mitteilung bei jedem Seitenaufruf müssen zwei Build-Variablen gesetzt werden. Leg dazu eine `.env` Datei mit folgenden Werten an (werden automatisch im Client verfügbar gemacht):
+Die Website ist auf Leads ausgelegt. Der wichtigste Einstieg ist der **Dynamics 365 Health-Check** (Startseite `#health-check` und `/check/`): acht Fragen, sofortiger Score pro Bereich, drei Hebel und eine Empfehlung. Danach kann die besuchende Person eine persönliche Auswertung anfordern. Dazu kommt ein Kontaktformular für Projekt- und Recruiter-Anfragen (Startseite `#kontakt` und `/contact/`).
 
-```bash
-PUBLIC_PUSHOVER_TOKEN="<dein-app-token>"
-PUBLIC_PUSHOVER_USER="<dein-user-key>"
-```
+| Teil | Datei |
+| ---- | ----- |
+| Fragen, Punkte, Schwellen, Texte | `src/data/health-check.ts` |
+| Scoring (rein, getestet) | `src/lib/health-check.ts` → `tests/health-check-logic.spec.ts` |
+| Formular-Logik, Validierung, Proof-of-Work | `src/lib/lead.ts` → `tests/lead-logic.spec.ts` |
+| DOM-Anbindung | `src/scripts/health-check.ts`, `src/scripts/lead-form.ts` |
+| Backend | n8n-Workflow **„Website-Leads · dynamics-tim.dev“** auf `n8n.dynamics-tim.dev` |
 
-Optional lassen sich Betreff und Nachricht anpassen:
+### Backend (n8n)
 
-```bash
-PUBLIC_PUSHOVER_TITLE="Neuer Besuch"
-PUBLIC_PUSHOVER_MESSAGE="Besuch auf {path}"
-```
+- `GET  {PUBLIC_LEAD_API}/challenge` gibt eine HMAC-signierte Proof-of-Work-Challenge aus (10 min gültig).
+- `POST {PUBLIC_LEAD_API}/submit` nimmt den Lead als `text/plain`-JSON an. Das ist ein CORS-„simple request“, also ohne Preflight.
+- Default für `PUBLIC_LEAD_API` ist `https://n8n.dynamics-tim.dev/webhook/dt-lead` (siehe `src/data/site.ts`). Mit `off` werden die Formulare deaktiviert und fallen auf eine vorausgefüllte E-Mail zurück.
+- Leads landen in der n8n-Data-Table `website_leads` und werden nach 6 Monaten automatisch gelöscht. Telegram meldet neue Leads **ohne** personenbezogene Daten.
 
-Sind Token und User-Key gesetzt, lädt das globale Layout `public/scripts/pushover-notifier.js` im Leerlauf nach (einmal pro Session) und erlaubt in der Content Security Policy Anfragen an `https://api.pushover.net`.
+### Sicherheitsmodell
 
-> Hinweis: Der Notifier verwendet aktuell zufällige Nachrichten aus einer festen Liste; `PUBLIC_PUSHOVER_MESSAGE` wird derzeit nicht ausgewertet. An den Titel wird ein 🔥 angehängt (ohne `PUBLIC_PUSHOVER_TITLE`: „Neuer Besuch🔥“).
+Die Seite ist statisch, die Endpunkte sind daher öffentlich. **Im Browser liegt kein Secret.** Schutz entsteht serverseitig in Schichten:
+
+1. Origin-Gate (`onlyRunIf` + CORS `allowedOrigins`): Nur `https://dynamics-tim.dev` löst Ausführungen aus.
+2. Honeypot-Feld und Mindest-Ausfüllzeit führen zu stillem Verwerfen. Bots erfahren nichts.
+3. Strikte Whitelist-Validierung: bekannte Felder, Längen, Steuer- und Bidi-Zeichen entfernt, Schutz vor Formel-Injection.
+4. Proof-of-Work (SHA-256, ALTCHA-Schema) mit HMAC-Signatur und Ablaufzeit.
+5. Replay-Schutz und Rate-Limit: 5 pro Stunde je gesalzenem IP-Hash, 40 pro Stunde global. Klartext-IPs werden nicht gespeichert.
+6. Keine automatische E-Mail an die eingegebene Adresse, damit niemand das Formular als Mail-Kanone missbrauchen kann.
+7. Erfolgreiche n8n-Ausführungen werden nicht gespeichert, damit keine Lead-Daten in der Execution-Historie liegen.
+
+> Die Grenzwerte in `src/lib/lead.ts` und im n8n-Node „Prüfen & entscheiden“ müssen übereinstimmen. Wer eine Frage oder Antwort-ID in `health-check.ts` umbenennt, muss die Whitelist im Workflow mitziehen.
+
+## 🎬 Pitch-Video
+
+`public/media/pitch.mp4` (720×900, H.264, ca. 1,4 MB) plus `pitch-poster.jpg`. Komponente: `src/components/PitchVideo.astro`. Das Video startet stumm und nur, solange es sichtbar ist. Bei `prefers-reduced-motion` oder Datensparmodus startet es nicht automatisch. Ton-Schalter und Transkript sind vorhanden.
 
 ## 📚 Content Collections
 
@@ -64,7 +81,7 @@ Das Repository enthält ein Workflow (`.github/workflows/deploy.yml`), der bei j
 3. das Build als Pages-Artefakt hochlädt
 4. via `actions/deploy-pages` auf GitHub Pages veröffentlicht
 
-Vor dem Build laufen die Playwright-Tests (`.github/workflows/quiz-smoke.yml`) — schlagen sie fehl, wird **nicht** deployed. Bei jedem Pull Request laufen dieselben Tests als Check.
+Vor dem Build laufen Lint und Playwright-Tests (`.github/workflows/e2e.yml`) — schlagen sie fehl, wird **nicht** deployed. Bei jedem Pull Request laufen dieselben Tests als Check.
 
 Die Seite ist unter `https://dynamics-tim.dev/` erreichbar. Domain & Basis-Pfad sind in `astro.config.mjs` hinterlegt.
 
@@ -74,10 +91,10 @@ Texte stehen nicht in den Templates, sondern in **`src/data/`**:
 
 | Datei                          | Inhalt                                                         |
 | ------------------------------ | -------------------------------------------------------------- |
-| `site.ts`                      | E-Mail, Buchungslink, Verfügbarkeit, Social Links, SEO-Links   |
-| `home.ts`                      | Startseite: Hero-Skills, Problem/Lösung, FAQ, Ablauf, Stimmen  |
-| `engagement-models.ts`         | Die drei Engagement-Modelle (Startseite + Quiz-Ergebnis)       |
-| `engagement-quiz.ts`           | Quiz-Fragen, Antworten, Punkte, Befund-/Risiko-Texte           |
+| `site.ts`                      | E-Mail, Buchungslink, Verfügbarkeit, Social Links, Lead-API    |
+| `home.ts`                      | Startseite: Hero, Story, Ergebnisse, Ablauf, Recruiter, FAQ    |
+| `health-check.ts`              | Health-Check: Fragen, Punkte, Hebel, Einstufung, Empfehlungen  |
+| `engagement-models.ts`         | Die drei Engagement-Modelle (Startseite + Leistungen)          |
 | `services.ts`                  | Leistungsseite                                                 |
 | `profile.ts`                   | Profilseite: Schwerpunkte & Highlights                         |
 | `legal-data.ts`                | Impressum/Datenschutz-Angaben                                  |
@@ -97,20 +114,20 @@ export const site = {
 };
 ```
 
-Alle Stellen auf der Website (Hero, Quick-Check, CTA) lesen diesen Wert aus — es reicht, ihn hier zu ändern.
+Alle Stellen auf der Website (Hero, Recruiter-Fakten, Kontakt, Footer) lesen diesen Wert aus — es reicht, ihn hier zu ändern.
 
 ## 🗂️ Projektstruktur
 
 ```
-├── public/                 # Statische Assets (Favicon, OG-Image, Manifest)
+├── public/                 # Statische Assets (Favicon, OG-Image, Manifest, media/ = Pitch-Video)
 ├── src/
 │   ├── components/         # UI-Komponenten (home/ = Sektionen der Startseite)
 │   ├── content/            # MDX Content Collections (Timeline, Projekte, Certs)
 │   ├── data/               # Alle Texte & Konfiguration
 │   ├── layouts/            # BaseLayout (Head, CSP, globale Skripte)
-│   ├── lib/                # Reine Logik ohne DOM (Quiz-Empfehlung)
+│   ├── lib/                # Reine Logik ohne DOM (Health-Check-Scoring, Lead/PoW)
 │   ├── pages/              # Astro Seitenrouten (SSG)
-│   ├── scripts/            # Client-Skripte (Animationen, Quiz)
+│   ├── scripts/            # Client-Skripte (Animationen, Health-Check, Formulare, Video)
 │   ├── styles/             # Tailwind Basestyles
 │   └── utils/              # url.ts, csp.ts, structured-data.ts
 ├── tests/                  # Playwright-Tests
