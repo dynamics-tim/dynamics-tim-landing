@@ -70,11 +70,10 @@ function buildRisk(answers: Answers): string {
     .join(' ');
 }
 
-function buildDerivation(answers: Answers): string {
-  const match = derivations.find(({ when }) =>
+function findDerivation(answers: Answers) {
+  return derivations.find(({ when }) =>
     Object.entries(when).every(([id, value]) => answers[id as QuestionId] === value)
   );
-  return match?.text ?? defaultDerivation;
 }
 
 /** Highest scoring model for the given answers; ties resolved by `tieBreakOrder`. */
@@ -104,7 +103,12 @@ export function getRecommendation(answers: Answers, forcedId?: string | null): R
     return { id: 'disqualify', badge: '', ...disqualifyResult };
   }
 
-  const modelId: ModelId = forcedId ? (isModelId(forcedId) ? forcedId : 'audit') : scoreAnswers(answers);
+  const derivation = findDerivation(answers);
+  const modelId: ModelId = forcedId
+    ? isModelId(forcedId)
+      ? forcedId
+      : 'audit'
+    : (derivation?.recommendation ?? scoreAnswers(answers));
   const model = engagementModels.find((entry) => entry.id === modelId);
   const caseStudy = model?.caseStudy ?? fallbacks.caseStudy;
 
@@ -115,7 +119,7 @@ export function getRecommendation(answers: Answers, forcedId?: string | null): R
     tagline: model?.tagline ?? '',
     finding: buildFinding(answers) || fallbacks.finding,
     risk: buildRisk(answers) || fallbacks.risk,
-    derivation: buildDerivation(answers),
+    derivation: derivation?.text ?? defaultDerivation,
     text: nextStepTexts[modelId],
     proofLabel: `Projekt-Spotlight: ${caseStudy.industry}`,
     proofText: caseStudy.text || fallbacks.caseStudy.text,

@@ -16,7 +16,7 @@ const expected: Array<[string, string]> = [
   ['automated/nobody/alerting', 'fullpackage'],
   ['automated/nobody/users', 'audit'],
   ['automated/nobody/no', 'audit'],
-  ['days/documented/alerting', 'fullpackage'],
+  ['days/documented/alerting', 'embedded'], // derivation override (text argues for embedded)
   ['days/documented/users', 'embedded'],
   ['days/documented/no', 'fullpackage'],
   ['days/oneperson/alerting', 'fullpackage'],

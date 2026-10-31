@@ -129,11 +129,19 @@ export const riskTexts: Record<string, string> = {
   users: 'Das Monitoring ist nicht früh genug, damit das Team aktiv reagieren kann.',
 };
 
-/**
- * "Ableitung" for specific answer combinations; first match wins.
- * Omitted questions match any answer.
- */
-export const derivations: Array<{ when: Partial<Record<QuestionId, string>>; text: string }> = [
+export interface Derivation {
+  /** Answers that must match; omitted questions match any answer */
+  when: Partial<Record<QuestionId, string>>;
+  text: string;
+  /**
+   * Recommendation to show for this combination instead of the score result.
+   * Set it when `text` argues for a specific model, so text and result agree.
+   */
+  recommendation?: ModelId;
+}
+
+/** "Ableitung" for specific answer combinations; first match wins. */
+export const derivations: Derivation[] = [
   {
     when: { '1': 'direct', '2': 'nobody' },
     text: 'Weil ihr direkt in Prod ändert und das Wissen nur in Einzelpersonen steckt, ist der Engpass die fehlende Standardisierung und Dokumentation — nicht der technische Funktionsumfang.',
@@ -145,6 +153,8 @@ export const derivations: Array<{ when: Partial<Record<QuestionId, string>>; tex
   {
     when: { '1': 'days', '2': 'documented', '3': 'alerting' },
     text: 'Weil ihr schon gut dokumentiert seid und überwacht werdet, braucht ihr keinen reinen Audit-Block, sondern eine gezielte Umsetzungskraft im Team.',
+    // Score is a tie (embedded 4 / fullpackage 4); the text argues for embedded
+    recommendation: 'embedded',
   },
 ];
 
