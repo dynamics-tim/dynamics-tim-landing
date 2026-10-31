@@ -7,18 +7,9 @@ const {
   ADDRESS,
   EMAIL,
   PHONE,
-  VAT_ID,
-  TRADE_REGISTER,
-  SUPERVISORY_AUTH
+  VAT_ID
 } = legalData;
 
-const hasTradeRegister = TRADE_REGISTER && TRADE_REGISTER !== 'optional';
-const tradeRegisterText = hasTradeRegister
-  ? TRADE_REGISTER
-  : 'TODO: Handelsregistereintrag und zuständige Kammer ergänzen, falls vorhanden.';
-const supervisoryAuthorityText = SUPERVISORY_AUTH && SUPERVISORY_AUTH.length > 0
-  ? SUPERVISORY_AUTH
-  : 'TODO: Zuständige Aufsichtsbehörde (Name, Anschrift, URL) ergänzen.';
 const mailHref = `mailto:${EMAIL}`;
 const sanitizedPhone = PHONE.replace(/[^+\d]/g, '');
 const phoneHref = `tel:${sanitizedPhone}`;
@@ -49,12 +40,6 @@ const phoneHref = `tel:${sanitizedPhone}`;
 
         <h3>Umsatzsteuer-ID</h3>
         <p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: <strong>{VAT_ID}</strong></p>
-
-        <!-- <h3>Registereintrag</h3>
-        <p>{tradeRegisterText}</p>
-
-        <h3>Aufsichtsbehörde</h3>
-        <p>{supervisoryAuthorityText}</p> -->
 
         <h3>Berufsrechtliche Regelungen</h3>
         <p>

@@ -1,25 +1,54 @@
 ---
-const base = import.meta.env.BASE_URL ?? '/';
-const to = (path: string) => {
-  const trimmed = path.replace(/^\//, '');
-  const [pathname, hash] = trimmed.split('#');
-  const normalized = pathname ? `${pathname.replace(/\/$/, '')}/` : '';
-  const suffix = hash ? `#${hash}` : '';
-  return `${base}${normalized}${suffix}`;
-};
+import { site } from '../data/site';
+import { asset, base, to } from '../utils/url';
 
 const navItems = [
   { label: 'Start', href: base },
   { label: 'Leistungen', href: to('services') },
   { label: 'Profil', href: to('profile') },
-  { label: 'Kontakt', href: to('contact') }
+  { label: 'Kontakt', href: to('contact') },
 ];
+
+/**
+ * The header CTA changes with scroll depth (share of the page scrolled):
+ * contact → quiz → booking. The client script below applies the stages.
+ */
+const isHome = Astro.url.pathname === base;
+const ctaStages = [
+  {
+    threshold: 0,
+    text: 'Kostenloses Erstgespräch',
+    mobileText: 'Erstgespräch',
+    href: to('contact'),
+    external: false,
+  },
+  {
+    threshold: 0.15,
+    text: 'Passenden Einstieg finden',
+    mobileText: 'Quiz',
+    href: isHome ? '#engagement-quiz' : to('#engagement-quiz'),
+    external: false,
+  },
+  {
+    threshold: 0.7,
+    text: '30-Min Slot buchen →',
+    mobileText: 'Buchen',
+    href: site.contact.bookingUrl,
+    external: true,
+  },
+];
+
+const ctaFocusClass =
+  'hover:bg-brand-600 focus-visible:bg-brand-600 hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2';
 ---
 
-<header class="sticky top-0 z-50 border-b border-surface-200/80 bg-white/85 shadow-sm backdrop-blur">
+<header
+  class="sticky top-0 z-50 border-b border-surface-200/80 bg-white/85 shadow-sm backdrop-blur"
+  data-cta-stages={JSON.stringify(ctaStages)}
+>
   <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
     <a href={base} data-astro-prefetch class="flex items-center gap-3 text-lg font-semibold text-brand-700 hover:text-brand-500">
-      <img src={`${base}favicon.svg`} alt="Tim Friedrich Logo" class="h-10 w-10 rounded-xl shadow-soft" />
+      <img src={asset('favicon.svg')} alt="Tim Friedrich Logo" class="h-10 w-10 rounded-xl shadow-soft" />
       <span class="hidden sm:inline-block">Tim Friedrich · Dynamics 365</span>
     </a>
     <nav class="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
@@ -31,9 +60,10 @@ const navItems = [
       <a
         id="nav-cta-desktop"
         data-quiz-cta="header"
+        data-header-cta="desktop"
         href={to('contact')}
         data-astro-prefetch
-        class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-brand-600 focus-visible:bg-brand-600 hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500 focus-visible:ring-offset-white"
+        class={`rounded-xl bg-brand-500 px-4 py-2 text-sm font-semibold text-white shadow-soft transition-colors ${ctaFocusClass} focus-visible:ring-offset-2 focus-visible:ring-brand-500 focus-visible:ring-offset-white`}
       >
         Kostenloses Erstgespräch
       </a>
@@ -41,9 +71,10 @@ const navItems = [
     <a
       id="nav-cta-mobile"
       data-quiz-cta="header"
+      data-header-cta="mobile"
       href={to('contact')}
       data-astro-prefetch
-      class="rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-soft transition-colors hover:bg-brand-600 focus-visible:bg-brand-600 hover:text-white focus-visible:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 md:hidden"
+      class={`rounded-xl bg-brand-500 px-3 py-2 text-sm font-semibold text-white shadow-soft transition-colors ${ctaFocusClass} focus-visible:ring-brand-400 md:hidden`}
       aria-label="Kontakt aufnehmen"
     >
       Kontakt
@@ -52,71 +83,55 @@ const navItems = [
 </header>
 
 <script>
-  (function () {
-    const desktopCta = document.getElementById('nav-cta-desktop') as HTMLAnchorElement | null;
-    const mobileCta = document.getElementById('nav-cta-mobile') as HTMLAnchorElement | null;
-    if (!desktopCta || !mobileCta) return;
+  interface CtaStage {
+    threshold: number;
+    text: string;
+    mobileText: string;
+    href: string;
+    external: boolean;
+  }
 
-    // Re-assign to const after null check so TS narrows inside closures
-    const dCta = desktopCta!;
-    const mCta = mobileCta!;
+  const header = document.querySelector<HTMLElement>('[data-cta-stages]');
+  const desktopCta = document.querySelector<HTMLAnchorElement>('[data-header-cta="desktop"]');
+  const mobileCta = document.querySelector<HTMLAnchorElement>('[data-header-cta="mobile"]');
 
-    // Derive base URL from the first nav link's href
-    const firstNavLink = document.querySelector('nav a.nav-link');
-    const base = firstNavLink ? new URL(firstNavLink.getAttribute('href') || '/', window.location.origin).pathname : '/';
-
-    const isHome =
-      window.location.pathname === '/' ||
-      window.location.pathname === base ||
-      window.location.pathname === `${base}index.html`;
-    const quizHref = isHome ? '#engagement-quiz' : `${base}#engagement-quiz`;
-
-    const stages = [
-      { threshold: 0, text: 'Kostenloses Erstgespräch', mobileText: 'Erstgespräch', href: `${base}contact/`, external: false },
-      { threshold: 0.15, text: 'Passenden Einstieg finden', mobileText: 'Quiz', href: quizHref, external: false },
-      { threshold: 0.7, text: '30-Min Slot buchen \u2192', mobileText: 'Buchen', href: 'https://outlook.office.com/bookwithme/user/c7bd6282644a4fcb82fd8cc491a921e5@dynamics-tim.dev?anonymous&ismsaljsauthenabled&ep=plink', external: true }
-    ];
-
+  if (header && desktopCta && mobileCta) {
+    const stages = JSON.parse(header.dataset.ctaStages ?? '[]') as CtaStage[];
     let currentStage = -1;
 
-    function updateCta() {
+    const applyStage = (link: HTMLAnchorElement, text: string, stage: CtaStage) => {
+      link.textContent = text;
+      link.setAttribute('href', stage.href);
+      if (stage.external) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      } else {
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
+      }
+    };
+
+    const updateCta = () => {
       const scrolled = window.scrollY + window.innerHeight;
       const total = document.documentElement.scrollHeight;
-      const pct = total > 0 ? scrolled / total : 0;
+      const depth = total > 0 ? scrolled / total : 0;
 
+      // Last stage whose threshold has been reached (stages are sorted ascending)
       let newStage = 0;
-      for (let i = stages.length - 1; i >= 0; i--) {
-        if (pct >= stages[i].threshold) {
-          newStage = i;
-          break;
-        }
-      }
+      stages.forEach((stage, index) => {
+        if (depth >= stage.threshold) newStage = index;
+      });
 
       if (newStage !== currentStage) {
         currentStage = newStage;
-        const s = stages[newStage];
-
-        dCta.textContent = s.text;
-        dCta.setAttribute('href', s.href);
-        mCta.textContent = s.mobileText;
-        mCta.setAttribute('href', s.href);
-
-        if (s.external) {
-          dCta.setAttribute('target', '_blank');
-          dCta.setAttribute('rel', 'noopener noreferrer');
-          mCta.setAttribute('target', '_blank');
-          mCta.setAttribute('rel', 'noopener noreferrer');
-        } else {
-          dCta.removeAttribute('target');
-          dCta.removeAttribute('rel');
-          mCta.removeAttribute('target');
-          mCta.removeAttribute('rel');
-        }
+        const stage = stages[newStage];
+        applyStage(desktopCta, stage.text, stage);
+        applyStage(mobileCta, stage.mobileText, stage);
       }
-    }
+    };
 
     window.addEventListener('scroll', updateCta, { passive: true });
     window.addEventListener('resize', updateCta, { passive: true });
     updateCta();
-  })();
+  }
 </script>

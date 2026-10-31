@@ -1,0 +1,110 @@
+---
+/**
+ * Sticky "Quick-Check" offer at the bottom of the landing page.
+ * Appears at 60 % scroll depth or on desktop exit intent; stays hidden for the
+ * session once dismissed or after the engagement quiz was completed.
+ */
+import Icon from '../Icon.astro';
+import { mailtoWith } from '../../data/site';
+
+const quickCheckHref = mailtoWith(
+  'Quick-Check anfragen',
+  'Hallo Tim, ich möchte den kostenlosen Dynamics 365 Quick-Check erhalten.'
+);
+---
+
+<div
+  id="quick-audit-banner"
+  class="fixed bottom-0 left-0 right-0 z-50 hidden translate-y-full transform transition-transform duration-500 ease-out"
+  role="complementary"
+  aria-label="Quick Audit Angebot"
+>
+  <div class="border-t border-brand-200 bg-brand-50 shadow-[0_-4px_30px_rgba(0,39,76,0.12)]">
+    <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-4 flex-wrap">
+      <div class="flex items-start gap-3">
+        <span
+          class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 text-brand-700 text-base"
+          >⚡</span
+        >
+        <div>
+          <p class="text-sm font-semibold text-slate-900">
+            Unsicher, ob dein CRM richtig aufgestellt ist?
+          </p>
+          <p class="text-sm text-slate-600">
+            Hol dir meinen <strong>10-Punkte Dynamics 365 Quick-Check</strong> — kostenlos per Mail.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <a
+          href={quickCheckHref}
+          class="rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        >
+          Quick-Check anfordern
+        </a>
+        <button
+          id="quick-audit-close"
+          class="rounded-lg p-1.5 text-slate-400 transition hover:bg-brand-100 hover:text-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+          aria-label="Schließen"
+        >
+          <Icon name="close" class="h-5 w-5" />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { QUIZ_COMPLETED_KEY, QUIZ_COMPLETE_EVENT } from '../../scripts/storage-keys';
+
+  const DISMISSED_KEY = 'qa-banner-dismissed';
+  const SHOW_AT_SCROLL_DEPTH = 0.6;
+  const SLIDE_DURATION_MS = 500;
+
+  const banner = document.getElementById('quick-audit-banner');
+  const closeBtn = document.getElementById('quick-audit-close');
+
+  if (banner && closeBtn) {
+    let shown = false;
+
+    const showBanner = () => {
+      if (
+        shown ||
+        sessionStorage.getItem(DISMISSED_KEY) ||
+        sessionStorage.getItem(QUIZ_COMPLETED_KEY)
+      ) {
+        return;
+      }
+      shown = true;
+      banner.classList.remove('hidden');
+      // Two frames: let the browser apply `display` before animating the slide-in
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => banner.classList.remove('translate-y-full'));
+      });
+    };
+
+    const hideBanner = () => {
+      banner.classList.add('translate-y-full');
+      setTimeout(() => banner.classList.add('hidden'), SLIDE_DURATION_MS);
+      sessionStorage.setItem(DISMISSED_KEY, '1');
+    };
+
+    const onScroll = () => {
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = document.documentElement.scrollHeight;
+      if (scrolled / total >= SHOW_AT_SCROLL_DEPTH) {
+        showBanner();
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+
+    closeBtn.addEventListener('click', hideBanner);
+    window.addEventListener(QUIZ_COMPLETE_EVENT, hideBanner);
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    // Desktop exit intent
+    document.documentElement.addEventListener('mouseleave', (event) => {
+      if (event.clientY <= 0) showBanner();
+    });
+  }
+</script>

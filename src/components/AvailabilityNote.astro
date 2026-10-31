@@ -1,0 +1,17 @@
+---
+/**
+ * "Nächste verfügbare Kapazität" hint with pulsing status dot.
+ * The label comes from `site.availability` — change it there.
+ */
+import type { HTMLAttributes } from 'astro/types';
+import { site } from '../data/site';
+
+type Props = HTMLAttributes<'p'>;
+
+const { class: className, ...attrs } = Astro.props as Props;
+---
+
+<p class={className} {...attrs}>
+  <span class="inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
+  Nächste verfügbare Kapazität: {site.availability.label}
+</p>

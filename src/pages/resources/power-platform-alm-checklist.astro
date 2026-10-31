@@ -1,14 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const base = import.meta.env.BASE_URL ?? '/';
-const to = (path: string) => {
-  const trimmed = path.replace(/^\//, '');
-  const [pathname, hash] = trimmed.split('#');
-  const normalized = pathname ? `${pathname.replace(/\/$/, '')}/` : '';
-  const suffix = hash ? `#${hash}` : '';
-  return `${base}${normalized}${suffix}`;
-};
+import { to } from '../../utils/url';
 
 const checklistBlocks = [
   {
@@ -84,7 +76,7 @@ const checklistBlocks = [
 
       <div class="mt-12 grid gap-6 md:grid-cols-2">
         {checklistBlocks.map((block) => (
-          <article class="card flex flex-col gap-4 border-surface-200 bg-white/90 transition" key={block.title}>
+          <article class="card flex flex-col gap-4 border-surface-200 bg-white/90 transition">
             <h2 class="text-xl font-semibold text-slate-900">{block.title}</h2>
             <ul class="space-y-2 text-base text-slate-600 list-disc pl-5">
               {block.items.map((item) => (

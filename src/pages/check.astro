@@ -1,23 +1,13 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import EngagementQuiz from "../components/EngagementQuiz.astro";
-import { engagementModels } from "../data/engagement-models";
-import { site } from "../data/site";
-
-const base = import.meta.env.BASE_URL ?? "/";
-const to = (path: string) => {
-  const trimmed = path.replace(/^\//, "");
-  const [pathname, hash] = trimmed.split("#");
-  const normalized = pathname ? `${pathname.replace(/\/$/, "")}/` : "";
-  const suffix = hash ? `#${hash}` : "";
-  return `${base}${normalized}${suffix}`;
-};
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EngagementQuiz from '../components/EngagementQuiz.astro';
+import { to } from '../utils/url';
 ---
 
 <BaseLayout
   title="Dynamics 365 Engagement-Check"
   description="Finde in drei Fragen heraus, welches Dynamics 365 Engagement-Modell zu deinem Team passt."
-  breadcrumbs={[{ name: "Engagement-Check", url: "/check/" }]}
+  breadcrumbs={[{ name: 'Engagement-Check', url: '/check/' }]}
 >
   <section class="bg-surface-100 py-16">
     <div class="mx-auto max-w-6xl px-6">
@@ -30,9 +20,6 @@ const to = (path: string) => {
       </div>
     </div>
   </section>
-  <EngagementQuiz
-    engagementModels={engagementModels}
-    availabilityLabel={site.availability.label}
-    modelLinkBase={to("/")}
-  />
+  {/* The engagement models live on the home page, so result links point there */}
+  <EngagementQuiz modelLinkBase={to('/')} />
 </BaseLayout>

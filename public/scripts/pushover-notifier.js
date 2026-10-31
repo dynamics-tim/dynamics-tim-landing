@@ -1,5 +1,5 @@
-// Get configuration from window object set by BaseLayout
-const config = window.__lazyLoaderConfig || {};
+// Configuration is set by BaseLayout.astro (only rendered when Pushover env vars exist)
+const config = window.__pushoverConfig || {};
 const token = config.pushoverToken;
 const user = config.pushoverUser;
 const endpoint = 'https://api.pushover.net/1/messages.json';
@@ -7,7 +7,6 @@ const endpoint = 'https://api.pushover.net/1/messages.json';
 if (!token || !user) {
   console.warn('Pushover notifier disabled: missing pushover token or user');
 } else {
-  const messageTemplate = config.pushoverMessage || 'New visitor on dynamics-tim.dev ({path})';
   const title = config.pushoverTitle+"🔥";
   
   // Use a global flag to prevent multiple notifications across page navigations

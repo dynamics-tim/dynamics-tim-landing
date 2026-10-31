@@ -1,0 +1,58 @@
+---
+import { problemSolutionStrip, type StripTone } from '../../data/home';
+
+/** Full class strings per tone (kept literal so Tailwind can detect them). */
+const toneStyles: Record<StripTone, { box: string; label: string; marker: string; symbol: string }> =
+  {
+    problem: {
+      box: 'border-red-100 bg-red-50/60',
+      label: 'bg-red-100 text-red-700',
+      marker: 'text-red-400',
+      symbol: '✗',
+    },
+    solution: {
+      box: 'border-brand-100 bg-brand-50/60',
+      label: 'bg-brand-100 text-brand-700',
+      marker: 'text-brand-400',
+      symbol: '→',
+    },
+    result: {
+      box: 'border-green-100 bg-green-50/60',
+      label: 'bg-green-100 text-green-700',
+      marker: 'text-green-500',
+      symbol: '✓',
+    },
+  };
+---
+
+<section class="bg-white py-16 border-b border-surface-100 animate-on-scroll">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="grid gap-8 md:grid-cols-3">
+      {
+        problemSolutionStrip.map((column, index) => {
+          const tone = toneStyles[column.tone];
+          return (
+            <div
+              class={`rounded-2xl border ${tone.box} p-6 space-y-3`}
+              data-reveal
+              data-reveal-delay={`${index * 80}`}
+            >
+              <div
+                class={`inline-flex items-center gap-2 rounded-full ${tone.label} px-3 py-1 text-xs font-semibold uppercase tracking-wide`}
+              >
+                {column.label}
+              </div>
+              <ul class="space-y-2 text-sm text-slate-700">
+                {column.items.map((item) => (
+                  <li class="flex items-start gap-2">
+                    <span class={`mt-0.5 ${tone.marker}`}>{tone.symbol}</span> {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

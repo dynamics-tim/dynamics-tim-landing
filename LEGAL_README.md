@@ -18,7 +18,7 @@
 1. Skripte mit `data-consent` markieren und echte `src` als `data-src` hinterlegen.
 2. Optionale Attribute per `data-attr-async=""`, `data-attr-defer=""`, `data-attr-referrerpolicy="no-referrer"` usw. setzen.
 3. Embeds (YouTube, Cal.com Widget, Maps) ohne `src` einsetzen, stattdessen `data-src` plus `data-consent="embeds"` verwenden.
-4. Bei neuen Domains die CSP in `src/layouts/BaseLayout.astro` anpassen (z. B. `frame-src`, `script-src`).
+4. Bei neuen Domains die CSP in `src/utils/csp.ts` anpassen (z. B. `frame-src`, `script-src`).
 
 ## Dienste & Verantwortung
 - Hosting/CDN: GitHub Pages / Fastly (Server-Logs, TLS-Termination).

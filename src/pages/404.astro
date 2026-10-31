@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const base = import.meta.env.BASE_URL ?? '/';
+import { base } from '../utils/url';
 ---
 
 <BaseLayout title="Seite nicht gefunden" showHeader={false} showFooter={false}>

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { render } from 'astro:content';
+import SectionHeader from './SectionHeader.astro';
 
 interface Props {
   items: CollectionEntry<'timeline'>[];
@@ -17,15 +18,14 @@ const rendered = await Promise.all(
 
 <section class="bg-surface-100 py-20 animate-on-scroll">
   <div class="mx-auto max-w-6xl px-6">
-    <div class="mb-10 max-w-3xl space-y-4">
-      <h2 class="section-title">Erfahrung im Überblick</h2>
-      <p class="text-lg text-slate-600">
-        Hands-on Erfahrung in Dynamics 365 Projekten mit Fokus auf Development, Technical Consulting und Team-Verstärkung.
-      </p>
-    </div>
+    <SectionHeader
+      title="Erfahrung im Überblick"
+      subtitle="Hands-on Erfahrung in Dynamics 365 Projekten mit Fokus auf Development, Technical Consulting und Team-Verstärkung."
+      reveal={false}
+    />
     <ol class="relative border-l border-surface-200">
       {rendered.map(({ entry, Content }) => (
-        <li class="relative ml-6 border-b border-surface-200 py-8 last:border-b-0" key={entry.id}>
+        <li class="relative ml-6 border-b border-surface-200 py-8 last:border-b-0">
           <div class="absolute -left-3 top-9 z-20 h-6 w-6 rounded-full border-4 border-white bg-accent-400 shadow-soft" aria-hidden="true"></div>
           <div class="card card--resume flex flex-col gap-2">
             <div class="flex flex-wrap items-center gap-3 text-sm font-semibold uppercase tracking-wide text-brand-600">
@@ -40,7 +40,7 @@ const rendered = await Promise.all(
             {entry.data.tags.length > 0 && (
               <div class="mt-4 flex flex-wrap gap-2">
                 {entry.data.tags.map((tag) => (
-                  <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-600" key={tag}>
+                  <span class="rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-600">
                     {tag}
                   </span>
                 ))}

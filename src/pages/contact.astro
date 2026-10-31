@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
 ---
 
 <BaseLayout
@@ -18,13 +19,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </p>
       <div class="mt-10 flex flex-col gap-4">
         <a
-          href="mailto:hello@dynamics-tim.dev"
+          href={site.contact.mailto}
           class="rounded-2xl bg-brand-500 px-6 py-3 text-base font-semibold text-white shadow-soft transition hover:bg-brand-400 hover:text-white focus-visible:text-white"
         >
-          hello@dynamics-tim.dev
+          {site.contact.email}
         </a>
         <a
-          href="https://outlook.office.com/bookwithme/user/c7bd6282644a4fcb82fd8cc491a921e5@dynamics-tim.dev?anonymous&ismsaljsauthenabled&ep=plink"
+          href={site.contact.bookingUrl}
           target="_blank"
           rel="noopener noreferrer"
           class="rounded-2xl border border-brand-200/60 bg-white px-6 py-3 text-base font-semibold text-brand-600 transition hover:border-brand-300 hover:bg-surface-100"

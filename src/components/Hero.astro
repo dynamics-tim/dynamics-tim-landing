@@ -1,26 +1,9 @@
 ---
+import AvailabilityNote from './AvailabilityNote.astro';
+import Icon from './Icon.astro';
+import { heroProofPoints, heroSkills } from '../data/home';
 import { site } from '../data/site';
-
-const base = import.meta.env.BASE_URL ?? '/';
-const to = (path: string) => {
-  const trimmed = path.replace(/^\//, '');
-  const [pathname, hash] = trimmed.split('#');
-  const normalized = pathname ? `${pathname.replace(/\/$/, '')}/` : '';
-  const suffix = hash ? `#${hash}` : '';
-  return `${base}${normalized}${suffix}`;
-};
-
-const testimonials = [
-  {
-    title: 'ORBIS SE Referenz',
-    quote:
-      'Tim überzeugte durch seine exzellente Analysefähigkeit und fand für alle auftretenden Probleme ausnahmslos gute Lösungen.',
-    attribution: 'Microsoft Platform Solutions, ORBIS SE'
-  }
-];
-
-const currentTestimonial = testimonials[0];
-const testimonialRotatorScript = `${base}scripts/testimonial-rotator.js`;
+import { asset, to } from '../utils/url';
 ---
 
 <section class="hero-ambient relative overflow-hidden bg-gradient-to-br from-brand-900 via-brand-800 to-accent-700 py-24 sm:py-28 lg:py-32 text-white">
@@ -41,7 +24,7 @@ const testimonialRotatorScript = `${base}scripts/testimonial-rotator.js`;
         >
           <div class="absolute -inset-1 rounded-full bg-gradient-to-br from-signal-400 via-accent-300 to-signal-500 opacity-75 blur-md animate-pulse group-hover:opacity-100 transition-opacity"></div>
           <img 
-            src={`${base}images/tim-portrait.jpg`}
+            src={asset('images/tim-portrait.jpg')}
             alt="Tim Friedrich - Dynamics 365 Developer & Technical Consultant"
             class="relative h-24 w-24 rounded-full object-cover ring-4 ring-white/20 shadow-xl group-hover:ring-white/40 transition-all duration-300 group-hover:scale-105"
             width="96"
@@ -64,7 +47,7 @@ const testimonialRotatorScript = `${base}scripts/testimonial-rotator.js`;
       <div class="space-y-3" data-reveal data-reveal-delay="200">
         <div class="flex flex-wrap items-center gap-4">
           <a
-            href="https://outlook.office.com/bookwithme/user/c7bd6282644a4fcb82fd8cc491a921e5@dynamics-tim.dev?anonymous&ismsaljsauthenabled&ep=plink"
+            href={site.contact.bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
             class="cta-glow hero-cta group inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-signal-400 via-signal-300 to-signal-500 px-7 py-3 text-base font-semibold text-brand-900 shadow-[0_24px_56px_-18px_rgba(255,185,0,0.8)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_30px_76px_-20px_rgba(255,185,0,0.85)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-900"
@@ -85,35 +68,22 @@ const testimonialRotatorScript = `${base}scripts/testimonial-rotator.js`;
             <span>In 60 Sekunden herausfinden</span>
           </a>
         </div>
-        <p class="text-xs text-white/40 flex items-center gap-1.5">
-          <span class="inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
-          Nächste verfügbare Kapazität: {site.availability.label}
-        </p>
-        <p class="text-sm text-white/60">Oder per Mail: <a href="mailto:hello@dynamics-tim.dev" class="underline text-white/80 hover:text-white transition-colors">hello@dynamics-tim.dev</a></p>
+        <AvailabilityNote class="text-xs text-white/40 flex items-center gap-1.5" />
+        <p class="text-sm text-white/60">Oder per Mail: <a href={site.contact.mailto} class="underline text-white/80 hover:text-white transition-colors">{site.contact.email}</a></p>
         <div class="flex flex-wrap items-center gap-3 text-sm text-white/50" data-reveal data-reveal-delay="220">
-          <span class="flex items-center gap-1.5"><span class="inline-block h-1.5 w-1.5 rounded-full bg-signal-400"></span>20+ Projekte</span>
-          <span class="flex items-center gap-1.5"><span class="inline-block h-1.5 w-1.5 rounded-full bg-signal-400"></span>ORBIS SE, Maschinenbau, Handel</span>
-          <span class="flex items-center gap-1.5"><span class="inline-block h-1.5 w-1.5 rounded-full bg-signal-400"></span>Ø 3 Monate Audit → Go-Live</span>
+          {heroProofPoints.map((point) => (
+            <span class="flex items-center gap-1.5"><span class="inline-block h-1.5 w-1.5 rounded-full bg-signal-400"></span>{point}</span>
+          ))}
         </div>
       </div>
       <ul class="mt-8 grid gap-3 text-base text-white/90 sm:grid-cols-3 hero-skills-list" data-reveal data-reveal-delay="260">
-        {[
-          'C# Plugins & Power Automate',
-          'Azure Integrations',
-          'UI Test Automation (Playwright)',
-          'Customization & Configuration',
-          'Custom Controls (PCF)',
-          'Azure DevOps, Clean ALM & Observability'
-        ].map((item, index) => (
-          <li class={`hero-skill-card hero-skill-card--${index + 1} flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 px-3 py-2 shadow-soft backdrop-blur-sm transition-all duration-300`}>
+        {heroSkills.map((item, index) => (
+          <li
+            class="hero-skill-card flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 px-3 py-2 shadow-soft backdrop-blur-sm transition-all duration-300"
+            style={`--skill-index: ${index}`}
+          >
             <span class="hero-skill-icon flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-signal-400 transition-all duration-300">
-              <svg viewBox="0 0 20 20" fill="currentColor" class="h-4 w-4">
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 0 1 0 1.414l-7.25 7.25a1 1 0 0 1-1.414 0l-3.5-3.5a1 1 0 1 1 1.414-1.414l2.793 2.793 6.543-6.543a1 1 0 0 1 1.414 0z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
+              <Icon name="check" class="h-4 w-4" />
             </span>
             <span class="hero-skill-text transition-all duration-300">{item}</span>
           </li>
