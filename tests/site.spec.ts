@@ -59,3 +59,25 @@ test('text can be selected (no global user-select lock)', async ({ page }) => {
   const userSelect = await page.locator('h1').evaluate((el) => getComputedStyle(el).userSelect);
   expect(userSelect).not.toBe('none');
 });
+
+test('select option lists stay readable in dark and light forms', async ({ page }) => {
+  const optionColors = (selector: string) =>
+    page.locator(selector).evaluate((select: HTMLSelectElement) => {
+      const option = getComputedStyle(select.options[1]);
+      return { scheme: getComputedStyle(select).colorScheme, bg: option.backgroundColor, fg: option.color };
+    });
+
+  await page.goto('/contact/');
+  expect(await optionColors('#contact-lead-role')).toEqual({
+    scheme: 'dark',
+    bg: 'rgb(14, 17, 12)', // ink-900
+    fg: 'rgb(244, 245, 240)', // paper
+  });
+
+  await page.goto('/check/');
+  expect(await optionColors('#hc-lead-role')).toEqual({
+    scheme: 'light',
+    bg: 'rgb(250, 251, 247)', // paper-50
+    fg: 'rgb(7, 9, 6)', // ink-950
+  });
+});
