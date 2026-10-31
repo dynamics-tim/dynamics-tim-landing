@@ -6,10 +6,10 @@ import globals from 'globals';
 
 export default [
   {
-    ignores: ['dist', '.astro', '.dist', 'node_modules', 'scripts']
+    ignores: ['dist', '.astro', '.dist', 'node_modules', 'scripts', 'test-results']
   },
   js.configs.recommended,
-  ...tseslint.configs.recommended,
+  ...tseslint.configs['flat/recommended'],
   ...astroPlugin.configs['flat/recommended'],
   {
     files: ['**/*.{ts,tsx}', '**/*.astro', '**/*.astro/*.ts', '**/*.astro/*.js'],
@@ -26,6 +26,25 @@ export default [
           varsIgnorePattern: '^_'
         }
       ]
+    }
+  },
+  {
+    // Plain browser scripts served as-is from /public
+    files: ['public/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        ...globals.browser
+      }
+    }
+  },
+  {
+    // Tooling / config files executed by Node
+    files: ['*.config.{js,mjs,ts}', 'tests/**/*.ts'],
+    languageOptions: {
+      globals: {
+        ...globals.node
+      }
     }
   },
   prettier
