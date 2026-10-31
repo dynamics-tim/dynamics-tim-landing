@@ -1,0 +1,42 @@
+---
+import AvailabilityNote from '../AvailabilityNote.astro';
+import { site } from '../../data/site';
+import { to } from '../../utils/url';
+---
+
+<section
+  class="bg-gradient-to-br from-brand-900 via-brand-800 to-accent-600 py-24 text-white"
+  data-reveal
+  data-reveal-delay="0"
+>
+  <div class="mx-auto max-w-5xl px-6 text-center">
+    <h2 class="text-3xl font-bold sm:text-4xl" data-reveal data-reveal-delay="0">
+      Bereit für Verstärkung in deinem Dynamics 365 Team?
+    </h2>
+    <p class="mt-4 text-lg text-slate-200" data-reveal data-reveal-delay="80">
+      Lass uns im kostenlosen Erstgespräch klären, wie ich dein Team mit Senior-Level Expertise in
+      Development und Technical Consulting unterstützen kann.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-4" data-reveal data-reveal-delay="160">
+      <a
+        href={site.contact.bookingUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="cta-glow rounded-2xl bg-white px-6 py-3 text-base font-semibold text-brand-700 shadow-soft transition hover:bg-surface-200 btn-pulse"
+      >
+        30-Min Slot buchen →
+      </a>
+      <a
+        href={to('services')}
+        class="cta-outline rounded-2xl border border-white/60 px-6 py-3 text-base font-semibold text-white transition hover:bg-white/15"
+      >
+        Dynamics 365 Leistungen ansehen
+      </a>
+    </div>
+    <AvailabilityNote
+      class="mt-4 text-sm text-white/50 flex items-center justify-center gap-2"
+      data-reveal
+      data-reveal-delay="200"
+    />
+  </div>
+</section>

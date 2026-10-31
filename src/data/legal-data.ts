@@ -1,6 +1,7 @@
-﻿import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { site } from './site';
 
 export interface LegalData {
   BUSINESS_NAME: string;
@@ -19,7 +20,7 @@ export interface LegalData {
 const defaultData: LegalData = {
   BUSINESS_NAME: 'Tim Friedrich - Dynamics 365 Freelancer',
   ADDRESS: 'Heßlingerstraße 2, 88518 Herbertingen, Deutschland',
-  EMAIL: 'hello@dynamics-tim.dev',
+  EMAIL: site.contact.email,
   PHONE: '+4915156940452',
   VAT_ID: 'DE453253034',
   TRADE_REGISTER: 'optional',

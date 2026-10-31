@@ -9,18 +9,11 @@ const {
   PHONE,
   PROCESSORS,
   CONTACT_RETENTION_MONTHS,
-  SUPERVISORY_AUTH,
   DPO,
   HOSTING
 } = legalData;
 
 const processorList = Array.isArray(PROCESSORS) ? PROCESSORS : [];
-const supervisoryAuthorityText = SUPERVISORY_AUTH && SUPERVISORY_AUTH.length > 0
-  ? SUPERVISORY_AUTH
-  : 'TODO: Zuständige Aufsichtsbehörde (Name, Anschrift, URL) ergänzen.';
-const dpoInfo = DPO && DPO.length > 0
-  ? DPO
-  : 'Es ist kein Datenschutzbeauftragter bestellt. TODO: Kontaktdaten ergänzen, falls künftig erforderlich.';
 ---
 
 <BaseLayout
@@ -48,10 +41,6 @@ const dpoInfo = DPO && DPO.length > 0
           E-Mail: <a href={`mailto:${EMAIL}`}>{EMAIL}</a><br />
           Telefon: <a href={`tel:${PHONE.replace(/[^+\d]/g, '')}`}>{PHONE}</a>
         </p>
-        <!-- <p>{dpoInfo}</p> -->
-
-        <!-- <h3>Aufsichtsbehörde</h3>
-        <p>{supervisoryAuthorityText}</p> -->
 
         <h2>Zwecke, Rechtsgrundlagen und Datenkategorien</h2>
         <h3>Bereitstellung der Website und Server-Logs</h3>

@@ -1,0 +1,28 @@
+---
+import { faqs } from '../../data/home';
+---
+
+<section class="bg-surface-100 py-20 animate-on-scroll" id="faq">
+  <div class="mx-auto max-w-6xl px-6">
+    <h2 class="section-title" data-reveal data-reveal-delay="0">FAQ: Dynamics 365 Zusammenarbeit</h2>
+    <div class="mt-10 space-y-6" data-reveal data-reveal-delay="80">
+      {
+        faqs.map((faq, index) => (
+          <details
+            class="group rounded-2xl border border-surface-200 bg-white/90 p-6 shadow-soft transition"
+            data-reveal
+            data-reveal-delay={`${index * 80 + 160}`}
+          >
+            <summary class="flex cursor-pointer items-center justify-between gap-4 text-left text-lg font-semibold text-slate-900">
+              <span>{faq.question}</span>
+              <span class="text-brand-400 transition group-open:rotate-45" aria-hidden="true">
+                +
+              </span>
+            </summary>
+            <div class="mt-4 text-base text-slate-600" set:html={faq.answer} />
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

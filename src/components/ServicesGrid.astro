@@ -1,11 +1,6 @@
 ---
-interface ServiceItem {
-  title: string;
-  description: string;
-  cta?: string;
-  href?: string;
-  id?: string;
-}
+import SectionHeader from './SectionHeader.astro';
+import type { ServiceItem } from '../data/services';
 
 interface Props {
   heading?: string;
@@ -18,10 +13,7 @@ const { heading = 'Leistungen', subheading, items } = Astro.props as Props;
 
 <section class="bg-surface-100 py-20 animate-on-scroll">
   <div class="mx-auto max-w-6xl px-6">
-    <div class="mb-10 max-w-3xl space-y-4">
-      <h2 class="section-title" data-reveal data-reveal-delay="0">{heading}</h2>
-      {subheading && <p class="text-lg text-slate-600" data-reveal data-reveal-delay="80">{subheading}</p>}
-    </div>
+    <SectionHeader title={heading} subtitle={subheading} />
     <div class="grid gap-6 md:grid-cols-2">
       {items.map((service, index) => (
         <article

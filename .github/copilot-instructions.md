@@ -2,9 +2,9 @@
 
 # Copilot Instructions - Tim Freelance Landing
 
-This is an **Astro 6** + Tailwind CSS 3 static site for Tim Friedrich's Dynamics 365 freelancing services, deployed on GitHub Pages at `https://dynamics-tim.dev/`.
+This is an **Astro 7** + Tailwind CSS 3 static site for Tim Friedrich's Dynamics 365 freelancing services, deployed on GitHub Pages at `https://dynamics-tim.dev/`.
 
-**Stack:** Astro 6 (SSG) · TypeScript (strict) · Tailwind CSS 3 · MDX content collections · GitHub Actions CI/CD
+**Stack:** Astro 7 (SSG) · TypeScript (strict) · Tailwind CSS 3 · MDX content collections · GitHub Actions CI/CD
 
 ## Build & Run Commands
 
@@ -31,30 +31,41 @@ npm run format    # Prettier with astro plugin
 
 ```
 src/
-  components/   Astro components (island architecture — minimal client-side JS)
+  components/   Astro components (minimal client-side JS)
+    home/       Sections of the landing page (index.astro only composes them)
+    profile/    Profile page building blocks
+    Icon.astro  Inline SVG icon set — use instead of pasting <svg> markup
   content/      MDX content collections: timeline/, projects/, certs/
-  layouts/      BaseLayout.astro (SEO, CSP, font loading), SeoHead.astro (JSON-LD)
+  data/         ALL copy & configuration (site.ts, home.ts, services.ts, profile.ts,
+                engagement-models.ts, engagement-quiz.ts, legal-data.ts)
+  layouts/      BaseLayout.astro (head, CSP, fonts, global scripts)
+  lib/          Pure, DOM-free logic (engagement-quiz.ts — unit tested)
   pages/        Astro pages (SSG routes, trailingSlash: always)
+  scripts/      Client-side TS modules (animations, quiz DOM wiring, storage keys)
   styles/       global.css — .card, .section-title, .nav-link CSS utilities
-  data/         Static data files
-  scripts/      Pushover notification script (`pushover-notifier.ts`)
-public/         Static assets, CNAME (GitHub Pages custom domain)
+  utils/        url.ts (to/asset/base), csp.ts, structured-data.ts, collections.ts
+public/         Static assets served as-is (reveal.js, consent.js, pushover-notifier.js)
 scripts/        generate-og.mjs, generate-favicons.mjs (run on npm install)
+tests/          Playwright: quiz E2E smoke test + quiz logic table test
 ```
 
 **Key patterns:**
-- Use `import.meta.env.BASE_URL` for all asset paths; use the `to()` helper for page routes (normalizes trailing slashes for GitHub Pages compatibility)
-- The `to()` helper is currently duplicated across components — update all instances if modifying, or extract to a shared util
+- **Content lives in `src/data/`** — change copy there, not in the templates. Contact data, booking URL, availability and social links are in `src/data/site.ts` (single source of truth)
+- Links: import from `src/utils/url.ts` — `to('services')` for pages, `asset('images/x.jpg')` for files in `public/`, `base` for the root. Never hard-code `/page`
+- Icons: `<Icon name="check" class="h-4 w-4" />` (`src/components/Icon.astro`); add new icons to its map
+- Section headings: `<SectionHeader title subtitle />`; availability hint: `<AvailabilityNote class="…" />`
+- Tailwind classes that depend on data (tones/variants) must be written as full literal strings in a map — never build class names by string concatenation of fragments
 - React 18 is a peer dependency for Astro islands only — do not build standalone React components
-- Font paths: `global.css` uses absolute `/assets/fonts/`; `BaseLayout.astro` uses `${base}assets/fonts/` — keep both in sync
-- Use `data-reveal` / `data-reveal-delay` attributes for scroll-triggered animations
+- Font paths: `global.css` uses absolute `/assets/fonts/`; `BaseLayout.astro` preloads via `asset('assets/fonts/…')` — keep both in sync
+- Use `data-reveal` / `data-reveal-delay` attributes for scroll-triggered fade-ins (public/assets/js/reveal.js); `.animate-on-scroll` / `.animate-scale-up` on sections (src/scripts/animations.ts); `data-counter` for count-up numbers
 
 ## Key Integrations
 
 - **GitHub Pages** — deployed via `.github/workflows/deploy.yml` on main push
 - **Pushover** — optional visitor notifications via env vars (`PUBLIC_PUSHOVER_TOKEN`, `PUBLIC_PUSHOVER_USER`, `PUBLIC_PUSHOVER_TITLE`, `PUBLIC_PUSHOVER_MESSAGE`). When set, the Pushover API is added to the CSP and notification scripts are loaded.
 - **Cal.com** — booking widget integration
-- **CSP** — dynamically built in `BaseLayout.astro`; update the corresponding source array when adding any external resource
+- **CSP** — built by `buildCsp()` in `src/utils/csp.ts`; add new external origins there
+- **Engagement quiz** — copy & scoring in `src/data/engagement-quiz.ts`, logic in `src/lib/engagement-quiz.ts` (pinned by `tests/engagement-quiz-logic.spec.ts`), DOM wiring in `src/scripts/engagement-quiz.ts`. Title/badge/tagline/case study come from `engagement-models.ts`
 
 ## Content Collections (`src/content/`)
 
@@ -75,10 +86,18 @@ Tags and skills arrays use consistent casing across entries (e.g., `"Dynamics 36
 - All animations MUST have `prefers-reduced-motion: reduce` overrides
 - Use `cubic-bezier(0.16, 1, 0.3, 1)` as the standard easing curve
 
+## Verifying Changes
+
+```bash
+npm run lint        # must pass with 0 warnings
+npm run build
+npm run test:e2e    # Playwright: quiz smoke tests + quiz logic table
+```
+
 ## Common Pitfalls
 
 - Never use `<a href="/page">` — always route through `base` or `to()` for GitHub Pages compatibility
-- Don't add `<script>` tags without updating the CSP in `BaseLayout.astro`
+- Don't add external `<script>`/`fetch` origins without updating `src/utils/csp.ts`
 - Don't import global CSS anywhere except `BaseLayout.astro`
 - Content collection schema mismatches break the build — always validate with `npm run sync`
 - Don't add `@font-face` declarations without also updating the preload links in `BaseLayout.astro`

@@ -1,8 +1,6 @@
 ---
-interface Breadcrumb {
-  name: string;
-  url: string;
-}
+import { site } from '../data/site';
+import type { Breadcrumb } from '../utils/structured-data';
 
 interface Props {
   title?: string;
@@ -58,11 +56,7 @@ const jsonLd = {
       description,
       url: siteUrl,
       image: imageUrl,
-      sameAs: [
-        'https://github.com/tim-freelance',
-        'https://www.linkedin.com/in/tim-friedrich',
-        'https://www.youtube.com/@tim-freelance'
-      ],
+      sameAs: [...site.seo.sameAs],
       knowsAbout: [
         'Dynamics 365 Sales',
         'Dynamics 365 Customer Service',

@@ -1,19 +1,38 @@
 ---
-import type { EngagementModel } from "../data/engagement-models";
+/**
+ * 3-question quiz that recommends an engagement model.
+ * Questions/copy: `data/engagement-quiz.ts` · Logic: `lib/engagement-quiz.ts`
+ * · DOM wiring: `scripts/engagement-quiz.ts`
+ */
+import AvailabilityNote from './AvailabilityNote.astro';
+import Icon from './Icon.astro';
+import { quizQuestions } from '../data/engagement-quiz';
+import { site } from '../data/site';
 
 interface Props {
-  engagementModels: EngagementModel[];
-  availabilityLabel: string;
+  /**
+   * Prefix for "Mehr zum Modell" links. Leave empty on pages that render the
+   * engagement models section (links scroll to it); otherwise pass the URL of
+   * the page that does (e.g. the home page).
+   */
   modelLinkBase?: string;
 }
 
-const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props as Props;
+const { modelLinkBase = '' } = Astro.props as Props;
+
+const optionClass =
+  'quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60';
+const smallButtonClass =
+  'rounded-lg border border-surface-300 text-slate-600 transition hover:border-brand-300 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60';
+const resultBoxClass = 'rounded-xl border border-surface-200 bg-surface-50 p-4';
+const resultBoxLabelClass = 'text-xs font-semibold uppercase tracking-wide text-slate-500';
 ---
 
-{/* 3-Question Selector Quiz */}
 <section
   class="bg-brand-900 py-20 text-white animate-on-scroll"
   aria-labelledby="engagement-quiz-title"
+  data-engagement-quiz
+  data-model-link-base={modelLinkBase}
 >
   <div class="mx-auto max-w-6xl px-6">
     <div
@@ -28,7 +47,7 @@ const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props 
             Nicht sicher, was du brauchst?
           </p>
           <h2 id="engagement-quiz-title" class="text-2xl font-semibold text-white">
-            Beantworte 3 Fragen und erhalte eine passende Empfehlung.
+            Beantworte {quizQuestions.length} Fragen und erhalte eine passende Empfehlung.
           </h2>
           <p class="mt-2 text-sm text-white/70">
             Dauer: unter 60 Sekunden. Du kannst deine Antworten jederzeit anpassen.
@@ -43,11 +62,11 @@ const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props 
       <div class="mt-7 space-y-5" id="quiz-container">
         <div class="rounded-2xl border border-surface-200 bg-white p-5">
           <div class="mb-3 flex items-center justify-between gap-3">
-            <p id="quiz-step-label" class="text-sm font-semibold text-slate-800">Frage 1 von 3</p>
+            <p id="quiz-step-label" class="text-sm font-semibold text-slate-800">Frage 1 von {quizQuestions.length}</p>
             <button
               id="quiz-reset-top"
               type="button"
-              class="hidden rounded-lg border border-surface-300 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
+              class={`hidden ${smallButtonClass} px-3 py-1.5 text-xs font-medium`}
             >
               Neu starten
             </button>
@@ -62,125 +81,35 @@ const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props 
         </div>
 
         <div class="space-y-5" id="quiz-steps">
-          <div class="quiz-step rounded-2xl border border-surface-200 bg-white p-6" data-step="1">
-            <p class="text-base font-medium text-slate-800">
-              1. Wie lange dauert bei euch ein Release von Dev nach Prod?
-            </p>
-            <div class="mt-4 grid gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
-                data-q="1"
-                data-v="automated"
-                aria-pressed="false"
+          {
+            quizQuestions.map((question, questionIndex) => (
+              <div
+                class={`quiz-step ${questionIndex > 0 ? 'hidden ' : ''}rounded-2xl border border-surface-200 bg-white p-6`}
+                data-step={question.id}
               >
-                Stunden — läuft automatisiert
-              </button>
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
-                data-q="1"
-                data-v="days"
-                aria-pressed="false"
-              >
-                Ein bis zwei Tage, mit manuellen Schritten
-              </button>
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
-                data-q="1"
-                data-v="weeks"
-                aria-pressed="false"
-              >
-                Über eine Woche
-              </button>
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60 sm:col-span-2"
-                data-q="1"
-                data-v="direct"
-                aria-pressed="false"
-              >
-                Ehrlich: wir ändern direkt in Prod
-              </button>
-            </div>
-          </div>
-
-          <div
-            class="quiz-step hidden rounded-2xl border border-surface-200 bg-white p-6"
-            data-step="2"
-          >
-            <p class="text-base font-medium text-slate-800">
-              2. Kann jemand im Team sagen, was die einzelnen Plugins und Flows tun?
-            </p>
-            <div class="mt-4 grid gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
-                data-q="2"
-                data-v="documented"
-                aria-pressed="false"
-              >
-                Ja, ist dokumentiert
-              </button>
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
-                data-q="2"
-                data-v="oneperson"
-                aria-pressed="false"
-              >
-                Eine Person weiß es
-              </button>
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60 sm:col-span-2"
-                data-q="2"
-                data-v="nobody"
-                aria-pressed="false"
-              >
-                Niemand — historisch gewachsen
-              </button>
-            </div>
-          </div>
-
-          <div
-            class="quiz-step hidden rounded-2xl border border-surface-200 bg-white p-6"
-            data-step="3"
-          >
-            <p class="text-base font-medium text-slate-800">
-              3. Wenn nachts ein Plugin fehlschlägt — merkt das jemand?
-            </p>
-            <div class="mt-4 grid gap-3 sm:grid-cols-2">
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
-                data-q="3"
-                data-v="alerting"
-                aria-pressed="false"
-              >
-                Ja, Monitoring und Alerting laufen
-              </button>
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
-                data-q="3"
-                data-v="users"
-                aria-pressed="false"
-              >
-                Fällt irgendwann beim Anwender auf
-              </button>
-              <button
-                type="button"
-                class="quiz-btn rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm font-medium text-slate-700 transition hover:border-brand-400 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60 sm:col-span-2"
-                data-q="3"
-                data-v="no"
-                aria-pressed="false"
-              >
-                Nein
-              </button>
-            </div>
-          </div>
+                <p class="text-base font-medium text-slate-800">
+                  {questionIndex + 1}. {question.prompt}
+                </p>
+                <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                  {question.options.map((option, optionIndex) => (
+                    <button
+                      type="button"
+                      class={
+                        optionIndex === question.options.length - 1
+                          ? `${optionClass} sm:col-span-2`
+                          : optionClass
+                      }
+                      data-q={question.id}
+                      data-v={option.value}
+                      aria-pressed="false"
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))
+          }
         </div>
 
         <div id="quiz-result" class="hidden" aria-live="polite">
@@ -191,12 +120,7 @@ const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props 
               <span
                 class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-brand-600"
               >
-                <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
-                  <path
-                    fill-rule="evenodd"
-                    d="M16.707 5.293a1 1 0 0 1 0 1.414l-7.25 7.25a1 1 0 0 1-1.414 0l-3.5-3.5a1 1 0 1 1 1.414-1.414l2.793 2.793 6.543-6.543a1 1 0 0 1 1.414 0z"
-                    clip-rule="evenodd"></path>
-                </svg>
+                <Icon name="check" class="h-5 w-5" />
               </span>
               <p class="text-sm font-semibold uppercase tracking-wide text-brand-700">
                 Meine Empfehlung für dich
@@ -207,28 +131,24 @@ const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props 
                 id="quiz-result-badge"
                 class="mb-2 inline-flex items-center rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700 ring-1 ring-brand-200/60"
               ></span>
-              <h4
-                id="quiz-result-title"
-                class="text-2xl font-semibold text-slate-900"
-                tabindex="-1"
-              ></h4>
-              <p id="quiz-result-tagline" class="mt-1 text-sm font-medium italic text-brand-600">
-              </p>
+              <h4 id="quiz-result-title" class="text-2xl font-semibold text-slate-900" tabindex="-1">
+              </h4>
+              <p id="quiz-result-tagline" class="mt-1 text-sm font-medium italic text-brand-600"></p>
             </div>
 
             <div class="grid gap-4 md:grid-cols-2">
-              <div class="rounded-xl border border-surface-200 bg-surface-50 p-4">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Befund</p>
+              <div class={resultBoxClass}>
+                <p class={resultBoxLabelClass}>Befund</p>
                 <p id="quiz-result-finding" class="mt-2 text-sm text-slate-700"></p>
               </div>
-              <div class="rounded-xl border border-surface-200 bg-surface-50 p-4">
-                <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Risiko</p>
+              <div class={resultBoxClass}>
+                <p class={resultBoxLabelClass}>Risiko</p>
                 <p id="quiz-result-risk" class="mt-2 text-sm text-slate-700"></p>
               </div>
             </div>
 
-            <div class="rounded-xl border border-surface-200 bg-surface-50 p-4">
-              <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Ableitung</p>
+            <div class={resultBoxClass}>
+              <p class={resultBoxLabelClass}>Ableitung</p>
               <p id="quiz-result-derivation" class="mt-2 text-sm text-slate-700"></p>
             </div>
 
@@ -246,10 +166,8 @@ const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props 
               </blockquote>
             </div>
 
-            <div class="rounded-xl border border-surface-200 bg-surface-50 p-4">
-              <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                Nächster Schritt
-              </p>
+            <div class={resultBoxClass}>
+              <p class={resultBoxLabelClass}>Nächster Schritt</p>
               <p id="quiz-result-text" class="mt-2 text-base text-slate-600"></p>
             </div>
 
@@ -258,7 +176,7 @@ const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props 
             <div class="flex flex-wrap items-center gap-3 pt-1">
               <a
                 id="quiz-result-cal"
-                href="https://outlook.office.com/bookwithme/user/c7bd6282644a4fcb82fd8cc491a921e5@dynamics-tim.dev?anonymous&ismsaljsauthenabled&ep=plink"
+                href={site.contact.bookingUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="cta-glow inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-signal-400 via-signal-300 to-signal-500 px-6 py-3 text-sm font-semibold text-brand-900 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
@@ -272,568 +190,21 @@ const { engagementModels, availabilityLabel, modelLinkBase = "" } = Astro.props 
               >
                 Mehr zum Modell &rarr;
               </a>
-              <button
-                id="quiz-edit"
-                type="button"
-                class="rounded-lg border border-surface-300 px-3 py-2 text-sm font-medium text-slate-600 transition hover:border-brand-300 hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-300/60"
-              >
+              <button id="quiz-edit" type="button" class={`${smallButtonClass} px-3 py-2 text-sm font-medium`}>
                 Neu starten
               </button>
             </div>
-            <p class="flex items-center gap-1.5 text-xs text-slate-400">
-              <span class="inline-block h-2 w-2 rounded-full bg-green-400 animate-pulse"></span>
-              Nächste verfügbare Kapazität: {availabilityLabel}
-            </p>
+            <AvailabilityNote class="flex items-center gap-1.5 text-xs text-slate-400" />
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-<script
-  type="application/json"
-  id="quiz-data"
-  set:html={JSON.stringify({
-    modelLinkBase,
-    caseStudies: Object.fromEntries(engagementModels.map((model) => [model.id, model.caseStudy])),
-  })
-    .replace(/</g, "\\u003c")
-    .replace(/>/g, "\\u003e")
-    .replace(/&/g, "\\u0026")
-    .replace(/\u2028/g, "\\u2028")
-    .replace(/\u2029/g, "\\u2029")}
-></script>
+
 <script>
-  (function () {
-    const totalSteps = 3;
-    const answers: Record<string, string> = {};
-    const answerLabels: Record<string, string> = {};
-    const storageKey = "engagement-quiz-result";
-    const completedKey = "quiz-completed";
-    const validRecommendationIds = new Set(["audit", "embedded", "fullpackage"]);
-    let forcedRecommendationId: string | null = null;
-    let quizStarted = false;
-    const questionLabels: Record<string, string> = {
-      "1": "Release-Reife",
-      "2": "Wissensverteilung",
-      "3": "Fehlersichtbarkeit",
-    };
-    const quizData: {
-      modelLinkBase: string;
-      caseStudies: Record<string, { industry: string; text: string }>;
-    } = JSON.parse(document.getElementById("quiz-data")?.textContent ?? "{}");
-    const modelLinkBase = quizData.modelLinkBase ?? "";
-    const caseStudyLookup = new Map(Object.entries(quizData.caseStudies ?? {}));
-    const bookingUrl =
-      "https://outlook.office.com/bookwithme/user/c7bd6282644a4fcb82fd8cc491a921e5@dynamics-tim.dev?anonymous&ismsaljsauthenabled&ep=plink";
-    const btns = document.querySelectorAll<HTMLButtonElement>(".quiz-btn");
-    const steps = Array.from(document.querySelectorAll<HTMLElement>(".quiz-step"));
-    const resultEl = document.getElementById("quiz-result");
-    const resultText = document.getElementById("quiz-result-text");
-    const resultLink = document.getElementById("quiz-result-link") as HTMLAnchorElement | null;
-    const resultCal = document.getElementById("quiz-result-cal") as HTMLAnchorElement | null;
-    const resultFinding = document.getElementById("quiz-result-finding");
-    const resultRisk = document.getElementById("quiz-result-risk");
-    const resultDerivation = document.getElementById("quiz-result-derivation");
-    const resultBadge = document.getElementById("quiz-result-badge");
-    const resultTitle = document.getElementById("quiz-result-title");
-    const resultTagline = document.getElementById("quiz-result-tagline");
-    const resultProof = document.getElementById("quiz-result-proof");
-    const resultProofLabel = document.getElementById("quiz-result-proof-label");
-    const stepLabel = document.getElementById("quiz-step-label");
-    const progressBar = document.getElementById("quiz-progress-bar") as HTMLElement | null;
-    const stepsWrapper = document.getElementById("quiz-steps");
-    const answerSummary = document.getElementById("quiz-answer-summary");
-    const resetTop = document.getElementById("quiz-reset-top") as HTMLButtonElement | null;
-    const editBtn = document.getElementById("quiz-edit") as HTMLButtonElement | null;
+  import { initEngagementQuiz } from '../scripts/engagement-quiz';
 
-    function track(eventName: string, detail: Record<string, string | number> = {}) {
-      window.dispatchEvent(new CustomEvent(eventName, { detail }));
-    }
-
-    const scoreMatrix: Record<string, Record<string, number>> = {
-      automated: { embedded: 1, fullpackage: 1 },
-      days: { audit: 1, embedded: 2, fullpackage: 2 },
-      weeks: { audit: 2, embedded: 1, fullpackage: 2 },
-      direct: { audit: 3, embedded: 1, fullpackage: 2 },
-      documented: { embedded: 1, fullpackage: 1 },
-      oneperson: { audit: 1, embedded: 2, fullpackage: 2 },
-      nobody: { audit: 3, embedded: 1, fullpackage: 2 },
-      alerting: { embedded: 1, fullpackage: 1 },
-      users: { audit: 1, embedded: 2, fullpackage: 1 },
-      no: { audit: 3, embedded: 1, fullpackage: 2 },
-    };
-
-    function buildFindingText() {
-      const q1 = answers["1"];
-      const q2 = answers["2"];
-      const q3 = answers["3"];
-
-      const releaseSignals: Record<string, string> = {
-        automated: "Euer Release-Prozess läuft bereits weit automatisiert.",
-        days: "Euer Release braucht noch manuelle Schritte und kostet ein bis zwei Tage.",
-        weeks: "Euer Release ist über eine Woche lang und damit deutlich länger als nötig.",
-        direct:
-          "Bei euch ist jedes Deployment ein Einzelfall. Das ist kein Prozessproblem, sondern ein Personenrisiko.",
-      };
-
-      const knowledgeSignals: Record<string, string> = {
-        documented:
-          "Das Wissen über Plugins und Flows ist dokumentiert und im Team nachvollziehbar.",
-        oneperson: "Nur eine Person kennt die einzelnen Plugins und Flows wirklich.",
-        nobody:
-          "Niemand kann die Historie und Abhängigkeiten vollständig erklären — das System ist historisch gewachsen.",
-      };
-
-      const alertSignals: Record<string, string> = {
-        alerting: "Bei einem Fehler läuft Monitoring und Alerting bereits.",
-        users: "Wenn etwas fehlschlägt, fällt es eher beim Anwender auf als im Team.",
-        no: "Bei einem Nachtfehler merkt niemand frühzeitig etwas.",
-      };
-
-      return [releaseSignals[q1], knowledgeSignals[q2], alertSignals[q3]].filter(Boolean).join(" ");
-    }
-
-    function buildRiskText() {
-      const q1 = answers["1"];
-      const q2 = answers["2"];
-      const q3 = answers["3"];
-
-      const risks: string[] = [];
-
-      if (q1 === "direct") {
-        risks.push(
-          "Jede Änderung in Prod ist potenziell riskant, weil es keinen standardisierten Releasepfad gibt."
-        );
-      } else if (q1 === "weeks") {
-        risks.push(
-          "Der Release-Prozess ist langsam genug, dass kleine Probleme zu größeren Störungen und Regressionsrisiken werden."
-        );
-      } else if (q1 === "days") {
-        risks.push(
-          "Manuelle Schritte ziehen Fehler und Verzögerungen nach sich, die bei jedem Release wieder auftauchen."
-        );
-      }
-
-      if (q2 === "nobody") {
-        risks.push(
-          "Wenn die Person wegfällt, die die Logik kennt, seid ihr blind und müsst im Notfall improvisieren."
-        );
-      } else if (q2 === "oneperson") {
-        risks.push(
-          "Die Wissenslast sitzt in einer einzigen Person — ein typischer Bottleneck bei kritischen Plugins und Flows."
-        );
-      }
-
-      if (q3 === "no") {
-        risks.push(
-          "Fehler werden erst nach außen sichtbar, wenn der Kunde oder die User sie erleben."
-        );
-      } else if (q3 === "users") {
-        risks.push("Das Monitoring ist nicht früh genug, damit das Team aktiv reagieren kann.");
-      }
-
-      return risks.join(" ");
-    }
-
-    function buildDerivationText() {
-      const q1 = answers["1"];
-      const q2 = answers["2"];
-      const q3 = answers["3"];
-
-      if (q1 === "direct" && q2 === "nobody") {
-        return "Weil ihr direkt in Prod ändert und das Wissen nur in Einzelpersonen steckt, ist der Engpass die fehlende Standardisierung und Dokumentation — nicht der technische Funktionsumfang.";
-      }
-
-      if (q1 === "weeks" && q2 === "oneperson" && q3 === "users") {
-        return "Weil ihr Releases verzögert, das Wissen auf eine Person fällt und Fehler spät sichtbar werden, ist der Engpass ein nicht tragfähiger operativer Rhythmus.";
-      }
-
-      if (q1 === "days" && q2 === "documented" && q3 === "alerting") {
-        return "Weil ihr schon gut dokumentiert seid und überwacht werdet, braucht ihr keinen reinen Audit-Block, sondern eine gezielte Umsetzungskraft im Team.";
-      }
-
-      return "Weil ihr diese Signale gemeinsam zeigt, liegt der Engpass nicht im Projektstart, sondern im operativen Reifegrad der Plattform.";
-    }
-
-    function getRecommendation(recommendationId = forcedRecommendationId) {
-      const q1 = answers["1"];
-      const q2 = answers["2"];
-      const q3 = answers["3"];
-
-      if (
-        recommendationId === "disqualify" ||
-        (!recommendationId &&
-          q1 === "automated" &&
-          q2 === "documented" &&
-          q3 === "alerting")
-      ) {
-        return {
-          id: "disqualify",
-          title: "Ehrliche Antwort: dafür brauchst du mich nicht.",
-          badge: "",
-          tagline: "Euer Setup ist sauberer als das der meisten Teams.",
-          finding:
-            "Euer Release-Prozess ist automatisiert, das Wissen ist dokumentiert und eure Fehlererkennung läuft bereits mit Monitoring und Alerting.",
-          risk: "Die größten Risiken liegen nicht im System, sondern in der Richtung: Ein Mandat wäre hier überdimensioniert und würde das Team nicht wirklich voranbringen.",
-          derivation:
-            "Weil ihr genau die Kriterien für eine reife Setup-Umgebung erfüllt, ist ein Mandat für eure aktuelle Situation nicht der passende Einstieg.",
-          text: "Wenn ihr eine zweite Meinung zu einer konkreten Architekturentscheidung wollt, meldet euch gern — aber ein Mandat wäre Overkill.",
-          href: "mailto:hello@dynamics-tim.dev?subject=Zweite%20Meinung%20zu%20Dynamics%20365&body=Hallo%20Tim%2C%20ich%20h%C3%A4tte%20gerne%20eine%20zweite%20Meinung%20zu%20einer%20konkreten%20Architekturentscheidung.%20",
-          ctaLabel: "Mail senden →",
-          proofLabel: "Beleg aus dem Praxisbereich",
-          proofText:
-            "Ich arbeite mit Teams, die schon sauber am Laufen sind und dann gezielt an Architektur, ALM und Skalierung arbeiten — nicht mit Re-Engineering aus einer Notlage heraus.",
-          linkText: "Mehr zu meinem Ansatz →",
-          linkHref: "#engagement-modelle",
-          calHref: "mailto:hello@dynamics-tim.dev?subject=Zweite%20Meinung%20zu%20Dynamics%20365",
-        };
-      }
-
-      const weightedScores: Record<string, number> = { audit: 0, embedded: 0, fullpackage: 0 };
-      const valuesToScore = [q1, q2, q3];
-
-      valuesToScore.forEach((value) => {
-        const score = scoreMatrix[value] ?? {};
-        Object.entries(score).forEach(([key, weight]) => {
-          weightedScores[key] = (weightedScores[key] ?? 0) + weight;
-        });
-      });
-
-      const recommendationOrder: Array<keyof typeof weightedScores> = [
-        "audit",
-        "fullpackage",
-        "embedded",
-      ];
-      const recommendedKey = [...recommendationOrder].sort(
-        (a, b) => weightedScores[b] - weightedScores[a]
-      )[0];
-      const match = {
-        audit: {
-          id: "audit",
-          title: "Audit & Strategie",
-          badge: "Schnelleinstieg · 1–2 Wochen",
-          tagline: "Du bekommst Klarheit — nicht nur Folien.",
-          text: "Ich prüfe eure Architektur, Release- und Sicherheitsroutinen und lege einen priorisierten Maßnahmenplan mit Quick Wins und Roadmap fest.",
-          href: "#audit",
-          ctaLabel: "30-Min Slot buchen →",
-          calHref: bookingUrl,
-          linkText: "Mehr zum Modell →",
-          linkHref: "#audit",
-        },
-        embedded: {
-          id: "embedded",
-          title: "Embedded Developer",
-          badge: "Laufend · Sprint-basiert",
-          tagline: "Senior-Kraft ins Team — ohne Overhead.",
-          text: "Du bekommst Senior-Kapazität im Sprint-Prozess — von Plugins über Automationen bis hin zu QA und stabilen Release-Zyklen.",
-          href: "#embedded",
-          ctaLabel: "30-Min Slot buchen →",
-          calHref: bookingUrl,
-          linkText: "Mehr zum Modell →",
-          linkHref: "#embedded",
-        },
-        fullpackage: {
-          id: "fullpackage",
-          title: "Full Package: Audit → Enablement",
-          badge: "End-to-End · 3–4 Monate",
-          tagline: "Einmal richtig machen. Dauerhaft wirken.",
-          text: "Vom Audit über Umsetzung bis zur Team-Übergabe — damit euer Team langfristig stabil und eigenständig releasen kann.",
-          href: "#fullpackage",
-          ctaLabel: "30-Min Slot buchen →",
-          calHref: bookingUrl,
-          linkText: "Mehr zum Modell →",
-          linkHref: "#fullpackage",
-        },
-      };
-
-      const baseMatch = match[recommendationId ?? recommendedKey] ?? match.audit;
-      const caseStudy = caseStudyLookup.get(baseMatch.id) ?? {
-        industry: "Dynamics 365",
-        text: "Dein Setup braucht eine klare Priorisierung, damit Technologie und Team wieder in einen stabilen Rhythmus kommen.",
-      };
-      const caseStudyText =
-        caseStudy.text ||
-        "Dein Setup braucht eine klare Priorisierung, damit Technologie und Team wieder in einen stabilen Rhythmus kommen.";
-
-      return {
-        ...baseMatch,
-        finding:
-          buildFindingText() ||
-          "Deine Selbsteinschätzung zeigt einen konkreten Ansatzpunkt für den nächsten Schritt.",
-        risk:
-          buildRiskText() ||
-          "Ohne klare Priorisierung bleiben Verbesserungen oft hinter ihrem möglichen Nutzen zurück.",
-        derivation: buildDerivationText(),
-        proofLabel: `Projekt-Spotlight: ${caseStudy.industry}`,
-        proofText: caseStudyText,
-      };
-    }
-
-    function answeredCount() {
-      return Object.keys(answers).length;
-    }
-
-    function setActiveStep(step: number) {
-      steps.forEach((stepEl) => {
-        const isActive = Number(stepEl.dataset.step) === step;
-        stepEl.classList.toggle("hidden", !isActive);
-        stepEl.setAttribute("aria-hidden", isActive ? "false" : "true");
-      });
-    }
-
-    function updateProgress() {
-      const done = answeredCount();
-      if (stepLabel) {
-        stepLabel.textContent =
-          done === totalSteps ? "Auswertung bereit" : `Frage ${done + 1} von ${totalSteps}`;
-      }
-      if (progressBar) {
-        progressBar.style.width = `${(done / totalSteps) * 100}%`;
-      }
-      if (resetTop) {
-        resetTop.classList.toggle("hidden", done === 0);
-      }
-    }
-
-    function renderAnswerSummary() {
-      if (!answerSummary) return;
-      answerSummary.innerHTML = "";
-      ["1", "2", "3"].forEach((question) => {
-        const item = document.createElement("li");
-        item.className = "rounded-xl border border-surface-200 bg-surface-50 px-3 py-2";
-        item.textContent = `${questionLabels[question]}: ${answerLabels[question] ?? "n/a"}`;
-        answerSummary.appendChild(item);
-      });
-    }
-
-    function clearResultView() {
-      if (!resultEl) return;
-      resultEl.classList.add("hidden");
-      if (stepsWrapper) {
-        stepsWrapper.classList.remove("hidden");
-      }
-    }
-
-    function persistResult(rec: { id: string }) {
-      sessionStorage.setItem(
-        storageKey,
-        JSON.stringify({
-          id: rec.id,
-          answers,
-          answerLabels,
-        })
-      );
-      sessionStorage.setItem(completedKey, "1");
-      const url = new URL(window.location.href);
-      if (validRecommendationIds.has(rec.id)) {
-        url.searchParams.set("rec", rec.id);
-      } else {
-        url.searchParams.delete("rec");
-      }
-      window.history.replaceState({}, "", url);
-      window.dispatchEvent(
-        new CustomEvent("quiz-complete", { detail: { recommendation: rec.id } })
-      );
-      track("quiz_complete", { recommendation: rec.id });
-    }
-
-    function focusModel(modelId: string) {
-      if (modelLinkBase || !validRecommendationIds.has(modelId)) return;
-      const model = document.getElementById(modelId);
-      if (!model) return;
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      model.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "center" });
-      model.classList.add("ring-2", "ring-brand-400");
-      window.setTimeout(() => model.classList.remove("ring-2", "ring-brand-400"), 2000);
-    }
-
-    function revealResult(recommendationId?: string, persist = true) {
-      if (!resultEl || !resultText) return;
-      const rec = getRecommendation(recommendationId);
-      if (resultText) resultText.textContent = rec.text;
-      if (resultTitle) resultTitle.textContent = rec.title;
-      if (resultBadge) {
-        resultBadge.textContent = rec.badge || "";
-        resultBadge.classList.toggle("hidden", !rec.badge);
-      }
-      if (resultTagline) resultTagline.textContent = rec.tagline ? `"${rec.tagline}"` : "";
-      if (resultFinding) resultFinding.textContent = rec.finding ?? "";
-      if (resultRisk) resultRisk.textContent = rec.risk ?? "";
-      if (resultDerivation) resultDerivation.textContent = rec.derivation ?? "";
-      if (resultProof) resultProof.textContent = rec.proofText ?? "";
-      if (resultProofLabel) resultProofLabel.textContent = rec.proofLabel ?? "";
-      if (resultLink) {
-        resultLink.href = `${modelLinkBase}${rec.linkHref ?? rec.href ?? "#engagement-modelle"}`;
-        resultLink.textContent = rec.linkText ?? "Mehr zum Modell →";
-        resultLink.dataset.modelId = rec.id;
-      }
-      if (resultCal) {
-        resultCal.href = rec.calHref ?? bookingUrl;
-        resultCal.textContent = rec.ctaLabel ?? "30-Min Slot buchen →";
-        if (rec.calHref?.startsWith("mailto:")) {
-          resultCal.removeAttribute("target");
-          resultCal.removeAttribute("rel");
-        } else {
-          resultCal.target = "_blank";
-          resultCal.rel = "noopener noreferrer";
-        }
-      }
-      renderAnswerSummary();
-      resultEl.classList.remove("hidden");
-      if (stepsWrapper) {
-        stepsWrapper.classList.add("hidden");
-      }
-      if (stepLabel) {
-        stepLabel.textContent = "Empfehlung";
-      }
-      resultTitle?.focus();
-      if (progressBar) {
-        progressBar.style.width = "100%";
-      }
-      if (persist) persistResult(rec);
-      else sessionStorage.setItem(completedKey, "1");
-      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const card = resultEl.querySelector(".quiz-result-card") as HTMLElement | null;
-      if (card && !reducedMotion) {
-        card.style.opacity = "0";
-        card.style.transform = "translateY(20px)";
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            card.style.transition =
-              "opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)";
-            card.style.opacity = "1";
-            card.style.transform = "translateY(0)";
-          });
-        });
-      }
-      resultEl.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "nearest" });
-    }
-
-    function updateSelectedState(question: string, activeButton: HTMLButtonElement) {
-      document
-        .querySelectorAll<HTMLButtonElement>(`.quiz-btn[data-q="${question}"]`)
-        .forEach((btn) => {
-          const isActive = btn === activeButton;
-          btn.classList.toggle("border-brand-400", isActive);
-          btn.classList.toggle("bg-brand-50", isActive);
-          btn.classList.toggle("text-brand-700", isActive);
-          btn.classList.toggle("shadow-sm", isActive);
-          btn.setAttribute("aria-pressed", isActive ? "true" : "false");
-        });
-    }
-
-    function resetQuiz() {
-      Object.keys(answers).forEach((key) => {
-        delete answers[key];
-      });
-      Object.keys(answerLabels).forEach((key) => {
-        delete answerLabels[key];
-      });
-      btns.forEach((btn) => {
-        btn.classList.remove("border-brand-400", "bg-brand-50", "text-brand-700", "shadow-sm");
-        btn.setAttribute("aria-pressed", "false");
-      });
-      clearResultView();
-      setActiveStep(1);
-      updateProgress();
-      forcedRecommendationId = null;
-      sessionStorage.removeItem(storageKey);
-      sessionStorage.removeItem(completedKey);
-      const url = new URL(window.location.href);
-      url.searchParams.delete("rec");
-      window.history.replaceState({}, "", url);
-    }
-
-    btns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const q = btn.dataset.q!;
-        const v = btn.dataset.v!;
-        forcedRecommendationId = null;
-        if (!quizStarted) {
-          quizStarted = true;
-          track("quiz_start");
-        }
-        track("quiz_step", { question: Number(q) });
-        answers[q] = v;
-        answerLabels[q] = btn.textContent?.trim() ?? "";
-        updateSelectedState(q, btn);
-        updateProgress();
-        if (answeredCount() === totalSteps) {
-          revealResult();
-        } else {
-          clearResultView();
-          setActiveStep(Math.min(Number(q) + 1, totalSteps));
-        }
-      });
-    });
-
-    if (resultLink) {
-      resultLink.addEventListener("click", (event) => {
-        const modelId = resultLink.dataset.modelId;
-        track("quiz_cta_click", { target: "recommendation" });
-        if (!modelLinkBase && modelId && document.getElementById(modelId)) {
-          event.preventDefault();
-          window.history.replaceState({}, "", `#${modelId}`);
-          focusModel(modelId);
-        }
-      });
-    }
-
-    resultCal?.addEventListener("click", () => {
-      track("quiz_cta_click", { target: "booking" });
-    });
-
-    document.querySelectorAll<HTMLElement>("[data-quiz-cta]").forEach((cta) => {
-      cta.addEventListener("click", () => {
-        track("quiz_cta_click", { target: cta.dataset.quizCta ?? "unknown" });
-      });
-    });
-
-    if (resetTop) {
-      resetTop.addEventListener("click", () => {
-        resetQuiz();
-      });
-    }
-
-    if (editBtn) {
-      editBtn.addEventListener("click", () => {
-        resetQuiz();
-        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        document.getElementById("quiz-container")?.scrollIntoView({
-          behavior: reducedMotion ? "auto" : "smooth",
-          block: "nearest",
-        });
-      });
-    }
-
-    try {
-      const stored = JSON.parse(sessionStorage.getItem(storageKey) ?? "null") as {
-        id?: string;
-        answers?: Record<string, string>;
-        answerLabels?: Record<string, string>;
-      } | null;
-      if (stored?.answers) Object.assign(answers, stored.answers);
-      if (stored?.answerLabels) Object.assign(answerLabels, stored.answerLabels);
-      Object.entries(answers).forEach(([question, value]) => {
-        const button = document.querySelector<HTMLButtonElement>(
-          `.quiz-btn[data-q="${question}"][data-v="${value}"]`
-        );
-        if (button) updateSelectedState(question, button);
-      });
-      const queryRecommendation = new URLSearchParams(window.location.search).get("rec");
-      forcedRecommendationId = validRecommendationIds.has(queryRecommendation ?? "")
-        ? queryRecommendation
-        : null;
-      if (forcedRecommendationId || stored?.id) {
-        revealResult(forcedRecommendationId ?? stored?.id, false);
-      } else {
-        setActiveStep(1);
-        updateProgress();
-      }
-    } catch {
-      setActiveStep(1);
-      updateProgress();
-    }
-  })();
+  const root = document.querySelector<HTMLElement>('[data-engagement-quiz]');
+  if (root) initEngagementQuiz(root);
 </script>

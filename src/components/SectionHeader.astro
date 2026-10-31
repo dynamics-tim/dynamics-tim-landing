@@ -1,0 +1,18 @@
+---
+/** Standard section heading: `.section-title` h2 plus optional lead paragraph. */
+interface Props {
+  title: string;
+  subtitle?: string;
+  /** Adds scroll-reveal attributes (default: true) */
+  reveal?: boolean;
+}
+
+const { title, subtitle, reveal = true } = Astro.props as Props;
+const revealAttrs = (delay: number) =>
+  reveal ? { 'data-reveal': '', 'data-reveal-delay': String(delay) } : {};
+---
+
+<div class="mb-10 max-w-3xl space-y-4">
+  <h2 class="section-title" {...revealAttrs(0)}>{title}</h2>
+  {subtitle && <p class="text-lg text-slate-600" {...revealAttrs(80)}>{subtitle}</p>}
+</div>

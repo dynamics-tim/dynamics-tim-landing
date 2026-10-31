@@ -1,84 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ServicesGrid from '../components/ServicesGrid.astro';
+import { collaborationFormats, coreServices } from '../data/services';
+import { site } from '../data/site';
+import { getPageUrls, serviceItemListSchema } from '../utils/structured-data';
 
-const services = [
-  {
-    title: 'Dynamics 365 Prozess- & App-Design',
-    description:
-      'Workshops, User Journeys sowie modellgetriebene Apps, Canvas Apps und Custom Pages für optimierte Service-Prozesse.',
-    id: 'prozessdesign'
-  },
-  {
-    title: 'Power Platform Automation & Plugins',
-    description:
-      'C# Plugins, Power Automate Flows, PCF Controls und Dataverse-Logik für saubere Automatisierung und erweiterte Business-Regeln.',
-    id: 'automation'
-  },
-  {
-    title: 'Azure Integration & Automatisierung',
-    description:
-      'Azure Functions, Service Bus, Logic Apps und Event Driven Architecture verbinden Dynamics 365 mit CRM, ERP und Datenplattformen.',
-    id: 'integration'
-  },
-  {
-    title: 'UI Test Automation & Quality Gates',
-    description:
-      'Playwright-basierte Test-Frameworks für Business-kritische CRM-Workflows mit robusten Retry-Strategien und Quality Gates für sichere Deployments.',
-    id: 'quality'
-  },
-  {
-    title: 'DevOps, Qualität & Enablement',
-    description:
-      'CI/CD, ALM, Code-Quality-Gates und Team-Coaching sorgen für nachhaltige Delivery und dokumentierte Übergaben.',
-    id: 'enablement'
-  }
-];
+const { canonicalUrl, personId } = getPageUrls(Astro.site, Astro.url);
 
-const formats = [
-  {
-    title: 'Team Augmentation',
-    description: 'Senior Dynamics Developer/Consultant, der dein Team verstärkt, in Sprints liefert und Wissen dokumentiert weitergibt.'
-  },
-  {
-    title: 'Technical Spike',
-    description: 'Zwei Wochen Fokus: Prozessanalyse, technisches Konzept, Prototyping und priorisierte Umsetzungsempfehlungen.'
-  },
-  {
-    title: 'Review & Coaching',
-    description: 'Health Check für bestehende Lösungen inklusive Code-Reviews, Pairing Sessions und Enablement der internen Entwickler:innen.'
-  }
-];
-
-const canonicalUrl = Astro.site
-  ? new URL(Astro.url.pathname, Astro.site).toString()
-  : Astro.url.href;
-const siteUrl = Astro.site ? Astro.site.toString() : new URL('/', canonicalUrl).toString();
-const providerId = `${siteUrl}#person`;
-
-const serviceListSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'ItemList',
-  name: 'Dynamics 365 Leistungen & Consulting',
-  itemListElement: services.map((service, index) => ({
-    '@type': 'ListItem',
-    position: index + 1,
-    item: {
-      '@type': 'Service',
-      name: service.title,
-      description: service.description,
-      url: new URL(`#${service.id ?? ''}`, canonicalUrl).toString(),
-      provider: {
-        '@type': 'Person',
-        '@id': providerId
-      },
-      areaServed: {
-        '@type': 'Country',
-        name: 'Deutschland'
-      }
-    }
-  }))
-};
+const serviceListSchema = serviceItemListSchema(
+  'Dynamics 365 Leistungen & Consulting',
+  coreServices.map((service) => ({
+    name: service.title,
+    description: service.description,
+    url: new URL(`#${service.id ?? ''}`, canonicalUrl).toString(),
+  })),
+  personId
+);
 ---
 
 <BaseLayout
@@ -101,15 +38,15 @@ const serviceListSchema = {
   <ServicesGrid
     heading="Kernkompetenzen"
     subheading="Strategie, Umsetzung und Betrieb – abgestimmt auf Dynamics 365 Sales & Service."
-    items={services}
+    items={coreServices}
   />
 
   <section class="bg-gradient-to-br from-brand-900 via-brand-800 to-accent-600 py-20 text-white animate-on-scroll">
     <div class="mx-auto max-w-6xl px-6">
       <h2 class="section-title text-white">Zusammenarbeitsmodelle</h2>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
-        {formats.map((format) => (
-          <div class="card card--on-dark text-left" key={format.title}>
+        {collaborationFormats.map((format) => (
+          <div class="card card--on-dark text-left">
             <h3 class="text-xl font-semibold text-white">{format.title}</h3>
             <p class="mt-3 text-sm text-slate-200">{format.description}</p>
           </div>
@@ -125,7 +62,7 @@ const serviceListSchema = {
         Schicke mir deine Anforderungen oder buche direkt einen Termin. Ich melde mich innerhalb von 48 Stunden mit konkreten Vorschlägen zum Vorgehen.
       </p>
       <a
-        href="mailto:hello@dynamics-tim.dev"
+        href={site.contact.mailto}
         class="mt-8 inline-flex items-center rounded-2xl bg-brand-500 px-6 py-3 text-base font-semibold text-white shadow-soft transition hover:bg-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-200"
       >
         Kostenloses Erstgespräch vereinbaren
@@ -134,6 +71,3 @@ const serviceListSchema = {
   </section>
   <script type="application/ld+json" set:html={JSON.stringify(serviceListSchema)} />
 </BaseLayout>
-
-
-

@@ -7,34 +7,14 @@ body * {
   user-select: none;
 }
 
+/*
+ * Both font files are referenced with absolute /assets/fonts/ paths.
+ * Keep in sync with the <link rel="preload"> tags in BaseLayout.astro.
+ */
 @font-face {
   font-family: 'Inter';
   font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/assets/fonts/inter-latin.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/assets/fonts/inter-latin.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/assets/fonts/inter-latin.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 700;
+  font-weight: 400 700;
   font-display: swap;
   src: url('/assets/fonts/inter-latin.woff2') format('woff2');
 }
@@ -42,15 +22,7 @@ body * {
 @font-face {
   font-family: 'Sora';
   font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/assets/fonts/sora-latin.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Sora';
-  font-style: normal;
-  font-weight: 700;
+  font-weight: 600 700;
   font-display: swap;
   src: url('/assets/fonts/sora-latin.woff2') format('woff2');
 }
@@ -212,7 +184,9 @@ body * {
   }
 }
 
-/* ── StratITIQ Scroll-triggered Animation System ──────── */
+/* ── Scroll-triggered animations (driven by scripts/animations.ts) ──
+ * `.animate-on-scroll` / `.animate-scale-up` get `.animate-in` once visible.
+ */
 
 .animate-on-scroll {
   opacity: 0;
@@ -224,29 +198,14 @@ body * {
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-.hero-stagger > * {
+.animate-scale-up {
   opacity: 0;
-  transform: translateY(1.5rem);
+  transform: scale(0.95);
 }
-.hero-stagger.animate-in > * {
-  animation: hero-fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-.hero-stagger.animate-in > *:nth-child(1) { animation-delay: 0.1s; }
-.hero-stagger.animate-in > *:nth-child(2) { animation-delay: 0.25s; }
-.hero-stagger.animate-in > *:nth-child(3) { animation-delay: 0.4s; }
-.hero-stagger.animate-in > *:nth-child(4) { animation-delay: 0.55s; }
-.hero-stagger.animate-in > *:nth-child(5) { animation-delay: 0.65s; }
-
-.dashboard-entrance {
-  opacity: 0;
-  transform: translateX(3rem) rotate(1deg);
-}
-.dashboard-entrance.animate-in {
-  animation: dashboard-slide 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-}
-
-.gradient-drift {
-  animation: gradient-shift 12s ease-in-out infinite alternate;
+.animate-scale-up.animate-in {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .badge-shimmer {
@@ -262,136 +221,11 @@ body * {
   animation: shimmer-sweep 3s ease-in-out 1s infinite;
 }
 
-.stagger-children > * {
-  opacity: 0;
-  transform: translateY(1rem);
-}
-.stagger-children.animate-in > * {
-  animation: stagger-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-.stagger-children.animate-in > *:nth-child(1) { animation-delay: 0.05s; }
-.stagger-children.animate-in > *:nth-child(2) { animation-delay: 0.15s; }
-.stagger-children.animate-in > *:nth-child(3) { animation-delay: 0.25s; }
-.stagger-children.animate-in > *:nth-child(4) { animation-delay: 0.35s; }
-.stagger-children.animate-in > *:nth-child(5) { animation-delay: 0.45s; }
-.stagger-children.animate-in > *:nth-child(6) { animation-delay: 0.55s; }
-.stagger-children.animate-in > *:nth-child(7) { animation-delay: 0.65s; }
-.stagger-children.animate-in > *:nth-child(8) { animation-delay: 0.75s; }
-
-.animate-slide-left {
-  opacity: 0;
-  transform: translateX(-2rem);
-}
-.animate-slide-left.animate-in {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-slide-right {
-  opacity: 0;
-  transform: translateX(2rem);
-}
-.animate-slide-right.animate-in {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.animate-scale-up {
-  opacity: 0;
-  transform: scale(0.95);
-}
-.animate-scale-up.animate-in {
-  opacity: 1;
-  transform: scale(1);
-  transition: opacity 0.7s ease-out, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.card-glow {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-}
-.card-glow:hover {
-  border-color: rgba(var(--accent-glow), 0.25);
-  box-shadow: 0 0 30px rgba(var(--accent-glow), 0.08), inset 0 0 30px rgba(var(--accent-glow), 0.03);
-}
-
-.arrow-slide .arrow-icon {
-  display: inline-block;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.arrow-slide:hover .arrow-icon {
-  transform: translateX(4px);
-}
-
-.checkmark-draw path {
-  stroke-dasharray: 24;
-  stroke-dashoffset: 24;
-}
-.checkmark-draw.animate-in path {
-  animation: draw-check 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.faq-smooth {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-.faq-smooth[open] {
-  border-color: rgba(var(--accent-glow), 0.2);
-  box-shadow: 0 0 20px rgba(var(--accent-glow), 0.05);
-}
-.faq-answer {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-  opacity: 0;
-}
-.faq-smooth[open] .faq-answer {
-  grid-template-rows: 1fr;
-  opacity: 1;
-}
-.faq-answer > div {
-  overflow: hidden;
-}
-
 .btn-pulse {
   animation: cta-pulse 3s ease-in-out infinite;
 }
 
-.marquee-container {
-  overflow: hidden;
-  width: 100%;
-  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-}
-.marquee-track {
-  display: flex;
-  gap: 3rem;
-  width: max-content;
-  animation: marquee-scroll 30s linear infinite;
-}
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-.quote-border-draw {
-  border-left-color: transparent;
-  position: relative;
-}
-.quote-border-draw::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 4px;
-  height: 0;
-  background: rgba(var(--accent-glow), 0.4);
-  border-radius: 2px;
-  transition: height 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.quote-border-draw.animate-in::before {
-  height: 100%;
-}
-
+/* Created by scripts/animations.ts */
 .scroll-progress {
   position: fixed;
   top: 0;
@@ -407,99 +241,28 @@ body * {
   pointer-events: none;
 }
 
-@property --border-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-.gradient-border-animate {
-  --border-angle: 0deg;
-  border-color: transparent;
-  background-image:
-    linear-gradient(#F9FBFF, #F9FBFF),
-    conic-gradient(from var(--border-angle), rgba(var(--accent-glow), 0.3), transparent 30%, transparent 70%, rgba(var(--accent-glow), 0.3));
-  background-origin: border-box;
-  background-clip: padding-box, border-box;
-  animation: border-rotate 8s linear infinite;
-}
-
-.dot-pulse {
-  animation: dot-ping 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* ── StratITIQ Keyframes ─────────────────────────────── */
-@keyframes hero-fade-up {
-  from { opacity: 0; transform: translateY(1.5rem); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes dashboard-slide {
-  from { opacity: 0; transform: translateX(3rem) rotate(1deg); }
-  to { opacity: 1; transform: translateX(0) rotate(0deg); }
-}
-@keyframes gradient-shift {
-  0% { background-position: 0% 0%; }
-  100% { background-position: 100% 100%; }
-}
 @keyframes shimmer-sweep {
   0% { transform: translateX(-100%); }
   20% { transform: translateX(100%); }
   100% { transform: translateX(100%); }
 }
-@keyframes stagger-fade-up {
-  from { opacity: 0; transform: translateY(1rem); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes draw-check {
-  to { stroke-dashoffset: 0; }
-}
 @keyframes cta-pulse {
   0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-glow), 0.15); }
   50% { box-shadow: 0 0 20px 4px rgba(var(--accent-glow), 0.12); }
 }
-@keyframes marquee-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-@keyframes border-rotate {
-  to { --border-angle: 360deg; }
-}
-@keyframes dot-ping {
-  0% { transform: scale(0); opacity: 0; }
-  50% { transform: scale(1.8); opacity: 0.4; }
-  100% { transform: scale(1); opacity: 1; }
-}
 
-/* ── StratITIQ Reduced Motion ────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .animate-on-scroll { opacity: 1; transform: none; }
   .animate-in { transition: none; }
-  .hero-stagger > *,
-  .dashboard-entrance,
-  .stagger-children > *,
-  .animate-slide-left,
-  .animate-slide-right,
-  .animate-scale-up,
-  .quote-border-draw::before {
+  .animate-scale-up {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
   }
   .badge-shimmer::after,
-  .gradient-drift,
-  .marquee-track,
-  .gradient-border-animate,
   .btn-pulse,
   .scroll-progress {
     animation: none !important;
-  }
-  .faq-answer {
-    grid-template-rows: 1fr !important;
-    opacity: 1 !important;
-    transition: none !important;
-  }
-  .checkmark-draw path {
-    stroke-dasharray: none !important;
-    stroke-dashoffset: 0 !important;
   }
 }
 
@@ -603,15 +366,9 @@ body * {
     animation-delay: 8s;
   }
 
-  .hero-ambient .ambient-glow,
-  .hero-ambient .ambient-orb {
+  .hero-ambient .ambient-glow {
     animation: heroSoftPulse 16s ease-in-out infinite alternate;
     will-change: transform, opacity;
-  }
-
-  .hero-ambient .ambient-orb {
-    animation-duration: 20s;
-    animation-delay: 2s;
   }
 
   .hero-badge {
@@ -802,7 +559,6 @@ body * {
   .hero-ambient::before,
   .hero-ambient::after,
   .hero-ambient .ambient-glow,
-  .hero-ambient .ambient-orb,
   .hero-ambient .ambient-gradient,
   .hero-ambient .ambient-grid,
   .hero-ambient .floating-orb,
@@ -1015,58 +771,12 @@ body * {
   animation: heroSkillTextGlow var(--animation-duration) ease-in-out infinite;
 }
 
-.hero-skill-card--1 {
-  animation-delay: 0s;
-}
-
-.hero-skill-card--1 .hero-skill-icon,
-.hero-skill-card--1 .hero-skill-text {
-  animation-delay: 0s;
-}
-
-.hero-skill-card--2 {
-  animation-delay: 2s;
-}
-
-.hero-skill-card--2 .hero-skill-icon,
-.hero-skill-card--2 .hero-skill-text {
-  animation-delay: 2s;
-}
-
-.hero-skill-card--3 {
-  animation-delay: 4s;
-}
-
-.hero-skill-card--3 .hero-skill-icon,
-.hero-skill-card--3 .hero-skill-text {
-  animation-delay: 4s;
-}
-
-.hero-skill-card--4 {
-  animation-delay: 6s;
-}
-
-.hero-skill-card--4 .hero-skill-icon,
-.hero-skill-card--4 .hero-skill-text {
-  animation-delay: 6s;
-}
-
-.hero-skill-card--5 {
-  animation-delay: 8s;
-}
-
-.hero-skill-card--5 .hero-skill-icon,
-.hero-skill-card--5 .hero-skill-text {
-  animation-delay: 8s;
-}
-
-.hero-skill-card--6 {
-  animation-delay: 10s;
-}
-
-.hero-skill-card--6 .hero-skill-icon,
-.hero-skill-card--6 .hero-skill-text {
-  animation-delay: 10s;
+/* Highlight wanders through the list: each card starts 2s after the previous
+   one (`--skill-index` is set inline by Hero.astro; 6 cards × 2s = 12s cycle). */
+.hero-skill-card,
+.hero-skill-card .hero-skill-icon,
+.hero-skill-card .hero-skill-text {
+  animation-delay: calc(var(--skill-index, 0) * 2s);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1076,5 +786,3 @@ body * {
     animation: none !important;
   }
 }
-
-
