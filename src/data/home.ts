@@ -145,12 +145,6 @@ export const testimonials: Testimonial[] = [
     author: 'Microsoft Platform Solutions',
     company: 'ORBIS SE',
   },
-  {
-    quote:
-      'Saubere Architektur, klare Kommunikation und ein Team, das nach dem Projekt selbst weiterarbeiten kann. Genau das haben wir bekommen.',
-    author: 'M. Schneider, Projektleitung',
-    company: 'Fertigungsunternehmen, Süddeutschland',
-  },
 ];
 
 /* ── Ablauf ───────────────────────────────────────────── */
