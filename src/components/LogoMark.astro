@@ -1,0 +1,22 @@
+---
+/**
+ * Brand mark: "tf." monogram on a lime tile — the period echoes the claim "bessere Releases.".
+ * Vector source of truth: scripts/assets/brand/mark.svg (64×64 grid). Keep the geometry in sync;
+ * favicons and app icons are generated from that file by scripts/generate-brand.mjs.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = 'h-9 w-9' } = Astro.props as Props;
+---
+
+<svg viewBox="0 0 64 64" class={className} aria-hidden="true" focusable="false">
+  <rect width="64" height="64" rx="14" class="fill-lime-500" />
+  <g class="fill-none stroke-ink-950" stroke-width="7.5">
+    <path d="M12 25.5H48" />
+    <path d="M19 12V41Q19 48.25 26.25 48.25H28" />
+    <path d="M36.5 52V22.5Q36.5 15.75 43.25 15.75H48" />
+  </g>
+  <rect x="44.5" y="44.5" width="7.5" height="7.5" rx="1.5" class="fill-ink-950" />
+</svg>

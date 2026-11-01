@@ -9,7 +9,7 @@ This is an **Astro 7** + Tailwind CSS 3 static site for Tim Friedrich's Dynamics
 ## Build & Run Commands
 
 ```bash
-npm install       # Install + runs postinstall: generates OG image and favicons
+npm install       # Install + runs postinstall: generates OG image, logo kit and favicons
 npm run dev       # Dev server on :4321 with HMR
 npm run build     # Production SSG build (HTML/CSS/JS/images compressed via astro-compress)
 npm run preview   # Preview production build locally
@@ -45,7 +45,7 @@ src/
   styles/       global.css — .card, .section-title, .nav-link CSS utilities
   utils/        url.ts (to/asset/base), csp.ts, structured-data.ts, collections.ts
 public/         Static assets served as-is (reveal.js, consent.js, media/pitch.mp4)
-scripts/        generate-og.mjs (copies scripts/assets/og-image.png), generate-favicons.mjs (run on npm install)
+scripts/        generate-og.mjs (copies scripts/assets/og-image.png), generate-brand.mjs (logo kit + favicons from scripts/assets/brand/*.svg, run on npm install)
 tests/          Playwright: health-check + lead + analytics logic tables, E2E flows (n8n mocked via tests/fixtures.ts), page smoke tests
 ```
 
