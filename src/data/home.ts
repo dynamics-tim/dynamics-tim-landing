@@ -30,8 +30,10 @@ export const heroStats = [
 ];
 
 export const clientLine = {
-  label: 'Projekte u. a. für',
-  names: ['ORBIS SE', 'Maschinenbau', 'IT-Services', 'Handel'],
+  label: 'Erfahrung aus Projekten bei',
+  names: ['LichtBlick SE', 'SF-Filter', 'ORBIS SE'],
+  sectorsLabel: 'Branchen',
+  sectors: ['Energie', 'Maschinenbau', 'Handel', 'IT-Dienstleistung'],
 };
 
 /** Accessible description of the (text-only, music-backed) pitch video */
