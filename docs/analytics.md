@@ -62,6 +62,24 @@ Browser (nur nach Einwilligung „Analytics“, nie bei DNT/GPC)
 | `device` | string | `mobile` · `tablet` · `desktop` |
 | `duration_s` / `scroll_pct` | number | sichtbare Zeit / Scrolltiefe des Seitenaufrufs |
 
+## Dashboard
+
+Live-Dashboard als claude.ai-Artifact **„dynamics-tim.dev Analytics“**. Es liest über den n8n-Connector
+(jeweils mit dem Zugang der lesenden Person):
+
+| Quelle | Inhalt |
+| --- | --- |
+| `website_analytics_daily` | eine Zeile je Tag, letzte 90 Tage (Besuche, Seitenaufrufe, Verweildauer, Funnel-Events) |
+| `website_analytics_breakdown` | letzte 30 Tage je Seite, Quelle, Gerät, Stunde, Health-Check-Ergebnis (`dimension`/`key`) |
+| `website_analytics` | die 25 neuesten Besuche (live) |
+
+Die beiden Kennzahlen-Tabellen berechnet der n8n-Workflow **„Website-Analytics · Kennzahlen“** alle 15 Minuten
+aus der Rohtabelle (Upsert, danach werden Zeilen eines älteren Laufs über `run_at` entfernt). Der Grund: Der
+Connector liefert höchstens 100 Zeilen pro Abruf, die Rohtabelle wäre dafür zu groß.
+
+> Neue Events oder Formular-Arten müssen auch im Code-Node „Tageswerte berechnen“ (Spalte je Event) und in
+> `website_analytics_daily` als Spalte ergänzt werden, sonst tauchen sie im Dashboard nicht auf.
+
 ## Dashboard-Kennzahlen
 
 | Kennzahl | Filter / Berechnung |
