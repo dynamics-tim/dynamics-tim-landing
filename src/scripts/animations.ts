@@ -1,7 +1,7 @@
 /**
  * Site-wide scroll effects (loaded by BaseLayout):
  *  - `.animate-on-scroll` / `.animate-scale-up` → adds `.animate-in` when visible
- *  - `[data-counter]` → counts numbers up when visible ("20+", "Ø 3", "4,5")
+ *  - `[data-counter]` → counts numbers up when visible ("10+", "Ø 3", "4,5")
  *  - thin scroll progress bar at the top of the page
  *
  * The `[data-reveal]` fade-ins are handled separately by public/assets/js/reveal.js.
