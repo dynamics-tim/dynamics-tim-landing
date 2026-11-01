@@ -32,7 +32,5 @@ jobs:
         run: npm run lint
 
       - name: Run Playwright tests (health-check, lead form, pages)
+        # Tests mock the n8n endpoints; the default lead/analytics URLs are used so the CSP matches prod
         run: npm run test:e2e
-        env:
-          # Tests mock the n8n endpoints; the default lead URL is used so the CSP matches prod
-          PUBLIC_GOATCOUNTER_URL: ${{ vars.PUBLIC_GOATCOUNTER_URL }}

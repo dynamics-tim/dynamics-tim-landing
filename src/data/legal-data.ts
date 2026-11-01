@@ -15,6 +15,8 @@ export interface LegalData {
   HOSTING: string;
   PROCESSORS: string[];
   CONTACT_RETENTION_MONTHS: number;
+  /** Retention of the first-party analytics data (n8n data table website_analytics) */
+  ANALYTICS_RETENTION_MONTHS: number;
   /** Where the n8n lead workflow runs (hosting provider and location of n8n.dynamics-tim.dev) */
   LEAD_HOSTING: string;
 }
@@ -31,10 +33,11 @@ const defaultData: LegalData = {
   HOSTING: 'GitHub Pages',
   PROCESSORS: [
     'GitHub (Pages/CDN)',
-    'GoatCounter (Analytics-Dienst) - Betrieb durch Martin Tournoij (Irland); Datenhosting bei Hetzner in Finnland und Deutschland',
     'Microsoft Bookings (nur bei Terminbuchung)'
   ],
   CONTACT_RETENTION_MONTHS: 6,
+  // Mirrors the daily clean-up in the n8n workflow "Website-Analytics · dynamics-tim.dev"
+  ANALYTICS_RETENTION_MONTHS: 14,
   // TODO(Tim): Hosting-Anbieter und Standort der n8n-Instanz ergänzen, z. B. "Hetzner Online GmbH, Rechenzentrum Falkenstein (Deutschland)"
   LEAD_HOSTING: 'einem von mir selbst betriebenen Server (selbst gehostete n8n-Instanz unter n8n.dynamics-tim.dev)'
 };

@@ -28,11 +28,10 @@ const {
   showFooter = true,
 } = Astro.props as Props;
 
-const env = import.meta.env;
-const goatcounterUrl = env.PUBLIC_GOATCOUNTER_URL;
-const goatcounterOrigin = originOf(goatcounterUrl);
-
-const csp = buildCsp({ goatcounterOrigin, leadOrigin: originOf(site.leadApi ?? undefined) });
+const csp = buildCsp({
+  leadOrigin: originOf(site.leadApi ?? undefined),
+  analyticsOrigin: originOf(site.analyticsApi ?? undefined),
+});
 
 /** Content stays visible without JS (all scroll animations start hidden). */
 const noscriptCss =
@@ -53,17 +52,6 @@ const noscriptCss =
       url={url}
       breadcrumbs={breadcrumbs}
     />
-    {
-      goatcounterOrigin && (
-        <script
-          data-consent="analytics"
-          data-target="head"
-          data-goatcounter={goatcounterUrl}
-          data-src="https://gc.zgo.at/count.js"
-          data-attr-async
-        ></script>
-      )
-    }
     <link rel="icon" href={asset('favicon.ico')} sizes="32x32" />
     <link rel="icon" href={asset('favicon-16x16.png')} type="image/png" sizes="16x16" />
     <link rel="icon" href={asset('favicon-32x32.png')} type="image/png" sizes="32x32" />
@@ -76,7 +64,7 @@ const noscriptCss =
     <link rel="stylesheet" href={asset('assets/css/consent.css')} />
     <noscript><style set:html={noscriptCss} /></noscript>
   </head>
-  <body class="min-h-screen bg-paper">
+  <body class="min-h-screen bg-paper" data-analytics-endpoint={site.analyticsApi ?? undefined}>
     {showHeader && <Header />}
     <main id="main" tabindex="-1" class="outline-none">
       <slot />
@@ -86,6 +74,7 @@ const noscriptCss =
     <script src={asset('assets/js/consent.js')} defer></script>
     <script>
       import '../scripts/animations';
+      import '../scripts/analytics';
     </script>
   </body>
 </html>

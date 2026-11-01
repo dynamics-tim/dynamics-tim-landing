@@ -43,9 +43,9 @@ jobs:
         run: npm run build
         env:
           PUBLIC_BASE_URL: ${{ steps.pages.outputs.base_url }}
-          # Optional override of the n8n lead endpoint (default in src/data/site.ts)
+          # Optional overrides of the n8n endpoints (defaults in src/data/site.ts, "off" disables)
           PUBLIC_LEAD_API: ${{ vars.PUBLIC_LEAD_API }}
-          PUBLIC_GOATCOUNTER_URL: ${{ vars.PUBLIC_GOATCOUNTER_URL }}
+          PUBLIC_ANALYTICS_API: ${{ vars.PUBLIC_ANALYTICS_API }}
 
       - name: Upload production artifacts
         uses: actions/upload-pages-artifact@v3

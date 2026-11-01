@@ -1,7 +1,7 @@
 # Legal & Privacy Implementation Notes
 
 ## Consent Layer
-- Version: 2024-09-22 (`public/assets/js/consent.js`)
+- Version: 2026-11-01 (`public/assets/js/consent.js`; mit `CONSENT_LAYER_VERSION` in `tests/fixtures.ts` synchron halten)
 - Storage: `localStorage.dynamicsTimConsent` (JSON mit `version`, `preferences`, `timestamp`, `method`)
 - Kategorien & Defaults:
   - `essential` (immer aktiv, nicht konfigurierbar)
@@ -9,6 +9,7 @@
   - `marketing` (Standard: aus)
   - `embeds` (Standard: aus)
 - UI: `public/assets/js/consent.js`, `public/assets/css/consent.css`, Footer-Trigger (`data-consent-manage`).
+- Events: `consent:ready` (einmalig) und `consent:change` (bei jeder Anwendung, `detail` = Präferenzen) auf `window`; First-Party-Module wie `src/scripts/analytics.ts` hören darauf.
 - Blocking-Logik:
   - `<script data-consent="..." type="text/plain" data-src="/pfad.js">` wird erst nach Zustimmung injiziert.
   - `<iframe data-consent="embeds" data-src="https://...">` zeigt Platzhalter bis zur Freigabe.
@@ -22,6 +23,7 @@
 
 ## Dienste & Verantwortung
 - Hosting/CDN: GitHub Pages / Fastly (Server-Logs, TLS-Termination).
+- Reichweitenmessung: eigene Lösung (`src/scripts/analytics.ts`) → selbst gehostetes n8n (`website_analytics`, 14 Monate), nur nach Einwilligung „Analytics“; ersetzt GoatCounter.
 - Optionaler Terminservice: Cal.com (nur nach Klick, keine Auto-Initialisierung).
 - Schriftarten: Inter (variabel) lokal (`public/assets/fonts/`).
 

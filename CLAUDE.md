@@ -24,3 +24,6 @@ If you change health-check scoring in `src/data/health-check.ts`, update the exp
 table in `tests/health-check-logic.spec.ts` deliberately. Renaming a question id or option
 value, or changing a limit in `src/lib/lead.ts`, also requires updating the n8n workflow
 "Website-Leads · dynamics-tim.dev" (node "Prüfen & entscheiden") — it whitelists them.
+Likewise, adding/renaming an analytics event or value (`ANALYTICS_EVENTS` in `src/lib/analytics.ts`)
+requires updating "Website-Analytics · dynamics-tim.dev" (node "Prüfen & normalisieren"), and
+bumping `VERSION` in `public/assets/js/consent.js` requires `CONSENT_LAYER_VERSION` in `tests/fixtures.ts`.

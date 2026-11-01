@@ -4,6 +4,8 @@
  * restarts a video the visitor paused on purpose.
  */
 
+import { track } from './analytics';
+
 interface NetworkInformationLike {
   saveData?: boolean;
 }
@@ -53,6 +55,7 @@ document.querySelectorAll<HTMLElement>('[data-pitch-video]').forEach((root) => {
   };
 
   const userPlay = () => {
+    if (video.paused) track('video_play');
     pausedByUser = false;
     play();
   };

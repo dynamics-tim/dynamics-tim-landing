@@ -7,6 +7,7 @@ import { evaluate, findOption, isComplete, type HealthAnswers } from '../lib/hea
 import { healthQuestions, recommendationCopy, type GradeId } from '../data/health-check';
 import { clearAnswers, loadAnswers, saveAnswers } from './health-store';
 import { to } from '../utils/url';
+import { trackOnce } from './analytics';
 
 const ADVANCE_DELAY_MS = 220;
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -161,6 +162,8 @@ function init(root: HTMLElement) {
     if (recLink) recLink.href = to(rec.href);
 
     if (scroll) {
+      // Freshly completed (a restored result from sessionStorage is not counted again)
+      trackOnce('hc_complete', result.grade.id);
       resultView.focus({ preventScroll: true });
       root.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
     }
@@ -179,6 +182,8 @@ function init(root: HTMLElement) {
     const value = option.dataset.hcOption ?? '';
     if (!findOption(question.id, value)) return;
 
+    // Once per pageview — also counts when consent is only given mid-quiz
+    trackOnce('hc_start');
     answers = { ...answers, [question.id]: value };
     saveAnswers(answers);
     renderStep(false);

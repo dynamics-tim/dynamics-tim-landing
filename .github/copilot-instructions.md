@@ -39,14 +39,14 @@ src/
   data/         ALL copy & configuration (site.ts, home.ts, services.ts, profile.ts,
                 engagement-models.ts, health-check.ts, legal-data.ts)
   layouts/      BaseLayout.astro (head, CSP, fonts, global scripts)
-  lib/          Pure, DOM-free logic (health-check.ts scoring, lead.ts validation/PoW — unit tested)
+  lib/          Pure, DOM-free logic (health-check.ts scoring, lead.ts validation/PoW, analytics.ts payloads — unit tested)
   pages/        Astro pages (SSG routes, trailingSlash: always)
-  scripts/      Client-side TS modules (animations, health-check + lead-form wiring, pitch video)
+  scripts/      Client-side TS modules (animations, analytics, health-check + lead-form wiring, pitch video)
   styles/       global.css — .card, .section-title, .nav-link CSS utilities
   utils/        url.ts (to/asset/base), csp.ts, structured-data.ts, collections.ts
 public/         Static assets served as-is (reveal.js, consent.js, media/pitch.mp4)
 scripts/        generate-og.mjs (copies scripts/assets/og-image.png), generate-favicons.mjs (run on npm install)
-tests/          Playwright: health-check + lead logic tables, E2E flows (n8n mocked via tests/fixtures.ts), page smoke tests
+tests/          Playwright: health-check + lead + analytics logic tables, E2E flows (n8n mocked via tests/fixtures.ts), page smoke tests
 ```
 
 **Key patterns:**
@@ -63,6 +63,7 @@ tests/          Playwright: health-check + lead logic tables, E2E flows (n8n moc
 
 - **GitHub Pages** — deployed via `.github/workflows/deploy.yml` on main push, only after lint + Playwright tests (`e2e.yml`, called as reusable workflow) pass
 - **Lead endpoint (n8n)** — `site.leadApi` (`PUBLIC_LEAD_API`, default `https://n8n.dynamics-tim.dev/webhook/dt-lead`): `GET /challenge` (proof-of-work) and `POST /submit` (text/plain JSON). Workflow "Website-Leads · dynamics-tim.dev" validates with a whitelist that MIRRORS `src/lib/lead.ts` and the ids in `src/data/health-check.ts` — change both sides together. Never put secrets/tokens in `PUBLIC_*` variables: they ship to every visitor.
+- **Analytics endpoint (n8n)** — `site.analyticsApi` (`PUBLIC_ANALYTICS_API`, default `https://n8n.dynamics-tim.dev/webhook/dt-stats`): `POST /collect` via `navigator.sendBeacon` (text/plain JSON). First-party replacement for GoatCounter: starts only after consent to the `analytics` category (`consent:change` event from `public/assets/js/consent.js`), never with DNT/GPC. Record interactions with `track(name, value)` from `src/scripts/analytics.ts` — names/values are whitelisted in `src/lib/analytics.ts` (`ANALYTICS_EVENTS`) and MIRRORED in workflow "Website-Analytics · dynamics-tim.dev" (node "Prüfen & normalisieren"), data table `website_analytics`. See `docs/analytics.md`.
 - **Cal.com** — booking widget integration
 - **CSP** — built by `buildCsp()` in `src/utils/csp.ts`; add new external origins there
 - **Health-Check (lead magnet)** — copy & points in `src/data/health-check.ts`, scoring in `src/lib/health-check.ts` (pinned by `tests/health-check-logic.spec.ts`), DOM wiring in `src/scripts/health-check.ts`; answers (no PII) persist in sessionStorage via `src/scripts/health-store.ts`

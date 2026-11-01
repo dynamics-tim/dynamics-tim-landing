@@ -11,13 +11,16 @@ for (const path of pages) {
   });
 }
 
-test('CSP allows only the n8n lead origin and no third-party push services', async ({ page }) => {
+test('CSP allows only the n8n origin and no third-party analytics or push services', async ({ page }) => {
   await page.goto('/');
   const csp = (await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content')) ?? '';
   expect(csp).toContain('connect-src');
   expect(csp).toContain('https://n8n.dynamics-tim.dev');
   expect(csp).toContain("object-src 'none'");
   expect(csp).not.toContain('pushover');
+  expect(csp).not.toContain('gc.zgo.at');
+  expect(csp).not.toContain('goatcounter');
+  expect(await page.locator('script[data-goatcounter], script[src*="gc.zgo.at"]').count()).toBe(0);
   expect(await page.content()).not.toMatch(/pushover/i);
 });
 

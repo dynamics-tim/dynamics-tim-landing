@@ -24,6 +24,7 @@ import {
   type LeadKind,
   type PowSolution,
 } from '../lib/lead';
+import { track, trackOnce } from './analytics';
 import { loadAnswers } from './health-store';
 
 const REQUEST_TIMEOUT_MS = 15_000;
@@ -125,6 +126,16 @@ function initForm(form: HTMLFormElement) {
   // Only fetch the challenge once the visitor starts filling in the form (intent) — no request
   // to the lead server just because someone scrolled past it (privacy policy relies on this).
   form.addEventListener('focusin', () => preparePow(), { once: true });
+  // Not `once`: without consent trackOnce() is a no-op, so a later focus must still count
+  form.addEventListener('focusin', (event) => {
+    // focusin fires before the radio's change event — read the kind from the radio itself
+    const target = event.target as HTMLInputElement;
+    const kind =
+      target.matches('[data-kind-radio]') && LEAD_KINDS.includes(target.value as LeadKind)
+        ? (target.value as LeadKind)
+        : currentKind();
+    trackOnce('form_start', kind, `form_start:${form.id || baseKind}`);
+  });
 
   // ── Kind switch (contact ⇄ recruiter) ──
   const currentKind = (): LeadKind => {
@@ -293,6 +304,7 @@ function initForm(form: HTMLFormElement) {
 
       if (outcome === 'ok') {
         succeeded = true;
+        track('form_submit', input.kind);
         showSuccess(input.kind);
         return;
       }

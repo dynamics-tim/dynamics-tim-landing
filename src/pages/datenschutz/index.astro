@@ -9,6 +9,7 @@ const {
   PHONE,
   PROCESSORS,
   CONTACT_RETENTION_MONTHS,
+  ANALYTICS_RETENTION_MONTHS,
   DPO,
   HOSTING,
   LEAD_HOSTING
@@ -50,12 +51,18 @@ const processorList = Array.isArray(PROCESSORS) ? PROCESSORS : [];
           Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der sicheren Bereitstellung der Website).
         </p>
 
-        <h3>Webanalyse mit GoatCounter (nach Einwilligung)</h3>
+        <h3>Reichweitenmessung auf eigenem Server (nach Einwilligung)</h3>
         <p>
-          Sofern Sie im Consent-Layer in die Kategorie "Analytics" einwilligen, setzen wir GoatCounter zur statistischen Auswertung der Webseitennutzung ein. Dabei werden insbesondere Seitenaufrufe, Referrer-Informationen sowie grobe Geraete-/Browser-Merkmale und eine grobe Standortinformation (z. B. Land) verarbeitet, um Reichweite und Nutzung der Website zu verstehen. GoatCounter speichert nach eigenen Angaben keine IP-Adressen, keinen vollstaendigen User-Agent und keine Tracker-IDs und legt keine Informationen im Browser (keine Cookies/localStorage) zur Wiedererkennung ab.
+          Sofern Sie im Consent-Layer in die Kategorie "Analytics" einwilligen, messe ich mit einer selbst entwickelten, cookielosen Lösung, wie diese Website genutzt wird. Es werden keine Dienste Dritter eingebunden. Ihr Browser übermittelt dabei pro Seitenaufruf: die aufgerufene Seite (ohne URL-Parameter), die Domain der verweisenden Website bzw. einen Kampagnen-Parameter ("utm_source" oder "ref"), eine grobe Geräteklasse (Smartphone, Tablet oder Desktop, abgeleitet aus der Fensterbreite), die Zeit, in der die Seite sichtbar geöffnet war, die Scrolltiefe sowie Interaktionen (Health-Check begonnen/abgeschlossen inkl. Ergebniskategorie, Formular begonnen/gesendet, Klick auf Terminbuchung oder E-Mail-Link, Start des Videos). Inhalte von Formularfeldern werden dabei nicht übertragen.
         </p>
         <p>
-          Rechtsgrundlage ist Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO sowie Paragraf 25 Abs. 1 TDDDG (vormals TTDSG). Die Einwilligung kann jederzeit ueber "Einwilligung widerrufen" widerrufen werden.
+          Um Besuche von einzelnen Seitenaufrufen unterscheiden zu können, wird im Sitzungsspeicher (sessionStorage) Ihres Browsers eine zufällige Besuchskennung abgelegt, die beim Schließen des Tabs automatisch gelöscht wird. Es werden keine Cookies gesetzt, kein Fingerprinting durchgeführt und weder IP-Adresse noch vollständiger User-Agent gespeichert. Zum Schutz vor Missbrauch wird Ihre IP-Adresse lediglich flüchtig als täglich wechselnder, gekürzter Hash-Wert für maximal eine Stunde zur Begrenzung der Anfragen verwendet. Ist in Ihrem Browser "Do Not Track" oder "Global Privacy Control" aktiviert, findet keine Messung statt.
+        </p>
+        <p>
+          Die Daten werden verschlüsselt (HTTPS) an die Automatisierungsplattform n8n auf {LEAD_HOSTING} übertragen und dort in einer Datenbanktabelle gespeichert, um Reichweite und Nutzung der Website statistisch auszuwerten. Bei einem neuen Besuch erhalte ich eine Benachrichtigung über den Messenger-Dienst Telegram, die ausschließlich die aufgerufene Seite, die verweisende Domain und die Geräteklasse enthält. Die Messdaten werden nach {ANALYTICS_RETENTION_MONTHS} Monaten automatisch gelöscht.
+        </p>
+        <p>
+          Rechtsgrundlage ist Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO sowie § 25 Abs. 1 TDDDG. Die Einwilligung kann jederzeit über "Cookie-Einstellungen" im Fußbereich der Website mit Wirkung für die Zukunft widerrufen werden; die Besuchskennung wird dabei sofort gelöscht.
         </p>
 
         <h3>Kontaktaufnahme per E-Mail</h3>
@@ -108,12 +115,12 @@ const processorList = Array.isArray(PROCESSORS) ? PROCESSORS : [];
 
         <h2>Übermittlungen in Drittländer</h2>
         <p>
-          GitHub Inc. (USA) und Microsoft Corp. (USA) stützen internationale Datenübermittlungen auf EU-Standardvertragsklauseln gemäß Art. 46 DSGVO. Zusätzliche technische und organisatorische Maßnahmen dienen dem Schutz der Daten. GoatCounter speichert Daten innerhalb der EU (Deutschland/Finnland).
+          GitHub Inc. (USA) und Microsoft Corp. (USA) stützen internationale Datenübermittlungen auf EU-Standardvertragsklauseln gemäß Art. 46 DSGVO. Zusätzliche technische und organisatorische Maßnahmen dienen dem Schutz der Daten.
         </p>
 
         <h2>Speicherdauer</h2>
         <p>
-          Logdaten werden durch {HOSTING} für einen technisch notwendigen Zeitraum gespeichert und anschließend automatisiert gelöscht. Kommunikationsdaten werden gelöscht, sobald der Zweck entfällt und keine gesetzlichen Aufbewahrungspflichten entgegenstehen. Sofern Sie eine Einwilligung erteilt haben, verarbeiten wir die Daten bis zu Ihrem Widerruf. Analytics-Daten bei GoatCounter werden verarbeitet, bis sie im GoatCounter-Account geloescht werden; Sicherungskopien koennen bis zu 30 Tage vorgehalten werden.
+          Logdaten werden durch {HOSTING} für einen technisch notwendigen Zeitraum gespeichert und anschließend automatisiert gelöscht. Kommunikationsdaten werden gelöscht, sobald der Zweck entfällt und keine gesetzlichen Aufbewahrungspflichten entgegenstehen. Sofern Sie eine Einwilligung erteilt haben, verarbeiten wir die Daten bis zu Ihrem Widerruf. Daten der Reichweitenmessung werden nach {ANALYTICS_RETENTION_MONTHS} Monaten automatisch gelöscht.
         </p>
 
         <h2>Pflicht zur Bereitstellung</h2>
