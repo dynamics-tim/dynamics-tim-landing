@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import LogoMark from './LogoMark.astro';
 import { site } from '../data/site';
 import { base, to } from '../utils/url';
 
@@ -23,7 +24,7 @@ const ctaHref = isHome ? '#health-check' : to('check');
   </a>
   <div class="mx-auto flex max-w-page items-center justify-between gap-6 px-5 py-3 sm:px-8">
     <a href={base} class="group flex items-center gap-3 text-paper no-underline hover:text-paper" aria-label="Tim Friedrich, zur Startseite">
-      <span class="grid h-9 w-9 place-items-center rounded-xl bg-lime-500 font-extrabold tracking-tight text-ink-950 transition-transform duration-300 group-hover:-rotate-6">tf</span>
+      <LogoMark class="h-9 w-9 shrink-0 transition-transform duration-300 group-hover:-rotate-6 motion-reduce:transition-none motion-reduce:group-hover:rotate-0" />
       <span class="hidden flex-col whitespace-nowrap leading-tight sm:flex">
         <span class="text-[0.95rem] font-bold tracking-tight">Tim Friedrich</span>
         <span class="font-mono text-[0.65rem] uppercase tracking-[0.18em] text-ink-300">Dynamics 365</span>

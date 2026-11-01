@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "sync": "astro sync",
     "test:e2e": "playwright test",
-    "postinstall": "node scripts/generate-og.mjs && node scripts/generate-favicons.mjs"
+    "postinstall": "node scripts/generate-og.mjs && node scripts/generate-brand.mjs"
   },
   "keywords": [
     "astro",
