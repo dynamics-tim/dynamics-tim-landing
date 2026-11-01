@@ -4,25 +4,19 @@
  * Add new external origins here (and only here) when integrating a service.
  */
 export interface CspOptions {
-  /** Origin of the GoatCounter endpoint, if analytics is configured */
-  goatcounterOrigin?: string | null;
   /** Origin of the n8n lead endpoint (site.leadApi), if the forms are enabled */
   leadOrigin?: string | null;
+  /** Origin of the n8n analytics endpoint (site.analyticsApi), if tracking is enabled */
+  analyticsOrigin?: string | null;
 }
 
-export function buildCsp({ goatcounterOrigin = null, leadOrigin = null }: CspOptions = {}): string {
+export function buildCsp({ leadOrigin = null, analyticsOrigin = null }: CspOptions = {}): string {
   const scriptSources = ["'self'", "'unsafe-inline'"];
   const imgSources = ["'self'", 'data:'];
-  const connectSources = ["'self'"];
+  const connectSources = new Set(["'self'"]);
 
-  if (leadOrigin) {
-    connectSources.push(leadOrigin);
-  }
-
-  if (goatcounterOrigin) {
-    scriptSources.push('https://gc.zgo.at');
-    connectSources.push(goatcounterOrigin);
-    imgSources.push(goatcounterOrigin);
+  for (const origin of [leadOrigin, analyticsOrigin]) {
+    if (origin) connectSources.add(origin);
   }
 
   return [
@@ -31,7 +25,7 @@ export function buildCsp({ goatcounterOrigin = null, leadOrigin = null }: CspOpt
     "style-src 'self' 'unsafe-inline'",
     `img-src ${imgSources.join(' ')}`,
     "font-src 'self'",
-    `connect-src ${connectSources.join(' ')}`,
+    `connect-src ${[...connectSources].join(' ')}`,
     "media-src 'self'",
     "frame-src 'self'",
     "object-src 'none'",

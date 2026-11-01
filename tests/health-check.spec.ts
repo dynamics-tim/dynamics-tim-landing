@@ -1,24 +1,4 @@
-import { expect, mockLeadApi, test } from './fixtures';
-
-const weakAnswers = [
-  'Manueller Solution-Export und -Import',
-  'Nur Dev und Prod',
-  'Eine Person weiß Bescheid',
-  'Manuell durch Fachbereich oder Team',
-  'Die Anwender, irgendwann',
-  'Meistens, gelegentlich ist Nacharbeit nötig',
-  'Viel läuft parallel in Excel und Mails',
-  'Eine Person neben dem Tagesgeschäft',
-];
-
-async function answerAll(page: import('@playwright/test').Page) {
-  const check = page.locator('[data-health-check]');
-  for (const [index, label] of weakAnswers.entries()) {
-    await expect(page.locator('#hc-step-label')).toHaveText(`Frage ${index + 1} von 8`);
-    await check.getByRole('button', { name: label, exact: true }).click();
-  }
-  await expect(page.locator('#hc-result')).toBeVisible();
-}
+import { answerAll, expect, mockLeadApi, test, weakAnswers } from './fixtures';
 
 for (const path of ['/', '/check/']) {
   test(`health-check shows a result on ${path}`, async ({ page, pageErrors }) => {

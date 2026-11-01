@@ -5,7 +5,7 @@
   }
 
   const STORAGE_KEY = 'dynamicsTimConsent';
-  const VERSION = '2024-09-22';
+  const VERSION = '2026-11-01';
   const DEFAULT_PREFERENCES = {
     essential: true,
     analytics: false,
@@ -22,7 +22,7 @@
     {
       key: 'analytics',
       label: 'Analytics',
-      description: 'Optionales Tracking zur Reichweiten- und Performance-Messung. Wird nur nach Zustimmung geladen.',
+      description: 'Anonyme Reichweitenmessung auf meinem eigenen Server (Seitenaufrufe, Verweildauer, Nutzung von Health-Check und Formular). Keine Cookies, keine Drittanbieter.',
       locked: false
     },
     {
@@ -103,6 +103,10 @@
     });
     processScripts(applied);
     processEmbeds(applied);
+    if (globalScope) {
+      // First-party modules (e.g. src/scripts/analytics.ts) react to grants and revocations
+      globalScope.dispatchEvent(new CustomEvent('consent:change', { detail: { ...applied } }));
+    }
   }
 
   function ensureUI() {
@@ -385,9 +389,6 @@
     }
     if (source.dataset.attrIntegrity) {
       script.setAttribute('integrity', source.dataset.attrIntegrity);
-    }
-    if (source.dataset.goatcounter) {
-      script.setAttribute('data-goatcounter', source.dataset.goatcounter);
     }
 
     appendTarget.appendChild(script);

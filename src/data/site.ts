@@ -40,12 +40,26 @@ export const site = {
    * src/lib/lead.ts). Override with PUBLIC_LEAD_API, set it to "off" to disable the form.
    */
   // `import.meta.env` is undefined when this module runs outside Vite (Playwright unit tests)
-  leadApi: resolveLeadApi(import.meta.env?.PUBLIC_LEAD_API),
+  leadApi: resolveEndpoint(
+    import.meta.env?.PUBLIC_LEAD_API,
+    'https://n8n.dynamics-tim.dev/webhook/dt-lead'
+  ),
+
+  /**
+   * Analytics endpoint base (n8n workflow "Website-Analytics · dynamics-tim.dev").
+   * `POST {analyticsApi}/collect` receives pageviews, time on page and interaction events —
+   * only after consent to the "analytics" category (see src/lib/analytics.ts). Override with
+   * PUBLIC_ANALYTICS_API, set it to "off" to disable tracking entirely.
+   */
+  analyticsApi: resolveEndpoint(
+    import.meta.env?.PUBLIC_ANALYTICS_API,
+    'https://n8n.dynamics-tim.dev/webhook/dt-stats'
+  ),
 } as const;
 
-function resolveLeadApi(value: string | undefined): string | null {
+function resolveEndpoint(value: string | undefined, fallback: string): string | null {
   if (value === 'off') return null;
-  const url = value?.trim() || 'https://n8n.dynamics-tim.dev/webhook/dt-lead';
+  const url = value?.trim() || fallback;
   return /^https:\/\/[^\s/]+\/\S+$/.test(url) ? url.replace(/\/$/, '') : null;
 }
 

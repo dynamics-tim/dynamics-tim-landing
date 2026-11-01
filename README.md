@@ -23,7 +23,7 @@ Anschließend ist die Seite unter [http://localhost:4321](http://localhost:4321)
 | `npm run lint`    | ESLint (TypeScript + Astro) in Strict-Mode                |
 | `npm run format`  | Prettier Formatting für das gesamte Projekt               |
 | `npm run sync`    | Content Collections synchronisieren (`src/content/*`)     |
-| `npm run test:e2e`| Playwright: Health-Check- & Lead-Logik, E2E-Flows, Seiten  |
+| `npm run test:e2e`| Playwright: Health-Check-, Lead- & Analytics-Logik, E2E-Flows, Seiten |
 
 ## 🎯 Lead-Funnel: Health-Check & Formulare
 
@@ -58,6 +58,24 @@ Die Seite ist statisch, die Endpunkte sind daher öffentlich. **Im Browser liegt
 
 > Die Grenzwerte in `src/lib/lead.ts` und im n8n-Node „Prüfen & entscheiden“ müssen übereinstimmen. Wer eine Frage oder Antwort-ID in `health-check.ts` umbenennt, muss die Whitelist im Workflow mitziehen.
 
+## 📊 Besucher-Analytics (First-Party, n8n)
+
+Statt GoatCounter misst die Website selbst – **nur nach Einwilligung** in die Consent-Kategorie „Analytics“ und nie bei Do-Not-Track/Global Privacy Control. Keine Cookies, kein Drittanbieter, keine IP und kein User-Agent im Payload.
+
+| Teil | Datei |
+| ---- | ----- |
+| Payloads, Whitelist, Normalisierung (rein, getestet) | `src/lib/analytics.ts` → `tests/analytics-logic.spec.ts` |
+| DOM-Anbindung (Pageview, Verweildauer, Scrolltiefe, Klicks) | `src/scripts/analytics.ts` → `tests/analytics.spec.ts` |
+| Events aus Health-Check, Formularen, Video | `track()` in `src/scripts/health-check.ts`, `lead-form.ts`, `pitch-video.ts` |
+| Backend | n8n-Workflow **„Website-Analytics · dynamics-tim.dev“** → Data Table `website_analytics` |
+
+- `POST {PUBLIC_ANALYTICS_API}/collect` (Default `https://n8n.dynamics-tim.dev/webhook/dt-stats`, `off` deaktiviert) per `navigator.sendBeacon` als `text/plain`-JSON.
+- Ereignisse: `pageview`, `engagement` (sichtbare Zeit + Scrolltiefe, aktualisiert den Seitenaufruf), `event` (`hc_start`, `hc_complete`, `form_start`, `form_submit`, `booking_click`, `mail_click`, `video_play`).
+- Telegram pingt bei jedem **neuen Besuch** (max. 20/h, ohne personenbezogene Daten). Daten werden nach 14 Monaten gelöscht.
+- Architektur, Tabellen-Schema und Dashboard-Kennzahlen: [`docs/analytics.md`](docs/analytics.md).
+
+> Event-Namen/-Werte und Grenzwerte in `src/lib/analytics.ts` und im n8n-Node „Prüfen & normalisieren“ müssen übereinstimmen.
+
 ## 🎬 Pitch-Video
 
 `public/media/pitch.mp4` (720×900, H.264, ca. 1,4 MB) plus `pitch-poster.jpg`. Komponente: `src/components/PitchVideo.astro`. Das Video startet stumm und nur, solange es sichtbar ist. Bei `prefers-reduced-motion` oder Datensparmodus startet es nicht automatisch. Ton-Schalter und Transkript sind vorhanden.
@@ -91,7 +109,7 @@ Texte stehen nicht in den Templates, sondern in **`src/data/`**:
 
 | Datei                          | Inhalt                                                         |
 | ------------------------------ | -------------------------------------------------------------- |
-| `site.ts`                      | E-Mail, Buchungslink, Verfügbarkeit, Social Links, Lead-API    |
+| `site.ts`                      | E-Mail, Buchungslink, Verfügbarkeit, Social Links, Lead-/Analytics-API |
 | `home.ts`                      | Startseite: Hero, Story, Ergebnisse, Ablauf, Recruiter, FAQ    |
 | `health-check.ts`              | Health-Check: Fragen, Punkte, Hebel, Einstufung, Empfehlungen  |
 | `engagement-models.ts`         | Die drei Engagement-Modelle (Startseite + Leistungen)          |
@@ -125,9 +143,9 @@ Alle Stellen auf der Website (Hero, Recruiter-Fakten, Kontakt, Footer) lesen die
 │   ├── content/            # MDX Content Collections (Timeline, Projekte, Certs)
 │   ├── data/               # Alle Texte & Konfiguration
 │   ├── layouts/            # BaseLayout (Head, CSP, globale Skripte)
-│   ├── lib/                # Reine Logik ohne DOM (Health-Check-Scoring, Lead/PoW)
+│   ├── lib/                # Reine Logik ohne DOM (Health-Check-Scoring, Lead/PoW, Analytics)
 │   ├── pages/              # Astro Seitenrouten (SSG)
-│   ├── scripts/            # Client-Skripte (Animationen, Health-Check, Formulare, Video)
+│   ├── scripts/            # Client-Skripte (Animationen, Analytics, Health-Check, Formulare, Video)
 │   ├── styles/             # Tailwind Basestyles
 │   └── utils/              # url.ts, csp.ts, structured-data.ts
 ├── tests/                  # Playwright-Tests
