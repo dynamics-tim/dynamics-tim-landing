@@ -23,7 +23,7 @@ export const hero = {
 };
 
 export const heroStats = [
-  { value: '20+', label: 'D365-Projekte' },
+  { value: '10+', label: 'D365-Projekte' },
   { value: '5+', label: 'Jahre Dynamics 365' },
   { value: '5+', label: 'Zertifizierungen' },
   { value: 'Ø 3', label: 'Monate Audit → Go-live' },
@@ -42,7 +42,7 @@ export const pitchTranscript = [
   '18:01. Grün. Wochenende.',
   'Ich bin Tim. Im Code wie im Ring: Technik schlägt Kraft.',
   'Home Base Oberschwaben. Direkt, persönlich, kein Offshore.',
-  '20+ Dynamics-365-Projekte, Azure-Integrationen.',
+  '10+ Dynamics-365-Projekte, Azure-Integrationen.',
   'Dein CRM verdient bessere Releases. dynamics-tim.dev. 30 Minuten Erstgespräch, kostenlos.',
 ];
 
@@ -145,12 +145,6 @@ export const testimonials: Testimonial[] = [
     author: 'Microsoft Platform Solutions',
     company: 'ORBIS SE',
   },
-  {
-    quote:
-      'Saubere Architektur, klare Kommunikation und ein Team, das nach dem Projekt selbst weiterarbeiten kann. Genau das haben wir bekommen.',
-    author: 'M. Schneider, Projektleitung',
-    company: 'Fertigungsunternehmen, Süddeutschland',
-  },
 ];
 
 /* ── Ablauf ───────────────────────────────────────────── */
@@ -195,7 +189,7 @@ export const recruiter = {
   text: 'Ich arbeite direkt mit Unternehmen und gern auch über Agenturen. Wenn du eine passende Dynamics-365-Rolle hast, schick mir die Eckdaten.',
   facts: [
     { label: 'Rolle', value: 'Senior Dynamics 365 Developer · Technical Consultant' },
-    { label: 'Erfahrung', value: '5+ Jahre Dynamics 365 · 20+ Projekte' },
+    { label: 'Erfahrung', value: '5+ Jahre Dynamics 365 · 10+ Projekte' },
     { label: 'Schwerpunkte', value: 'C# Plugins · PCF · Power Automate · Azure Integration · ALM/DevOps' },
     { label: 'Verfügbar', value: `ab ${site.availability.label}` },
     { label: 'Einsatz', value: `${site.location} · vor Ort nach Absprache` },
